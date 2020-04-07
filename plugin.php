@@ -1,6 +1,14 @@
 <?php
 /**
- * Plugin Name: Table of Contents
+ * Plugin Name: SimpleTOC - A Table of Contents Block
+ * Plugin URI: https://github.com/mtoensing/Docker-Minecraft-PaperMC-Server
+ * Description: Adds a custom "table of contents" Gutenberg block.
+ * Version: 0.1
+ * Author:  Marc Tönsing, Paul de Wouters
+ * Author URI: marc.tv
+ * Text Domain: block-registered-usernames
+ * Domain Path: /languages
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
  namespace GutenTOC;
@@ -66,16 +74,16 @@ function render_callback( $attributes, $content ) {
 		return 'No headings.';
 	}
 	$heading_contents = array_column( $headings, 'innerHTML');
-	$output = '<div class="toc">';
-		$output .= 'Table of contents';
-		$output .= '<ul>';
+
+		$output .= '<h2>Inhaltsverzeichnis</h2>';
+		$output .= '<ul class="toc">';
 			foreach ( $heading_contents as $heading_content ) {
 				preg_match( '/\\n<h[2-6]>(.*)<\/h[2-6]>\\n/', $heading_content , $matches );
 				$link = sanitize_title_with_dashes( $matches[1]);
 				$output .= '<li><a href="#' . $link . '">' . $matches[1] . '</a></li>';
 			}
 		$output .= '</ul>';
-	$output .= '</div>';
+
 	return $output;
 }
 
@@ -87,5 +95,5 @@ function filter_block( $block_content, $block ) {
 	}
 	preg_match( '/\\n<(h[2-6])>(.*)<\/(h[2-6])>\\n/', $block_content , $matches );
 	$link = sanitize_title_with_dashes( $matches[2] );
-	return "\n<{$matches[1]}><span id='{$link}'>" . $matches[2] . "</span></{$matches[3]}>\n";
+	return "\n<{$matches[1]} id='{$link}'>" . $matches[2] . "</{$matches[3]}>\n";
 }
