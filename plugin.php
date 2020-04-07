@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: SimpleTOC - A Table of Contents Block
+ * Plugin Name: SimpleTOC - A Table of Contents Block for Gutenberg
  * Plugin URI: https://github.com/mtoensing/Docker-Minecraft-PaperMC-Server
  * Description: Adds a custom "table of contents" Gutenberg block.
  * Version: 0.1
@@ -75,7 +75,7 @@ function render_callback( $attributes, $content ) {
 	}
 	$heading_contents = array_column( $headings, 'innerHTML');
 
-		$output .= '<h2>Inhaltsverzeichnis</h2>';
+		$output .= '<h2>Table of Contents</h2>';
 		$output .= '<ul class="toc">';
 			foreach ( $heading_contents as $heading_content ) {
 				preg_match( '/\\n<h[2-6]>(.*)<\/h[2-6]>\\n/', $heading_content , $matches );
