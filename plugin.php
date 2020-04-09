@@ -78,7 +78,8 @@ function render_callback( $attributes, $content ) {
 	}
 	$heading_contents = array_column( $headings, 'innerHTML');
 
-		$output .= '<h2>' . __( 'Table of Contents', 'simpletoc' ) . '</h2>';
+    // Keep it simple so that the user can add this. 
+		//$output .= '<h2>' . __( 'Table of Contents', 'simpletoc' ) . '</h2>';
 
 		$output .= '<ul class="toc">';
 			foreach ( $heading_contents as $heading_content ) {
