@@ -1,4 +1,4 @@
-=== SimpleTOC for Gutenberg   ===
+=== SimpleTOC ===
 Contributors:  MarcDK, pdewouters
 Tags: Gutenberg, TOC, block, Table of Contents, basic
 Requires at least: 5.0
@@ -13,5 +13,7 @@ Adds a custom "table of contents" Gutenberg block.
 
 It works by parsing the post content and retrieving the heading blocks,
 and creates a new dynamic block with a list of links to the headings.
+
+No customizations. No options. Just an unordered list.
 
 This plugin is forked from https://github.com/pdewouters/gutentoc

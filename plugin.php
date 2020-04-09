@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: SimpleTOC for Gutenberg
+ * Plugin Name: SimpleTOC
  * Plugin URI: https://github.com/mtoensing/simpletoc
  * Description: Adds a basic "table of contents" Gutenberg block.
  * Version: 0.1
