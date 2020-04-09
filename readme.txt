@@ -1,4 +1,4 @@
-=== GutenTOC for Gutenberg   ===
+=== SimpleTOC for Gutenberg   ===
 Contributors:  MarcDK, pdewouters
 Tags: Gutenberg, TOC, block, Table of Contens
 Requires at least: 5.0
