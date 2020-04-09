@@ -20,9 +20,21 @@ defined( 'ABSPATH' ) || exit;
 */
 add_action( 'init', __NAMESPACE__ . '\\load_textdomain' );
 add_action( 'init', __NAMESPACE__ . '\\register_block' );
+add_action( 'init', __NAMESPACE__ . '\\simpletocinit' );
 
 function load_textdomain() {
 	load_plugin_textdomain( 'simpletoc', false, basename( __DIR__ ) . '/languages' );
+}
+
+function simpletocinit() {
+
+    wp_register_style(
+        'simpletoc-editor',
+        plugins_url( 'editor.css', __FILE__ ),
+        array( 'wp-edit-blocks' ),
+        filemtime( plugin_dir_path( __FILE__ ) . 'editor.css' )
+    );
+
 }
 
 /**
@@ -31,6 +43,8 @@ function load_textdomain() {
  *
  * Passes translations to JavaScript.
  */
+
+
 function register_block() {
 
 	if ( ! function_exists( 'register_block_type' ) ) {
@@ -45,8 +59,10 @@ function register_block() {
 		filemtime( plugin_dir_path( __FILE__ ) . 'build/index.js' )
 	);
 
+
 	register_block_type( 'simpletoc/toc', [
 		'editor_script' => 'simpletoc',
+    'editor_style' => 'simpletoc-editor',
 		'render_callback' => __NAMESPACE__ . '\\render_callback'
 	 ] );
 
@@ -78,7 +94,7 @@ function render_callback( $attributes, $content ) {
 	}
 	$heading_contents = array_column( $headings, 'innerHTML');
 
-    // Keep it simple so that the user can add this. 
+    // Keep it simple so that the user can add this.
 		//$output .= '<h2>' . __( 'Table of Contents', 'simpletoc' ) . '</h2>';
 
 		$output .= '<ul class="toc">';

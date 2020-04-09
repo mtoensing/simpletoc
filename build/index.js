@@ -106,9 +106,11 @@ registerBlockType('simpletoc/toc', {
   title: __('Table of Contents', 'simpletoc'),
   icon: 'list-view',
   category: 'layout',
-  edit: function edit(props) {
-    console.info(props);
-    return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("div", null, "Table of contents");
+  edit: function edit(_ref) {
+    var className = _ref.className;
+    return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("p", {
+      className: className
+    }, "SimpleTOC");
   },
   save: function save(props) {
     return null;

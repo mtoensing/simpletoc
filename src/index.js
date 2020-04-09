@@ -5,10 +5,9 @@ registerBlockType( 'simpletoc/toc', {
 	title: __( 'Table of Contents', 'simpletoc' ),
 	icon: 'list-view',
 	category: 'layout',
-	edit: props => {
-		console.info(props);
-		return <div>Table of contents</div>;
-	},
+	edit( { className } ) {
+        return <p className={ className }>SimpleTOC</p>;
+    },
 	save: props => {
 		return null;
 	},
