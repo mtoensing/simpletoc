@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: SimpleTOC - A Table of Contents Block for Gutenberg
- * Plugin URI: https://github.com/mtoensing/Docker-Minecraft-PaperMC-Server
- * Description: Adds a custom "table of contents" Gutenberg block.
+ * Plugin Name: SimpleTOC for Gutenberg
+ * Plugin URI: https://github.com/mtoensing/simpletoc
+ * Description: Adds a basic "table of contents" Gutenberg block.
  * Version: 0.1
  * Author:  Marc Tönsing, Paul de Wouters
  * Author URI: marc.tv
