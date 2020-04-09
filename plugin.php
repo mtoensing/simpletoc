@@ -67,6 +67,9 @@ function render_callback( $attributes, $content ) {
 		return 'No contents.';
 	}
 
+  //add only if block is used.
+  add_filter( 'render_block', __NAMESPACE__ . '\\filter_block', 10, 2 );
+
 	$headings = array_values( array_filter( $blocks, function( $block ){
 		return $block['blockName'] === 'core/heading';
 	}) );
@@ -78,7 +81,8 @@ function render_callback( $attributes, $content ) {
 		$output .= '<h2>Table of Contents</h2>';
 		$output .= '<ul class="toc">';
 			foreach ( $heading_contents as $heading_content ) {
-				preg_match( '/\\n<h[2-6]>(.*)<\/h[2-6]>\\n/', $heading_content , $matches );
+				preg_match( '|<h[^>]+>(.*)</h[^>]+>|iU', $heading_content , $matches );
+
 				$link = sanitize_title_with_dashes( $matches[1]);
 				$output .= '<li><a href="#' . $link . '">' . $matches[1] . '</a></li>';
 			}
@@ -87,13 +91,13 @@ function render_callback( $attributes, $content ) {
 	return $output;
 }
 
-add_filter( 'render_block', __NAMESPACE__ . '\\filter_block', 10, 2 );
-
 function filter_block( $block_content, $block ) {
 	if ( $block['blockName'] !== 'core/heading' ) {
 		return $block_content;
 	}
-	preg_match( '/\\n<(h[2-6])>(.*)<\/(h[2-6])>\\n/', $block_content , $matches );
+
+	preg_match('/\\n<(h[2-6](?:.*))>(.*)<\/(h[2-6])>\\n/', $block_content , $matches );
 	$link = sanitize_title_with_dashes( $matches[2] );
-	return "\n<{$matches[1]} id='{$link}'>" . $matches[2] . "</{$matches[3]}>\n";
+  $start = preg_replace('#\s(id|class)="[^"]+"#', '', $matches[1]);
+	return "\n<{$start} id='{$link}'>" . $matches[2] . "</{$matches[3]}>\n";
 }
