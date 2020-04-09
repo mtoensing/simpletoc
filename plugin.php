@@ -6,7 +6,7 @@
  * Version: 0.1
  * Author:  Marc Tönsing, Paul de Wouters
  * Author URI: marc.tv
- * Text Domain: block-registered-usernames
+ * Text Domain: simpletoc
  * Domain Path: /languages
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
@@ -22,7 +22,7 @@ add_action( 'init', __NAMESPACE__ . '\\load_textdomain' );
 add_action( 'init', __NAMESPACE__ . '\\register_block' );
 
 function load_textdomain() {
-	load_plugin_textdomain( 'gutentoc', false, basename( __DIR__ ) . '/languages' );
+	load_plugin_textdomain( 'simpletoc', false, basename( __DIR__ ) . '/languages' );
 }
 
 /**
@@ -78,7 +78,8 @@ function render_callback( $attributes, $content ) {
 	}
 	$heading_contents = array_column( $headings, 'innerHTML');
 
-		$output .= '<h2>Table of Contents</h2>';
+		$output .= '<h2>' . __( 'Table of Contents', 'simpletoc' ) . '</h2>';
+
 		$output .= '<ul class="toc">';
 			foreach ( $heading_contents as $heading_content ) {
 				preg_match( '|<h[^>]+>(.*)</h[^>]+>|iU', $heading_content , $matches );

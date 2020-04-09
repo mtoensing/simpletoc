@@ -1,12 +1,6 @@
 const { __, setLocaleData } = wp.i18n;
 const { registerBlockType } = wp.blocks;
 
-const blockStyle = {
-	backgroundColor: '#900',
-	color: '#fff',
-	padding: '20px',
-};
-
 registerBlockType( 'gutentoc/toc', {
 	title: __( 'Table of Contents', 'gutentoc' ),
 	icon: 'list-view',
