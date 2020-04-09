@@ -1,8 +1,8 @@
 const { __, setLocaleData } = wp.i18n;
 const { registerBlockType } = wp.blocks;
 
-registerBlockType( 'gutentoc/toc', {
-	title: __( 'Table of Contents', 'gutentoc' ),
+registerBlockType( 'simpletoc/toc', {
+	title: __( 'Table of Contents', 'simpletoc' ),
 	icon: 'list-view',
 	category: 'layout',
 	edit: props => {

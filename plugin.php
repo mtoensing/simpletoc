@@ -11,7 +11,7 @@
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
- namespace GutenTOC;
+ namespace SimpleTOC;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -39,14 +39,14 @@ function register_block() {
 	}
 
 	wp_register_script(
-		'gutentoc',
+		'simpletoc',
 		plugins_url( 'build/index.js', __FILE__ ),
 		[ 'wp-blocks', 'wp-i18n', 'wp-element' ],
 		filemtime( plugin_dir_path( __FILE__ ) . 'build/index.js' )
 	);
 
-	register_block_type( 'gutentoc/toc', [
-		'editor_script' => 'gutentoc',
+	register_block_type( 'simpletoc/toc', [
+		'editor_script' => 'simpletoc',
 		'render_callback' => __NAMESPACE__ . '\\render_callback'
 	 ] );
 
@@ -56,7 +56,7 @@ function register_block() {
      * plugin_dir_path( MY_PLUGIN ) . 'languages' ) ). For details see
      * https://make.wordpress.org/core/2018/11/09/new-javascript-i18n-support-in-wordpress/
      */
-    wp_set_script_translations( 'gutentoc', 'gutentoc-domain' );
+    wp_set_script_translations( 'simpletoc', 'simpletoc-domain' );
   }
 
 }
