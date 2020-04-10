@@ -21,12 +21,21 @@ add_action('init', __NAMESPACE__ . '\\simpletocinit');
 
 function simpletocinit()
 {
+    $asset_file = include(plugin_dir_path(__FILE__) . 'build/index.asset.php');
+
+    wp_register_script(
+    'simpletoc',
+    plugins_url('build/index.js', __FILE__),
+    [ 'wp-blocks', 'wp-i18n', 'wp-element', 'wp-server-side-render' ],
+    filemtime(plugin_dir_path(__FILE__) . 'build/index.js')
+    );
+
     wp_register_style(
-      'simpletoc-editor',
-      plugins_url('editor.css', __FILE__),
-      array( 'wp-edit-blocks' ),
-      filemtime(plugin_dir_path(__FILE__) . 'editor.css')
-  );
+    'simpletoc-editor',
+    plugins_url('editor.css', __FILE__),
+    array( 'wp-edit-blocks' ),
+    filemtime(plugin_dir_path(__FILE__) . 'editor.css')
+    );
 }
 
 /**
@@ -41,14 +50,6 @@ function register_block()
         // Gutenberg is not active.
         return;
     }
-
-    wp_register_script(
-    'simpletoc',
-    plugins_url('build/index.js', __FILE__),
-    [ 'wp-blocks', 'wp-i18n', 'wp-element' ],
-    filemtime(plugin_dir_path(__FILE__) . 'build/index.js')
-  );
-
 
     register_block_type('simpletoc/toc', [
     'editor_script' => 'simpletoc',
@@ -73,7 +74,7 @@ function render_callback($attributes, $content)
     }));
 
     if (empty($headings)) {
-        return 'No headings.';
+        return 'No headings found.';
     }
 
     $heading_contents = array_column($headings, 'innerHTML');

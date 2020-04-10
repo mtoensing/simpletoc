@@ -12,5 +12,8 @@
   "license": "ISC",
   "devDependencies": {
     "@wordpress/scripts": "3.3.0"
+  },
+  "dependencies": {
+    "@wordpress/server-side-render": "^1.9.0"
   }
 }

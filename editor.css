@@ -1,6 +1,5 @@
 .wp-block-simpletoc-toc {
     background: #fef8ee;
     border: 1px solid rgba(0,0,0,.2);
-    padding: 0;
-    margin: 0;
+    padding: 1em;
 }
