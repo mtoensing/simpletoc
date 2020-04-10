@@ -11,23 +11,22 @@
 
 namespace SimpleTOC;
 
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
 /**
  * Load all translations for our plugin from the MO file.
 */
-add_action( 'init', __NAMESPACE__ . '\\register_block' );
-add_action( 'init', __NAMESPACE__ . '\\simpletocinit' );
+add_action('init', __NAMESPACE__ . '\\register_block');
+add_action('init', __NAMESPACE__ . '\\simpletocinit');
 
-function simpletocinit() {
-
-  wp_register_style(
+function simpletocinit()
+{
+    wp_register_style(
       'simpletoc-editor',
-      plugins_url( 'editor.css', __FILE__ ),
+      plugins_url('editor.css', __FILE__),
       array( 'wp-edit-blocks' ),
-      filemtime( plugin_dir_path( __FILE__ ) . 'editor.css' )
+      filemtime(plugin_dir_path(__FILE__) . 'editor.css')
   );
-
 }
 
 /**
@@ -36,69 +35,68 @@ function simpletocinit() {
  *
  */
 
-function register_block() {
+function register_block()
+{
+    if (! function_exists('register_block_type')) {
+        // Gutenberg is not active.
+        return;
+    }
 
-  if ( ! function_exists( 'register_block_type' ) ) {
-  	// Gutenberg is not active.
-  	return;
-  }
-
-  wp_register_script(
-  	'simpletoc',
-  	plugins_url( 'build/index.js', __FILE__ ),
-  	[ 'wp-blocks', 'wp-i18n', 'wp-element' ],
-  	filemtime( plugin_dir_path( __FILE__ ) . 'build/index.js' )
+    wp_register_script(
+    'simpletoc',
+    plugins_url('build/index.js', __FILE__),
+    [ 'wp-blocks', 'wp-i18n', 'wp-element' ],
+    filemtime(plugin_dir_path(__FILE__) . 'build/index.js')
   );
 
 
-  register_block_type( 'simpletoc/toc', [
-  	'editor_script' => 'simpletoc',
+    register_block_type('simpletoc/toc', [
+    'editor_script' => 'simpletoc',
     'editor_style' => 'simpletoc-editor',
-  	'render_callback' => __NAMESPACE__ . '\\render_callback'
-   ] );
-
+    'render_callback' => __NAMESPACE__ . '\\render_callback'
+   ]);
 }
 
-function render_callback( $attributes, $content ) {
+function render_callback($attributes, $content)
+{
+    $blocks = parse_blocks(get_the_content(get_the_ID()));
 
-  $blocks = parse_blocks( get_the_content( get_the_ID()));
+    if (empty($blocks)) {
+        return 'No contents.';
+    }
 
-  if ( empty( $blocks ) ) {
-  	return 'No contents.';
-  }
+    //add only if block is used in this post.
+    add_filter('render_block', __NAMESPACE__ . '\\filter_block', 10, 2);
 
-  //add only if block is used in this post.
-  add_filter( 'render_block', __NAMESPACE__ . '\\filter_block', 10, 2 );
+    $headings = array_values(array_filter($blocks, function ($block) {
+        return $block['blockName'] === 'core/heading';
+    }));
 
-  $headings = array_values( array_filter( $blocks, function( $block ){
-  	return $block['blockName'] === 'core/heading';
-  }) );
+    if (empty($headings)) {
+        return 'No headings.';
+    }
 
-  if ( empty( $headings ) ) {
-  	return 'No headings.';
-  }
+    $heading_contents = array_column($headings, 'innerHTML');
 
-  $heading_contents = array_column( $headings, 'innerHTML');
+    $output .= '<ul class="toc">';
+    foreach ($heading_contents as $heading_content) {
+        preg_match('|<h[^>]+>(.*)</h[^>]+>|iU', $heading_content, $matches);
+        $link = sanitize_title_with_dashes($matches[1]);
+        $output .= '<li><a href="#' . $link . '">' . $matches[1] . '</a></li>';
+    }
+    $output .= '</ul>';
 
-  $output .= '<ul class="toc">';
-  foreach ( $heading_contents as $heading_content ) {
-  	preg_match( '|<h[^>]+>(.*)</h[^>]+>|iU', $heading_content , $matches );
-  	$link = sanitize_title_with_dashes( $matches[1]);
-  	$output .= '<li><a href="#' . $link . '">' . $matches[1] . '</a></li>';
-  }
-  $output .= '</ul>';
-
-  return $output;
+    return $output;
 }
 
-function filter_block( $block_content, $block ) {
+function filter_block($block_content, $block)
+{
+    if ($block['blockName'] !== 'core/heading') {
+        return $block_content;
+    }
 
-  if ( $block['blockName'] !== 'core/heading' ) {
-  	return $block_content;
-  }
-
-  preg_match('/\\n<(h[2-4](?:.*))>(.*)<\/(h[2-4])>\\n/', $block_content , $matches );
-  $link = sanitize_title_with_dashes( $matches[2] );
-  $start = preg_replace('#\s(id|class)="[^"]+"#', '', $matches[1]);
-  return "\n<{$start} id='{$link}'>" . $matches[2] . "</{$matches[3]}>\n";
+    preg_match('/\\n<(h[2-4](?:.*))>(.*)<\/(h[2-4])>\\n/', $block_content, $matches);
+    $link = sanitize_title_with_dashes($matches[2]);
+    $start = preg_replace('#\s(id|class)="[^"]+"#', '', $matches[1]);
+    return "\n<{$start} id='{$link}'>" . $matches[2] . "</{$matches[3]}>\n";
 }
