@@ -6,7 +6,13 @@ registerBlockType( 'simpletoc/toc', {
 	icon: 'list-view',
 	category: 'layout',
 	edit( { className } ) {
-        return <p className={ className }>SimpleTOC</p>;
+        return <p className={ className }>
+				<ul>
+					<li>SimpleTOC</li>
+					<li>SimpleTOC</li>
+					<li>SimpleTOC</li>
+				</ul>
+				</p>;
     },
 	save: props => {
 		return null;
