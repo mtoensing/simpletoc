@@ -1,5 +1,10 @@
 .wp-block-simpletoc-toc {
     background: #fef8ee;
     border: 1px solid rgba(0,0,0,.2);
+    padding: 0;
+}
+
+.wp-block-simpletoc-toc p.warning {
+    color: darkred;
     padding: 1em;
 }

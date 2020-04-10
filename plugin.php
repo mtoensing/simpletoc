@@ -63,7 +63,7 @@ function render_callback($attributes, $content)
     $blocks = parse_blocks(get_the_content(get_the_ID()));
 
     if (empty($blocks)) {
-        return 'No contents.';
+        return '<p class="warning"><strong>SimpleTOC:</strong> No contents.</p>';
     }
 
     //add only if block is used in this post.
@@ -74,7 +74,7 @@ function render_callback($attributes, $content)
     }));
 
     if (empty($headings)) {
-        return 'No headings found.';
+        return '<p class="warning"><strong>SimpleTOC:</strong> No headings found.</p>';
     }
 
     $heading_contents = array_column($headings, 'innerHTML');
