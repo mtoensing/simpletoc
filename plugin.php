@@ -96,7 +96,7 @@ function filter_block( $block_content, $block ) {
 		return $block_content;
 	}
 
-	preg_match('/\\n<(h[2-6](?:.*))>(.*)<\/(h[2-6])>\\n/', $block_content , $matches );
+	preg_match('/\\n<(h[2-4](?:.*))>(.*)<\/(h[2-4])>\\n/', $block_content , $matches );
 	$link = sanitize_title_with_dashes( $matches[2] );
   $start = preg_replace('#\s(id|class)="[^"]+"#', '', $matches[1]);
 	return "\n<{$start} id='{$link}'>" . $matches[2] . "</{$matches[3]}>\n";
