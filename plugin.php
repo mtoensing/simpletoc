@@ -1,13 +1,11 @@
 <?php
 /**
- * Plugin Name: SimpleTOC
+ * Plugin Name: SimpleTOC - Table of Contents Block
  * Plugin URI: https://github.com/mtoensing/simpletoc
- * Description: Adds a basic "table of contents" Gutenberg block.
+ * Description: Adds a basic "Table of Contents" Gutenberg block.
  * Version: 0.1
  * Author:  Marc Tönsing, Paul de Wouters
  * Author URI: marc.tv
- * Text Domain: simpletoc
- * Domain Path: /languages
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
@@ -18,13 +16,8 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Load all translations for our plugin from the MO file.
 */
-add_action( 'init', __NAMESPACE__ . '\\load_textdomain' );
 add_action( 'init', __NAMESPACE__ . '\\register_block' );
 add_action( 'init', __NAMESPACE__ . '\\simpletocinit' );
-
-function load_textdomain() {
-	load_plugin_textdomain( 'simpletoc', false, basename( __DIR__ ) . '/languages' );
-}
 
 function simpletocinit() {
 
@@ -66,24 +59,16 @@ function register_block() {
 		'render_callback' => __NAMESPACE__ . '\\render_callback'
 	 ] );
 
-  if ( function_exists( 'wp_set_script_translations' ) ) {
-    /**
-     * May be extended to wp_set_script_translations( 'my-handle', 'my-domain',
-     * plugin_dir_path( MY_PLUGIN ) . 'languages' ) ). For details see
-     * https://make.wordpress.org/core/2018/11/09/new-javascript-i18n-support-in-wordpress/
-     */
-    wp_set_script_translations( 'simpletoc', 'simpletoc-domain' );
-  }
-
 }
 
 function render_callback( $attributes, $content ) {
+
 	$blocks = parse_blocks( get_the_content( get_the_ID()));
 	if ( empty( $blocks ) ) {
 		return 'No contents.';
 	}
 
-  //add only if block is used.
+  //add only if block is used in this post.
   add_filter( 'render_block', __NAMESPACE__ . '\\filter_block', 10, 2 );
 
 	$headings = array_values( array_filter( $blocks, function( $block ){
@@ -93,9 +78,6 @@ function render_callback( $attributes, $content ) {
 		return 'No headings.';
 	}
 	$heading_contents = array_column( $headings, 'innerHTML');
-
-    // Keep it simple so that the user can add this.
-		//$output .= '<h2>' . __( 'Table of Contents', 'simpletoc' ) . '</h2>';
 
 		$output .= '<ul class="toc">';
 			foreach ( $heading_contents as $heading_content ) {

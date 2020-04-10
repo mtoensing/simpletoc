@@ -1,6 +1,6 @@
-=== SimpleTOC ===
+=== SimpleTOC - Table of Contents Block===
 Contributors:  MarcDK, pdewouters
-Tags: Gutenberg, TOC, block, Table of Contents, basic
+Tags: Gutenberg, TOC, block, Table of Contents, basic, simple
 Requires at least: 5.0
 Tested up to: 5.4
 Stable tag: 1.0
