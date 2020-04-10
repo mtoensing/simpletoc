@@ -38,24 +38,24 @@ function simpletocinit() {
 
 function register_block() {
 
-	if ( ! function_exists( 'register_block_type' ) ) {
-		// Gutenberg is not active.
-		return;
-	}
+  if ( ! function_exists( 'register_block_type' ) ) {
+  	// Gutenberg is not active.
+  	return;
+  }
 
-	wp_register_script(
-		'simpletoc',
-		plugins_url( 'build/index.js', __FILE__ ),
-		[ 'wp-blocks', 'wp-i18n', 'wp-element' ],
-		filemtime( plugin_dir_path( __FILE__ ) . 'build/index.js' )
-	);
+  wp_register_script(
+  	'simpletoc',
+  	plugins_url( 'build/index.js', __FILE__ ),
+  	[ 'wp-blocks', 'wp-i18n', 'wp-element' ],
+  	filemtime( plugin_dir_path( __FILE__ ) . 'build/index.js' )
+  );
 
 
-	register_block_type( 'simpletoc/toc', [
-		'editor_script' => 'simpletoc',
+  register_block_type( 'simpletoc/toc', [
+  	'editor_script' => 'simpletoc',
     'editor_style' => 'simpletoc-editor',
-		'render_callback' => __NAMESPACE__ . '\\render_callback'
-	 ] );
+  	'render_callback' => __NAMESPACE__ . '\\render_callback'
+   ] );
 
 }
 
