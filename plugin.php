@@ -6,6 +6,8 @@
  * Version: 0.1
  * Author:  Marc Tönsing, Paul de Wouters
  * Author URI: marc.tv
+ * Text Domain: simpletoc
+ * Domain Path: /languages
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
@@ -16,8 +18,17 @@ defined('ABSPATH') || exit;
 /**
  * Load all translations for our plugin from the MO file.
 */
-add_action('init', __NAMESPACE__ . '\\register_block');
+add_action( 'init', __NAMESPACE__ . '\\load_textdomain' );
+
+function load_textdomain() {
+	load_plugin_textdomain( 'simpletoc', false, basename( __DIR__ ) . '/languages' );
+}
+
+/**
+  * Initalise frontend and backend and register block
+**/
 add_action('init', __NAMESPACE__ . '\\simpletocinit');
+add_action('init', __NAMESPACE__ . '\\register_block');
 
 function simpletocinit()
 {
@@ -36,6 +47,15 @@ function simpletocinit()
     array( 'wp-edit-blocks' ),
     filemtime(plugin_dir_path(__FILE__) . 'editor.css')
     );
+
+    if ( function_exists( 'wp_set_script_translations' ) ) {
+      /**
+       * May be extended to wp_set_script_translations( 'my-handle', 'my-domain',
+       * plugin_dir_path( MY_PLUGIN ) . 'languages' ) ). For details see
+       * https://make.wordpress.org/core/2018/11/09/new-javascript-i18n-support-in-wordpress/
+       */
+      wp_set_script_translations( 'simpletoc', 'simpletoc-domain' );
+    }
 }
 
 /**
@@ -56,6 +76,7 @@ function register_block()
     'editor_style' => 'simpletoc-editor',
     'render_callback' => __NAMESPACE__ . '\\render_callback'
    ]);
+
 }
 
 function render_callback($attributes, $content)
@@ -78,7 +99,8 @@ function render_callback($attributes, $content)
     }
 
     $heading_contents = array_column($headings, 'innerHTML');
-
+    $output = '';
+    $output .= '<h2>' . __( 'Table of Contents', 'simpletoc' ) . '</h2>';
     $output .= '<ul class="toc">';
     foreach ($heading_contents as $heading_content) {
         preg_match('|<h[^>]+>(.*)</h[^>]+>|iU', $heading_content, $matches);
