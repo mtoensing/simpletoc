@@ -32,8 +32,6 @@ add_action('init', __NAMESPACE__ . '\\register_block');
 
 function simpletocinit()
 {
-    $asset_file = include(plugin_dir_path(__FILE__) . 'build/index.asset.php');
-
     wp_register_script(
     'simpletoc',
     plugins_url('build/index.js', __FILE__),
@@ -81,14 +79,15 @@ function register_block()
 
 function render_callback($attributes, $content)
 {
-    $blocks = parse_blocks(get_the_content(get_the_ID()));
+    //add only if block is used in this post.
+    add_filter('render_block', __NAMESPACE__ . '\\filter_block', 10, 2);
+
+    $post = get_post();
+    $blocks = parse_blocks($post->post_content);
 
     if (empty($blocks)) {
         return '<p class="warning"><strong>SimpleTOC:</strong> No contents.</p>';
     }
-
-    //add only if block is used in this post.
-    add_filter('render_block', __NAMESPACE__ . '\\filter_block', 10, 2);
 
     $headings = array_values(array_filter($blocks, function ($block) {
         return $block['blockName'] === 'core/heading';
@@ -99,13 +98,15 @@ function render_callback($attributes, $content)
     }
 
     $heading_contents = array_column($headings, 'innerHTML');
+
     $output = '';
     $output .= '<h2 class="toc-title">' . __( 'Table of Contents', 'simpletoc' ) . '</h2>';
     $output .= '<ul class="toc">';
     foreach ($heading_contents as $heading_content) {
         preg_match('|<h[^>]+>(.*)</h[^>]+>|iU', $heading_content, $matches);
+        $title = $matches[1];
         $link = sanitize_title_with_dashes($matches[1]);
-        $output .= '<li><a href="#' . $link . '">' . $matches[1] . '</a></li>';
+        $output .= '<li><a href="#' . $link . '">' . $title . '</a></li>';
     }
     $output .= '</ul>';
 
