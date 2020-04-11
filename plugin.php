@@ -100,7 +100,7 @@ function render_callback($attributes, $content)
 
     $heading_contents = array_column($headings, 'innerHTML');
     $output = '';
-    $output .= '<h2>' . __( 'Table of Contents', 'simpletoc' ) . '</h2>';
+    $output .= '<h2 class="toc-title">' . __( 'Table of Contents', 'simpletoc' ) . '</h2>';
     $output .= '<ul class="toc">';
     foreach ($heading_contents as $heading_content) {
         preg_match('|<h[^>]+>(.*)</h[^>]+>|iU', $heading_content, $matches);
