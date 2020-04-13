@@ -29,3 +29,7 @@ This plugin is forked from https://github.com/pdewouters/gutentoc by pdewouters 
 SimpleTOC can be found and installed via the Plugin menu within WordPress administration (Plugins -> Add New). Alternatively, it can be downloaded from WordPress.org and installed manually...
 
 In Gutenberg, add a Block and search for "SimpleTOC" or just "TOC". Safe your content before you use it.
+
+## Screenshots ##
+1. SimpleTOC Block in Gutenberg
+2. SimpleTOC in the post
