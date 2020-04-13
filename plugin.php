@@ -3,7 +3,7 @@
  * Plugin Name: SimpleTOC - Table of Contents Block
  * Plugin URI: https://github.com/mtoensing/simpletoc
  * Description: Adds a basic "Table of Contents" Gutenberg block.
- * Version: 0.1
+ * Version: 0.8
  * Author:  Marc Tönsing, Paul de Wouters
  * Author URI: marc.tv
  * Text Domain: simpletoc
@@ -99,18 +99,13 @@ function render_callback($attributes, $content)
 
     $heading_contents = array_column($headings, 'innerHTML');
 
-    $output = '';
-    $output .= '<h2 class="toc-title">' . __( 'Table of Contents', 'simpletoc' ) . '</h2>';
-    $output .= '<ul class="toc">';
-    foreach ($heading_contents as $heading_content) {
-        preg_match('|<h[^>]+>(.*)</h[^>]+>|iU', $heading_content, $matches);
-        $title = $matches[1];
-        $link = sanitize_title_with_dashes($matches[1]);
-        $output .= '<li><a href="#' . $link . '">' . $title . '</a></li>';
-    }
-    $output .= '</ul>';
+		foreach ($heading_contents as  $key => & $heading) {
+				$heading = trim( $heading );
+		}
 
+		$output = generateToc($heading_contents);
     return $output;
+
 }
 
 function filter_block($block_content, $block)
@@ -123,4 +118,69 @@ function filter_block($block_content, $block)
     $link = sanitize_title_with_dashes($matches[2]);
     $start = preg_replace('#\s(id|class)="[^"]+"#', '', $matches[1]);
     return "\n<{$start} id='{$link}'>" . $matches[2] . "</{$matches[3]}>\n";
+}
+
+function generateToc($matches) {
+		/* uses code from https://github.com/shazahm1/Easy-Table-of-Contents */
+    $list ='';
+    $current_depth      = 7;
+    $numbered_items     = array();
+    $numbered_items_min = null;
+
+    // find the minimum heading to establish our baseline
+    //for ( $i = 0; $i < count( $matches ); $i ++ ) {
+    foreach ( $matches as $i => $match ) {
+      if ( $current_depth > $matches[ $i ][2] ) {
+        $current_depth = (int) $matches[ $i ][2];
+      }
+    }
+
+    $numbered_items[ $current_depth ] = 0;
+    $numbered_items_min               = 7;
+
+    foreach ( $matches as $i => $match ) {
+
+      $level = $matches[ $i ][2];
+      $count = $i + 1;
+
+      if ( $current_depth == (int) $matches[ $i ][2] ) {
+
+        $list .= '<li>';
+      }
+
+      // start lists
+      if ( $current_depth != (int) $matches[ $i ][2] ) {
+
+        for ( $current_depth; $current_depth < (int) $matches[ $i ][2]; $current_depth++ ) {
+
+          $numbered_items[ $current_depth + 1 ] = 0;
+          $list .= '<ul><li>';
+        }
+      }
+
+			$title = strip_tags($match);
+			$link = sanitize_title_with_dashes($title);
+      $list .= '<a href="#' . $link . '">' . $title . '</a>';
+
+      // end lists
+      if ( $i != count( $matches ) - 1 ) {
+
+        if ( $current_depth > (int) $matches[ $i + 1 ][2] ) {
+
+          for ( $current_depth; $current_depth > (int) $matches[ $i + 1 ][2]; $current_depth-- ) {
+
+            $list .= '</li></ul>';
+            $numbered_items[ $current_depth ] = 0;
+          }
+        }
+
+        if ( $current_depth == (int) @$matches[ $i + 1 ][2] ) {
+
+          $list .= '</li>';
+        }
+      }
+    }
+		$html = '<h2 class="toc-title">' . __( 'Table of Contents', 'simpletoc' ) . '</h2>';
+		$html .= '<ul class="toc">' . $list . "</li></ul>";
+    return $html;
 }
