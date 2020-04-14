@@ -11,7 +11,7 @@ Adds a custom "table of contents" Gutenberg block.
 
 == Description ==
 
-In Gutenberg, add a Block and search for "SimpleTOC" or just "TOC". You need to safe your post before you can add the block. It works by parsing the post content and retrieving the heading blocks and creates a new dynamic block with a list of links to the headings.
+In Gutenberg, add a block and search for "SimpleTOC" or just "TOC". You need to save your post before you add the block. It works by parsing the post content and retrieving the heading blocks and creates a new dynamic block with a list of links to the headings.
 
 = Features =
 
@@ -29,7 +29,7 @@ This plugin is forked from https://github.com/pdewouters/gutentoc by pdewouters 
 
 SimpleTOC can be found and installed via the Plugin menu within WordPress administration (Plugins -> Add New). Alternatively, it can be downloaded from WordPress.org and installed manually...
 
-In Gutenberg, add a Block and search for "SimpleTOC" or just "TOC". Safe your content before you use it.
+In Gutenberg, add a block and search for "SimpleTOC" or just "TOC". Please save your content before you use the block.
 
 ## Screenshots ##
 1. SimpleTOC Block in Gutenberg
