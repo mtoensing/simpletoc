@@ -180,7 +180,7 @@ function generateToc($matches) {
         }
       }
     }
-		$html = '<h2 class="toc-title">' . __( 'Table of Contents', 'simpletoc' ) . '</h2>';
-		$html .= '<ul class="toc">' . $list . "</li></ul>";
+		$html = '<h2 class="simpletoc-title">' . __( 'Table of Contents', 'simpletoc' ) . '</h2>';
+		$html .= '<ul class="simpletoc">' . $list . "</li></ul>";
     return $html;
 }
