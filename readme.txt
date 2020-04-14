@@ -15,6 +15,7 @@ It works by parsing the post content and retrieving the heading blocks and creat
 
 = Features =
 
+* Designed for Gutenberg.
 * Generates an unordered list.
 * Styled by your theme.
 * No customizations needed.
