@@ -3,7 +3,7 @@ Contributors:  MarcDK
 Tags: Gutenberg, TOC, block, Table of Contents, basic, simple, twenty-twenty, twenty-nineteen
 Requires at least: 5.0
 Tested up to: 5.4
-Stable tag: 0.9
+Stable tag: 1.0
 License: GPL2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
