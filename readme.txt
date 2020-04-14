@@ -15,13 +15,14 @@ In Gutenberg, add a block and search for "SimpleTOC" or just "TOC". You need to 
 
 = Features =
 
-* Designed for Gutenberg.
-* Generates an unordered list.
-* Styled by your theme.
-* No customizations needed.
-* Compatible with AMP plugins.
-* SEO friendly. No javascript.
-* Comes with English and German translations.
+* Designed for Gutenberg
+* Provides an unordered list
+* Simple and clean HTML   
+* Styled by your theme
+* No customizations needed
+* Compatible with AMP plugins
+* SEO friendly. No javascript
+* Comes with English and German translations
 
 This plugin is forked from https://github.com/pdewouters/gutentoc by pdewouters and uses code from https://github.com/shazahm1/Easy-Table-of-Contents by shazahm1
 
