@@ -3,7 +3,7 @@ Contributors:  MarcDK
 Tags: Gutenberg, TOC, block, Table of Contents, basic, simple
 Requires at least: 5.0
 Tested up to: 5.4
-Stable tag: 1.0
+Stable tag: 0.9
 License: GPL2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -11,7 +11,7 @@ Adds a custom "table of contents" Gutenberg block.
 
 == Description ==
 
-It works by parsing the post content and retrieving the heading blocks and creates a new dynamic block with a list of links to the headings. In Gutenberg, add a Block and search for "SimpleTOC" or just "TOC". You need to safe your post before you can add the block.
+In Gutenberg, add a Block and search for "SimpleTOC" or just "TOC". You need to safe your post before you can add the block. It works by parsing the post content and retrieving the heading blocks and creates a new dynamic block with a list of links to the headings.
 
 = Features =
 
