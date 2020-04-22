@@ -75,65 +75,55 @@
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
-/*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_server_side_render__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/server-side-render */ "@wordpress/server-side-render");
-/* harmony import */ var _wordpress_server_side_render__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_server_side_render__WEBPACK_IMPORTED_MODULE_1__);
+/*! no static exports found */
+/***/ (function(module, exports) {
 
 var _wp$i18n = wp.i18n,
     __ = _wp$i18n.__,
     setLocaleData = _wp$i18n.setLocaleData;
-var registerBlockType = wp.blocks.registerBlockType;
-var listul = wp.element.createElement('svg', {
+var simpletoc = wp.element.createElement('svg', {
   width: 20,
   height: 20
 }, wp.element.createElement('path', {
   d: "M5.5 7C4.67 7 4 6.33 4 5.5 4 4.68 4.67 4 5.5 4 6.32 4 7 4.68 7 5.5 7 6.33 6.32 7 5.5 7zM8 5h9v1H8V5zm-2.5 7c-.83 0-1.5-.67-1.5-1.5C4 9.68 4.67 9 5.5 9c.82 0 1.5.68 1.5 1.5 0 .83-.68 1.5-1.5 1.5zM8 10h9v1H8v-1zm-2.5 7c-.83 0-1.5-.67-1.5-1.5 0-.82.67-1.5 1.5-1.5.82 0 1.5.68 1.5 1.5 0 .83-.68 1.5-1.5 1.5zM8 15h9v1H8v-1z"
 }));
+var el = wp.element.createElement;
+var registerBlockType = wp.blocks.registerBlockType;
+var BlockControls = wp.blockEditor.BlockControls;
+var ServerSideRender = wp.serverSideRender;
+var Toolbar = wp.components.Toolbar;
+var IconButton = wp.components.Button;
+
+function sendfakeAttribute(props) {
+  // this acuallty triggers the ServerSideRender again ¯\_(ツ)_/¯
+  props.setAttributes({
+    updated: Date.now()
+  });
+}
 
 registerBlockType('simpletoc/toc', {
   title: __('SimpleTOC', 'simpletoc'),
-  icon: listul,
+  icon: simpletoc,
   category: 'layout',
   edit: function edit(props) {
-    return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("p", {
-      className: props.className
-    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_server_side_render__WEBPACK_IMPORTED_MODULE_1___default.a, {
-      block: "simpletoc/toc",
+    return [el(BlockControls, {
+      key: 'controls'
+    }, el(Toolbar, null, el(IconButton, {
+      className: 'components-icon-button components-toolbar__control',
+      label: __('update', simpletoc),
+      onClick: function onClick() {
+        sendfakeAttribute(props);
+      },
+      icon: 'update'
+    }))), el(ServerSideRender, {
+      block: props.name,
       attributes: props.attributes
-    }));
+    })];
   },
   save: function save(props) {
     return null;
   }
 });
-
-/***/ }),
-
-/***/ "@wordpress/element":
-/*!******************************************!*\
-  !*** external {"this":["wp","element"]} ***!
-  \******************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-(function() { module.exports = this["wp"]["element"]; }());
-
-/***/ }),
-
-/***/ "@wordpress/server-side-render":
-/*!***************************************************!*\
-  !*** external {"this":["wp","serverSideRender"]} ***!
-  \***************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-(function() { module.exports = this["wp"]["serverSideRender"]; }());
 
 /***/ })
 

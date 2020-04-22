@@ -1,6 +1,5 @@
 const { __, setLocaleData } = wp.i18n;
-const { registerBlockType } = wp.blocks;
-const listul  = wp.element.createElement('svg',
+const simpletoc  = wp.element.createElement('svg',
 	{
 		width: 20,
 		height: 20
@@ -11,21 +10,54 @@ const listul  = wp.element.createElement('svg',
 		}
 	)
 );
-import ServerSideRender from '@wordpress/server-side-render';
+const el = wp.element.createElement;
+const registerBlockType = wp.blocks.registerBlockType;
+const BlockControls = wp.blockEditor.BlockControls;
+const ServerSideRender = wp.serverSideRender;
+const Toolbar = wp.components.Toolbar;
+const IconButton = wp.components.Button;
+
+
+
+function sendfakeAttribute(props) {
+		// this acuallty triggers the ServerSideRender again ¯\_(ツ)_/¯
+		props.setAttributes({ updated: Date.now() });
+}
 
 registerBlockType( 'simpletoc/toc', {
 	title: __( 'SimpleTOC', 'simpletoc' ),
-	icon: listul,
+	icon: simpletoc,
 	category: 'layout',
 	edit: function( props ) {
-        return (
-					<p className={ props.className }>
-            <ServerSideRender
-                block="simpletoc/toc"
-                attributes={ props.attributes }
-            />
-					</p>
-        );
+
+					return [
+							el(
+								BlockControls,
+								{ key: 'controls' },
+								el(
+									Toolbar,
+									null,
+									el(
+										IconButton,
+										{
+											className: 'components-icon-button components-toolbar__control',
+											label: __( 'update' , simpletoc ),
+											onClick: function() { sendfakeAttribute(props) },
+											icon: 'update'
+										}
+									)
+								)
+							),
+							el(
+								ServerSideRender,
+								{
+									block: props.name,
+									attributes: props.attributes
+								}
+							)
+						];
+
+
     },
 	save: props => {
 		return null;

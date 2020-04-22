@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: SimpleTOC - Table of Contents Block\n"
-"POT-Creation-Date: 2020-04-22 18:16+0200\n"
-"PO-Revision-Date: 2020-04-22 18:16+0200\n"
+"POT-Creation-Date: 2020-04-22 23:14+0200\n"
+"PO-Revision-Date: 2020-04-22 23:18+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es_ES\n"
@@ -20,7 +20,7 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: plugin.php:174
+#: plugin.php:184
 msgid "Table of Contents"
 msgstr "Tabla de contenido"
 

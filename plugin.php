@@ -21,13 +21,17 @@ defined('ABSPATH') || exit;
 **/
 add_action('init', __NAMESPACE__ . '\\simpletocinit');
 add_action('init', __NAMESPACE__ . '\\register_block');
+add_action('init', __NAMESPACE__ . '\\simpletoc_set_script_translations');
 
-function simpletocinit()
-{
+function simpletoc_set_script_translations() {
+		wp_set_script_translations( 'simpletoc-script', 'simpletoc' );
+}
+
+function simpletocinit() {
     wp_register_script(
     'simpletoc',
     plugins_url('build/index.js', __FILE__),
-    [ 'wp-blocks', 'wp-i18n', 'wp-element', 'wp-server-side-render' ],
+    [ 'wp-blocks','wp-editor', 'wp-i18n', 'wp-element', 'wp-server-side-render' , 'wp-i18n' ],
     filemtime(plugin_dir_path(__FILE__) . 'build/index.js')
     );
 
@@ -38,13 +42,13 @@ function simpletocinit()
     filemtime(plugin_dir_path(__FILE__) . 'editor.css')
     );
 
-    if ( function_exists( 'wp_set_script_translations' ) ) {
-      /**
-       * May be extended to wp_set_script_translations( 'my-handle', 'my-domain',
-       * plugin_dir_path( MY_PLUGIN ) . 'languages' ) ). For details see
-       * https://make.wordpress.org/core/2018/11/09/new-javascript-i18n-support-in-wordpress/
-       */
-      wp_set_script_translations( 'simpletoc', 'simpletoc-domain' );
+    if (function_exists('wp_set_script_translations')) {
+        /**
+         * May be extended to wp_set_script_translations( 'my-handle', 'my-domain',
+         * plugin_dir_path( MY_PLUGIN ) . 'languages' ) ). For details see
+         * https://make.wordpress.org/core/2018/11/09/new-javascript-i18n-support-in-wordpress/
+         */
+        wp_set_script_translations('simpletoc', 'simpletoc-domain');
     }
 }
 
@@ -54,8 +58,7 @@ function simpletocinit()
  *
  */
 
-function register_block()
-{
+function register_block() {
     if (! function_exists('register_block_type')) {
         // Gutenberg is not active.
         return;
@@ -64,13 +67,29 @@ function register_block()
     register_block_type('simpletoc/toc', [
     'editor_script' => 'simpletoc',
     'editor_style' => 'simpletoc-editor',
+        'attributes' => array(
+        'plugin' => array(
+            'default' => array(
+                'post_id' => 123,
+                'key' => 'group_duq8f62hf',
+                'title' => 'My Block',
+            ),
+            '_builtIn' => true,
+        ),
+        'updated' => array(
+            'type' => 'number',
+            'default' => 0,
+            '_builtIn' => true,
+        ),
+        'others' => array(
+            'type' => 'string',
+        )
+    ),
     'render_callback' => __NAMESPACE__ . '\\render_callback'
    ]);
-
 }
 
-function render_callback($attributes, $content)
-{
+function render_callback($attributes, $content) {
     //add only if block is used in this post.
     add_filter('render_block', __NAMESPACE__ . '\\filter_block', 10, 2);
 
@@ -91,17 +110,15 @@ function render_callback($attributes, $content)
 
     $heading_contents = array_column($headings, 'innerHTML');
 
-		foreach ($heading_contents as  $key => & $heading) {
-				$heading = trim( $heading );
-		}
+    foreach ($heading_contents as  $key => & $heading) {
+        $heading = trim($heading);
+    }
 
-		$output = generateToc($heading_contents);
+    $output = generateToc($heading_contents);
     return $output;
-
 }
 
-function filter_block($block_content, $block)
-{
+function filter_block($block_content, $block) {
     if ($block['blockName'] !== 'core/heading') {
         return $block_content;
     }
@@ -113,7 +130,7 @@ function filter_block($block_content, $block)
 }
 
 function generateToc($matches) {
-		/* uses code from https://github.com/shazahm1/Easy-Table-of-Contents */
+    /* uses code from https://github.com/shazahm1/Easy-Table-of-Contents */
     $list ='';
     $current_depth      = 7;
     $numbered_items     = array();
@@ -121,58 +138,50 @@ function generateToc($matches) {
 
     // find the minimum heading to establish our baseline
     //for ( $i = 0; $i < count( $matches ); $i ++ ) {
-    foreach ( $matches as $i => $match ) {
-      if ( $current_depth > $matches[ $i ][2] ) {
-        $current_depth = (int) $matches[ $i ][2];
-      }
+    foreach ($matches as $i => $match) {
+        if ($current_depth > $matches[ $i ][2]) {
+            $current_depth = (int) $matches[ $i ][2];
+        }
     }
 
     $numbered_items[ $current_depth ] = 0;
     $numbered_items_min               = 7;
 
-    foreach ( $matches as $i => $match ) {
+    foreach ($matches as $i => $match) {
+        $level = $matches[ $i ][2];
+        $count = $i + 1;
 
-      $level = $matches[ $i ][2];
-      $count = $i + 1;
-
-      if ( $current_depth == (int) $matches[ $i ][2] ) {
-
-        $list .= '<li>';
-      }
-
-      // start lists
-      if ( $current_depth != (int) $matches[ $i ][2] ) {
-
-        for ( $current_depth; $current_depth < (int) $matches[ $i ][2]; $current_depth++ ) {
-
-          $numbered_items[ $current_depth + 1 ] = 0;
-          $list .= '<ul><li>';
-        }
-      }
-
-			$title = strip_tags($match);
-			$link = sanitize_title_with_dashes($title);
-      $list .= '<a href="#' . $link . '">' . $title . '</a>';
-
-      // end lists
-      if ( $i != count( $matches ) - 1 ) {
-
-        if ( $current_depth > (int) $matches[ $i + 1 ][2] ) {
-
-          for ( $current_depth; $current_depth > (int) $matches[ $i + 1 ][2]; $current_depth-- ) {
-
-            $list .= '</li></ul>';
-            $numbered_items[ $current_depth ] = 0;
-          }
+        if ($current_depth == (int) $matches[ $i ][2]) {
+            $list .= '<li>';
         }
 
-        if ( $current_depth == (int) @$matches[ $i + 1 ][2] ) {
-
-          $list .= '</li>';
+        // start lists
+        if ($current_depth != (int) $matches[ $i ][2]) {
+            for ($current_depth; $current_depth < (int) $matches[ $i ][2]; $current_depth++) {
+                $numbered_items[ $current_depth + 1 ] = 0;
+                $list .= '<ul><li>';
+            }
         }
-      }
+
+        $title = strip_tags($match);
+        $link = sanitize_title_with_dashes($title);
+        $list .= '<a href="#' . $link . '">' . $title . '</a>';
+
+        // end lists
+        if ($i != count($matches) - 1) {
+            if ($current_depth > (int) $matches[ $i + 1 ][2]) {
+                for ($current_depth; $current_depth > (int) $matches[ $i + 1 ][2]; $current_depth--) {
+                    $list .= '</li></ul>';
+                    $numbered_items[ $current_depth ] = 0;
+                }
+            }
+
+            if ($current_depth == (int) @$matches[ $i + 1 ][2]) {
+                $list .= '</li>';
+            }
+        }
     }
-		$html = '<h2 class="simpletoc-title">' . __( 'Table of Contents', 'simpletoc' ) . '</h2>';
-		$html .= '<ul class="simpletoc">' . $list . "</li></ul>";
+    $html = '<h2 class="simpletoc-title">' . __('Table of Contents', 'simpletoc') . '</h2>';
+    $html .= '<ul class="simpletoc">' . $list . "</li></ul>";
     return $html;
 }
