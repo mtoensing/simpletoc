@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: SimpleTOC - Table of Contents Block\n"
-"POT-Creation-Date: 2020-04-11 20:15+0200\n"
-"PO-Revision-Date: 2020-04-11 20:15+0200\n"
+"POT-Creation-Date: 2020-04-22 16:54+0200\n"
+"PO-Revision-Date: 2020-04-22 18:15+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_FR\n"
@@ -20,7 +20,7 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: plugin.php:103
+#: plugin.php:174
 msgid "Table of Contents"
 msgstr "Table des matières"
 
@@ -30,16 +30,16 @@ msgstr "SimpleTOC - Table des matières"
 
 #. Plugin URI of the plugin/theme
 msgid "https://github.com/mtoensing/simpletoc"
-msgstr ""
+msgstr "https://github.com/mtoensing/simpletoc"
 
 #. Description of the plugin/theme
 msgid "Adds a basic \"Table of Contents\" Gutenberg block."
-msgstr ""
+msgstr "Ajoute un bloc Gutenberg de base \"Table des matières\"."
 
 #. Author of the plugin/theme
-msgid "Marc Tönsing, Paul de Wouters"
-msgstr ""
+msgid "MarcDK"
+msgstr "MarcDK"
 
 #. Author URI of the plugin/theme
 msgid "marc.tv"
-msgstr ""
+msgstr "marc.tv"
