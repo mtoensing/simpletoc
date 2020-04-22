@@ -16,15 +16,6 @@ namespace SimpleTOC;
 defined('ABSPATH') || exit;
 
 /**
- * Load all translations for our plugin from the MO file.
-*/
-add_action( 'init', __NAMESPACE__ . '\\load_textdomain' );
-
-function load_textdomain() {
-	load_plugin_textdomain( 'simpletoc', false, basename( __DIR__ ) . '/languages' );
-}
-
-/**
   * Initalise frontend and backend and register block
 **/
 add_action('init', __NAMESPACE__ . '\\simpletocinit');

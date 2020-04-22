@@ -1,10 +1,10 @@
 === SimpleTOC - Table of Contents Block ===
 Contributors:  MarcDK
-Tags: Gutenberg, TOC, block, Table of Contents, basic, simple, twenty-twenty, twenty-nineteen
+Tags: Gutenberg, TOC, Table of Contents, Inhaltsverzeichnis, twenty-twenty
 Requires at least: 5.0
 Tested up to: 5.4
 Stable tag: 1.0
-License: GPL2
+License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Adds a custom "table of contents" Gutenberg block.
