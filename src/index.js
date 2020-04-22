@@ -1,4 +1,10 @@
-const { __, setLocaleData } = wp.i18n;
+const { __ } = wp.i18n;
+const el = wp.element.createElement;
+const registerBlockType = wp.blocks.registerBlockType;
+const BlockControls = wp.blockEditor.BlockControls;
+const ServerSideRender = wp.serverSideRender;
+const Toolbar = wp.components.Toolbar;
+const IconButton = wp.components.Button;
 const simpletoc  = wp.element.createElement('svg',
 	{
 		width: 20,
@@ -10,14 +16,6 @@ const simpletoc  = wp.element.createElement('svg',
 		}
 	)
 );
-const el = wp.element.createElement;
-const registerBlockType = wp.blocks.registerBlockType;
-const BlockControls = wp.blockEditor.BlockControls;
-const ServerSideRender = wp.serverSideRender;
-const Toolbar = wp.components.Toolbar;
-const IconButton = wp.components.Button;
-
-
 
 function sendfakeAttribute(props) {
 		// this acuallty triggers the ServerSideRender again ¯\_(ツ)_/¯
@@ -29,7 +27,6 @@ registerBlockType( 'simpletoc/toc', {
 	icon: simpletoc,
 	category: 'layout',
 	edit: function( props ) {
-
 					return [
 							el(
 								BlockControls,
@@ -41,7 +38,7 @@ registerBlockType( 'simpletoc/toc', {
 										IconButton,
 										{
 											className: 'components-icon-button components-toolbar__control',
-											label: __( 'update' , simpletoc ),
+											label: __( 'update' , 'simpletoc' ),
 											onClick: function() { sendfakeAttribute(props) },
 											icon: 'update'
 										}
