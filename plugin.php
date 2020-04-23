@@ -3,7 +3,7 @@
  * Plugin Name: SimpleTOC - Table of Contents Block
  * Plugin URI: https://github.com/mtoensing/simpletoc
  * Description: Adds a basic "Table of Contents" Gutenberg block.
- * Version: 1.6
+ * Version: 1.7
  * Author: MarcDK
  * Author URI: marc.tv
  * Text Domain: simpletoc
@@ -97,7 +97,9 @@ function render_callback($attributes, $content) {
     $blocks = parse_blocks($post->post_content);
 
     if (empty($blocks)) {
-        return '<p class="warning"><strong>SimpleTOC:</strong> No contents.</p>';
+				$html = '<h2 class="simpletoc-title">' . __('Table of Contents', 'simpletoc') . '</h2>';
+        $html .= '<div class="components-notice is-warning"><strong>' . __('No blocks found.', 'simpletoc')  . ' </strong><span>' . __('Save or update post first.', 'simpletoc') . '</span></div>';
+				return $html;
     }
 
     $headings = array_values(array_filter($blocks, function ($block) {
@@ -105,8 +107,10 @@ function render_callback($attributes, $content) {
     }));
 
     if (empty($headings)) {
-        return '<p class="warning"><strong>SimpleTOC:</strong> No headings found.</p>';
-    }
+				$html = '<h2 class="simpletoc-title">' . __('Table of Contents', 'simpletoc') . '</h2>';
+        $html .= '<div class="components-notice is-warning"><strong>' . __('No headings found.', 'simpletoc') . ' </strong><span>' . __('Save or update post first.', 'simpletoc') . '</span></div>';
+				return $html;
+		}
 
     $heading_contents = array_column($headings, 'innerHTML');
 
