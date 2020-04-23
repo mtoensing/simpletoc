@@ -38,7 +38,7 @@ registerBlockType( 'simpletoc/toc', {
 										IconButton,
 										{
 											className: 'components-icon-button components-toolbar__control',
-											label: __( 'update' , 'simpletoc' ),
+											label: __( 'Update table of contents' , 'simpletoc' ),
 											onClick: function() { sendfakeAttribute(props) },
 											icon: 'update'
 										}
