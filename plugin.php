@@ -3,7 +3,7 @@
  * Plugin Name: SimpleTOC - Table of Contents Block
  * Plugin URI: https://github.com/mtoensing/simpletoc
  * Description: Adds a basic "Table of Contents" Gutenberg block.
- * Version: 1.7
+ * Version: 1.8
  * Author: MarcDK
  * Author URI: marc.tv
  * Text Domain: simpletoc
@@ -19,19 +19,15 @@ defined('ABSPATH') || exit;
 /**
   * Initalise frontend and backend and register block
 **/
-add_action('init', __NAMESPACE__ . '\\simpletocinit');
+add_action('init', __NAMESPACE__ . '\\init');
 add_action('init', __NAMESPACE__ . '\\register_block');
-add_action('init', __NAMESPACE__ . '\\simpletoc_set_script_translations');
 
-function simpletoc_set_script_translations() {
-		wp_set_script_translations( 'simpletoc-script', 'simpletoc' );
-}
+function init() {
 
-function simpletocinit() {
     wp_register_script(
     'simpletoc',
     plugins_url('build/index.js', __FILE__),
-    [ 'wp-blocks','wp-editor', 'wp-i18n', 'wp-element', 'wp-server-side-render' , 'wp-i18n' ],
+    [ 'wp-i18n', 'wp-blocks', 'wp-editor', 'wp-element', 'wp-server-side-render'],
     filemtime(plugin_dir_path(__FILE__) . 'build/index.js')
     );
 
@@ -42,14 +38,15 @@ function simpletocinit() {
     filemtime(plugin_dir_path(__FILE__) . 'editor.css')
     );
 
-    if (function_exists('wp_set_script_translations')) {
-        /**
-         * May be extended to wp_set_script_translations( 'my-handle', 'my-domain',
-         * plugin_dir_path( MY_PLUGIN ) . 'languages' ) ). For details see
-         * https://make.wordpress.org/core/2018/11/09/new-javascript-i18n-support-in-wordpress/
-         */
-        wp_set_script_translations('simpletoc', 'simpletoc-domain');
-    }
+		if (function_exists('wp_set_script_translations')) {
+				/**
+				 * May be extended to wp_set_script_translations( 'my-handle', 'my-domain',
+				 * plugin_dir_path( MY_PLUGIN ) . 'languages' ) ). For details see
+				 * https://make.wordpress.org/core/2018/11/09/new-javascript-i18n-support-in-wordpress/
+				 */
+				wp_set_script_translations('simpletoc-js', 'simpletoc');
+		}
+
 }
 
 /**
