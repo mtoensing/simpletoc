@@ -3,7 +3,7 @@
  * Plugin Name: SimpleTOC - Table of Contents Block
  * Plugin URI: https://github.com/mtoensing/simpletoc
  * Description: Adds a basic "Table of Contents" Gutenberg block.
- * Version: 1.8
+ * Version: 1.9
  * Author: MarcDK
  * Author URI: marc.tv
  * Text Domain: simpletoc
@@ -25,7 +25,7 @@ add_action('init', __NAMESPACE__ . '\\register_block');
 function init() {
 
     wp_register_script(
-    'simpletoc',
+    'simpletoc-js',
     plugins_url('build/index.js', __FILE__),
     [ 'wp-i18n', 'wp-blocks', 'wp-editor', 'wp-element', 'wp-server-side-render'],
     filemtime(plugin_dir_path(__FILE__) . 'build/index.js')
@@ -38,14 +38,7 @@ function init() {
     filemtime(plugin_dir_path(__FILE__) . 'editor.css')
     );
 
-		if (function_exists('wp_set_script_translations')) {
-				/**
-				 * May be extended to wp_set_script_translations( 'my-handle', 'my-domain',
-				 * plugin_dir_path( MY_PLUGIN ) . 'languages' ) ). For details see
-				 * https://make.wordpress.org/core/2018/11/09/new-javascript-i18n-support-in-wordpress/
-				 */
-				wp_set_script_translations('simpletoc-js', 'simpletoc');
-		}
+		wp_set_script_translations('simpletoc-js', 'simpletoc');
 
 }
 
@@ -62,7 +55,7 @@ function register_block() {
     }
 
     register_block_type('simpletoc/toc', [
-    'editor_script' => 'simpletoc',
+    'editor_script' => 'simpletoc-js',
     'editor_style' => 'simpletoc-editor',
         'attributes' => array(
         'plugin' => array(
