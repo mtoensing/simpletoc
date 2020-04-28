@@ -125,11 +125,10 @@ function filter_block($block_content, $block) {
 }
 
 function generateToc($matches) {
-    /* uses code from https://github.com/shazahm1/Easy-Table-of-Contents */
+    /*  code from https://github.com/shazahm1/Easy-Table-of-Contents */
     $list ='';
     $current_depth      = 7;
     $numbered_items     = array();
-    $numbered_items_min = null;
 
     // find the minimum heading to establish our baseline
     //for ( $i = 0; $i < count( $matches ); $i ++ ) {
@@ -140,9 +139,9 @@ function generateToc($matches) {
     }
 
     $numbered_items[ $current_depth ] = 0;
-    $numbered_items_min               = 7;
 
     foreach ($matches as $i => $match) {
+
         $level = $matches[ $i ][2];
         $count = $i + 1;
 
@@ -174,6 +173,25 @@ function generateToc($matches) {
             if ($current_depth == (int) @$matches[ $i + 1 ][2]) {
                 $list .= '</li>';
             }
+        // last heading
+        } else {
+
+          // traverse heading in reverse from bottom to top
+          for (end($matches); ($currentKey=key($matches))!==null; prev($matches)){
+
+            // make sure it is not the first heading
+            if( $currentKey != 0 ) {
+                $current_depth = $matches[ $currentKey ][2];
+                $prevdepth = $matches[ $currentKey - 1 ][2];
+
+                // is current heading level higher than previous?
+                if( $current_depth > $prevdepth ) {
+                  $list .= '</li></ul>';
+                }
+            }
+
+          }
+
         }
     }
     $html = '<h2 class="simpletoc-title">' . __('Table of Contents', 'simpletoc') . '</h2>';
