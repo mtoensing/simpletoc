@@ -3,7 +3,7 @@ Contributors:  MarcDK
 Tags: Gutenberg, TOC, Table of Contents, Inhaltsverzeichnis, twenty-twenty
 Requires at least: 5.0
 Tested up to: 5.4
-Stable tag: 2.3
+Stable tag: 2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -39,5 +39,6 @@ In Gutenberg, add a block and search for "SimpleTOC" or just "TOC". Please save 
 
 == Changelog ==
 
-= 2.2  =
+= 2.4 =
 * Fixed: Handling of German Umlauts in url slugs for older browers.
+Notice: This will change the links in the toc and the headlines. 
