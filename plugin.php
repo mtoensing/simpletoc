@@ -3,7 +3,7 @@
  * Plugin Name: SimpleTOC - Table of Contents Block
  * Plugin URI: https://github.com/mtoensing/simpletoc
  * Description: Adds a basic "Table of Contents" Gutenberg block.
- * Version: 2.1
+ * Version: 2.2
  * Author: MarcDK
  * Author URI: marc.tv
  * Text Domain: simpletoc
@@ -112,6 +112,12 @@ function render_callback($attributes, $content) {
     return $output;
 }
 
+function simpletoc_sanitize_string($string){
+  $string_without_accents = remove_accents($string);
+  $sanitized_string = sanitize_title_with_dashes($string_without_accents);
+  return $sanitized_string;
+}
+
 function filter_block($block_content, $block) {
     if ($block['blockName'] !== 'core/heading') {
         return $block_content;
@@ -119,7 +125,7 @@ function filter_block($block_content, $block) {
 
     //$block_content = strip_tags($block_content, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
     preg_match('/\\n<(h[2-4](?:.*))>(.*)<\/(h[2-4])>\\n/', $block_content, $matches);
-    $link = sanitize_title_with_dashes($matches[2]);
+    $link = simpletoc_sanitize_string($matches[2]);
     $start = preg_replace('#\s(id|class)="[^"]+"#', '', $matches[1]);
     return "\n<{$start} id='{$link}'>" . $matches[2] . "</{$matches[3]}>\n";
 }
@@ -158,7 +164,7 @@ function generateToc($matches) {
         }
 
         $title = strip_tags($match);
-        $link = sanitize_title_with_dashes($title);
+        $link = simpletoc_sanitize_string( $title );
         $list .= '<a href="#' . $link . '">' . $title . '</a>';
 
         // end lists
