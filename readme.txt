@@ -36,9 +36,3 @@ In Gutenberg, add a block and search for "SimpleTOC" or just "TOC". Please save 
 ## Screenshots ##
 1. SimpleTOC block in Gutenberg editor
 2. SimpleTOC in the post
-
-== Changelog ==
-
-= 2.4 =
-* Fixed: Handling of German Umlauts in url slugs for older browers.
-Notice: This will change the links in the toc and the headlines.
