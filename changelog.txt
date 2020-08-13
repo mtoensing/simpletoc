@@ -1,0 +1,8 @@
+== Changelog ==
+
+= 2.5 =
+* removed editor block styles 
+
+= 2.4 =
+* Fixed: Handling of German Umlauts in url slugs for older browers.
+Notice: This will change the links in the toc and the headlines.
