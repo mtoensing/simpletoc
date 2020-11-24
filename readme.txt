@@ -1,9 +1,9 @@
 === SimpleTOC - Table of Contents Block ===
 Contributors:  MarcDK
-Tags: Gutenberg, TOC, Table of Contents, Inhaltsverzeichnis, twenty-twenty
+Tags: Gutenberg, blocks, gutenberg blocks, TOC, Table of Contents, Inhaltsverzeichnis
 Requires at least: 5.0
-Tested up to: 5.5
-Stable tag: 2.5
+Tested up to: 5.6
+Stable tag: 2.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,15 +15,15 @@ In Gutenberg, add a block and search for "SimpleTOC" or just "TOC". You need to 
 
 = Features =
 
-* Designed for Gutenberg
-* Works great with all themes
-* Simple and clean HTML
-* Inherits the style of your theme
-* No customizations needed
-* Compatible with AMP plugins
-* SEO friendly.
+* Designed for Gutenberg.
+* Works great with all themes.
+* Minimal and valid HTML output.
+* Inherits the style of your theme.
+* No customizations needed.
+* Compatible with AMP plugins.
+* SEO friendly..
 * No need for additional javascript or css.
-* Comes with English, French, Spanish and German translations
+* Comes with English, French, Spanish and German translations.
 
 This plugin is forked from https://github.com/pdewouters/gutentoc by pdewouters and uses code from https://github.com/shazahm1/Easy-Table-of-Contents by shazahm1
 

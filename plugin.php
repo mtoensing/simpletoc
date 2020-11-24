@@ -3,7 +3,7 @@
  * Plugin Name: SimpleTOC - Table of Contents Block
  * Plugin URI: https://github.com/mtoensing/simpletoc
  * Description: Adds a basic "Table of Contents" Gutenberg block.
- * Version: 2.5
+ * Version: 2.6
  * Author: MarcDK
  * Author URI: marc.tv
  * Text Domain: simpletoc
@@ -114,7 +114,8 @@ function render_callback($attributes, $content) {
 
 function simpletoc_sanitize_string($string){
   $string_without_accents = remove_accents($string);
-  $sanitized_string = sanitize_title_with_dashes($string_without_accents);
+  $string_only_letters_numbers_and_whitepace = preg_replace("/[^a-zA-Z0-9\s]/", "", $string_without_accents);
+  $sanitized_string = sanitize_title_with_dashes($string_only_letters_numbers_and_whitepace);
   return $sanitized_string;
 }
 
