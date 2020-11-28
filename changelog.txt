@@ -1,5 +1,8 @@
 == Changelog ==
 
+= 2.7 =
+* Added donate link due to demand.
+
 = 2.6 =
 * even more robust url sanitization.
 
