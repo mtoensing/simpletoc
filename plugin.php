@@ -3,7 +3,7 @@
  * Plugin Name: SimpleTOC - Table of Contents Block
  * Plugin URI: https://github.com/mtoensing/simpletoc
  * Description: Adds a basic "Table of Contents" Gutenberg block.
- * Version: 2.7
+ * Version: 2.8
  * Author: MarcDK
  * Author URI: marc.tv
  * Text Domain: simpletoc
@@ -30,6 +30,8 @@ function init() {
     [ 'wp-i18n', 'wp-blocks', 'wp-editor', 'wp-element', 'wp-server-side-render'],
     filemtime(plugin_dir_path(__FILE__) . 'build/index.js')
     );
+
+    add_filter('plugin_row_meta', __NAMESPACE__ . '\\simpletoc_plugin_meta', 10, 2);
 
     wp_register_style(
     'simpletoc-editor',
@@ -118,6 +120,21 @@ function simpletoc_sanitize_string($string){
   $sanitized_string = sanitize_title_with_dashes($string_only_letters_numbers_and_whitepace);
   return $sanitized_string;
 }
+
+function simpletoc_plugin_meta( $links, $file ) {
+
+	if ( false !== strpos( $file, 'simpletoc' ) ) {
+
+		$links = array_merge( $links, array( '<a href="https://wordpress.org/support/plugin/simpletoc">' . __( 'Support', 'simpletoc' ) . '</a>' ) );
+
+		$links = array_merge( $links, array( '<a href="https://www.paypal.com/donate?hosted_button_id=TJV4EURDF9TNL">' . __( 'Donate', 'simpletoc' ) . '</a>' ) );
+
+		$links = array_merge( $links, array( '<a href="https://wordpress.org/support/plugin/simpletoc/reviews/#new-post">' . __( 'Write a Review', 'simpletoc' ) . '&nbsp;⭐️⭐️⭐️⭐️⭐️</a>' ) );
+	}
+
+	return $links;
+}
+
 
 function filter_block($block_content, $block) {
     if ($block['blockName'] !== 'core/heading') {
