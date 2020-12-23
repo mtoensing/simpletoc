@@ -1,5 +1,8 @@
 == Changelog ==
 
+= 2.9 =
+* Added: Additional CSS Class(es) are correctly wrapped around the html output.
+
 = 2.8 =
 * Added donate link due to demand.
 
