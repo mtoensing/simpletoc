@@ -135,7 +135,7 @@ function simpletoc_plugin_meta( $links, $file ) {
 
 		$links = array_merge( $links, array( '<a href="https://wordpress.org/support/plugin/simpletoc">' . __( 'Support', 'simpletoc' ) . '</a>' ) );
 
-		$links = array_merge( $links, array( '<a href="https://www.paypal.com/donate?hosted_button_id=TJV4EURDF9TNL">' . __( 'Donate', 'simpletoc' ) . '</a>' ) );
+		$links = array_merge( $links, array( '<a href="https://marc.tv/out/donate">' . __( 'Donate', 'simpletoc' ) . '</a>' ) );
 
 		$links = array_merge( $links, array( '<a href="https://wordpress.org/support/plugin/simpletoc/reviews/#new-post">' . __( 'Write a Review', 'simpletoc' ) . '&nbsp;⭐️⭐️⭐️⭐️⭐️</a>' ) );
 	}
