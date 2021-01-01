@@ -28,6 +28,14 @@ In Gutenberg, add a block and search for "SimpleTOC" or just "TOC". You need to 
 
 This plugin is forked from https://github.com/pdewouters/gutentoc by pdewouters and uses code from https://github.com/shazahm1/Easy-Table-of-Contents by shazahm1
 
+== Changelog ==
+
+= 3.0 =
+* Fixed className warning in line 88
+
+= 2.9 =
+* Added: Additional CSS Class(es) are correctly wrapped around the html output.
+
 == Installation ==
 
 SimpleTOC can be found and installed via the Plugin menu within WordPress administration (Plugins -> Add New). Alternatively, it can be downloaded from WordPress.org and installed manually...
