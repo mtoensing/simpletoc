@@ -1,5 +1,8 @@
 == Changelog ==
 
+= 3.0 =
+* Fixed "Undefined array key “className” in \wp-content\plugins\simpletoc\plugin.php on line 88"
+
 = 2.9 =
 * Added: Additional CSS Class(es) are correctly wrapped around the html output.
 
