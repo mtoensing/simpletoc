@@ -147,15 +147,21 @@ function simpletoc_plugin_meta( $links, $file ) {
 
 
 function filter_block($block_content, $block) {
+    $className = '';
+
     if ($block['blockName'] !== 'core/heading') {
         return $block_content;
+    }
+
+    if(isset($block['attrs']) && isset($block['attrs']['className'])){
+      $className = $block['attrs']['className'];
     }
 
     //$block_content = strip_tags($block_content, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
     preg_match('/\\n<(h[2-4](?:.*))>(.*)<\/(h[2-4])>\\n/', $block_content, $matches);
     $link = simpletoc_sanitize_string($matches[2]);
     $start = preg_replace('#\s(id|class)="[^"]+"#', '', $matches[1]);
-    return "\n<{$start} id='{$link}'>" . $matches[2] . "</{$matches[3]}>\n";
+    return "\n<{$start} class='{$className}' id='{$link}'>" . $matches[2] . "</{$matches[3]}>\n";
 }
 
 function generateToc($matches) {
