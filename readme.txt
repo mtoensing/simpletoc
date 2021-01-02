@@ -4,7 +4,7 @@ Tags: Gutenberg, blocks, gutenberg blocks, TOC, Table of Contents, Inhaltsverzei
 Requires at least: 5.0
 Donate link: https://marc.tv/out/donate
 Tested up to: 5.6
-Stable tag: 3.1
+Stable tag: 3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,6 +29,9 @@ In Gutenberg, add a block and search for "SimpleTOC" or just "TOC". You need to 
 This plugin is forked from https://github.com/pdewouters/gutentoc by pdewouters and uses code from https://github.com/shazahm1/Easy-Table-of-Contents by shazahm1
 
 == Changelog ==
+
+= 3.2 =
+* Fixed missing custom class on headings. Thank you again Douglas Ferraz @douglasferraz89. I am looking forward to the next bug.
 
 = 3.1 =
 * Fixed classNameAttribute warning in line 89
