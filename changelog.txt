@@ -1,8 +1,8 @@
 == Changelog ==
 
 = 3.3 =
-* Fixed missing styles on headlines.
-* Fixed "id=" fragments on some headings.
+* Fixed missing separated styles on headlines.
+* Fixed "id=" fragments on some headings due to not well-formed or non-valid html in headings.
 
 = 3.2 =
 * Fixed missing custom class on headings. Thank you again Douglas Ferraz @douglasferraz89. I am looking forward to the next bug.
