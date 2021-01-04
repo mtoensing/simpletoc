@@ -145,7 +145,7 @@ function simpletoc_plugin_meta( $links, $file ) {
 
 
 
-function addAnkerAttribute($html){
+function addAnchorAttribute($html){
 
     $dom = new \DOMDocument();
     $dom->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
@@ -160,8 +160,8 @@ function addAnkerAttribute($html){
 
         // Set id attribute
         $heading_text = strip_tags($html);
-        $anker= simpletoc_sanitize_string($heading_text);
-        $tag->setAttribute("id", $anker);
+        $anchor= simpletoc_sanitize_string($heading_text);
+        $tag->setAttribute("id", $anchor);
     }
 
     // Save the HTML changes
@@ -177,7 +177,7 @@ function filter_block($block_content, $block) {
         return $block_content;
     }
 
-    $block_content = addAnkerAttribute($block_content);
+    $block_content = addAnchorAttribute($block_content);
 
     return $block_content;
 }
