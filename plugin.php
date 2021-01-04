@@ -137,7 +137,7 @@ function simpletoc_plugin_meta( $links, $file ) {
     $links = array_merge( $links, array( '<a href="https://wordpress.org/support/plugin/simpletoc/reviews/#new-post">' . __( 'Write a Review', 'simpletoc' ) . '&nbsp;⭐️⭐️⭐️⭐️⭐️</a>' ) );
   }
 
-	return $links;
+  return $links;
 }
 
 
