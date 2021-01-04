@@ -40,7 +40,7 @@ function init() {
     filemtime(plugin_dir_path(__FILE__) . 'editor.css')
     );
 
-		wp_set_script_translations('simpletoc-js', 'simpletoc');
+    wp_set_script_translations('simpletoc-js', 'simpletoc');
 
 }
 
@@ -89,19 +89,19 @@ function render_callback($attributes, $content) {
     $blocks = parse_blocks($post->post_content);
 
     if (empty($blocks)) {
-				$html = '<h2 class="simpletoc-title">' . __('Table of Contents', 'simpletoc') . '</h2>';
-        $html .= '<div class="components-notice is-warning"><strong>' . __('No blocks found.', 'simpletoc')  . ' </strong><span>' . __('Save or update post first.', 'simpletoc') . '</span></div>';
-				return $html;
+      $html = '<h2 class="simpletoc-title">' . __('Table of Contents', 'simpletoc') . '</h2>';
+      $html .= '<div class="components-notice is-warning"><strong>' . __('No blocks found.', 'simpletoc')  . ' </strong><span>' . __('Save or update post first.', 'simpletoc') . '</span></div>';
+      return $html;
     }
 
     $headings = array_values(array_filter($blocks, function ($block) {
-        return $block['blockName'] === 'core/heading';
+      return $block['blockName'] === 'core/heading';
     }));
 
     if (empty($headings)) {
-				$html = '<h2 class="simpletoc-title">' . __('Table of Contents', 'simpletoc') . '</h2>';
-        $html .= '<div class="components-notice is-warning"><strong>' . __('No headings found.', 'simpletoc') . ' </strong><span>' . __('Save or update post first.', 'simpletoc') . '</span></div>';
-				return $html;
+      $html = '<h2 class="simpletoc-title">' . __('Table of Contents', 'simpletoc') . '</h2>';
+      $html .= '<div class="components-notice is-warning"><strong>' . __('No headings found.', 'simpletoc') . ' </strong><span>' . __('Save or update post first.', 'simpletoc') . '</span></div>';
+      return $html;
 		}
 
     $heading_contents = array_column($headings, 'innerHTML');
@@ -131,14 +131,11 @@ function simpletoc_sanitize_string($string){
 
 function simpletoc_plugin_meta( $links, $file ) {
 
-	if ( false !== strpos( $file, 'simpletoc' ) ) {
-
-		$links = array_merge( $links, array( '<a href="https://wordpress.org/support/plugin/simpletoc">' . __( 'Support', 'simpletoc' ) . '</a>' ) );
-
-		$links = array_merge( $links, array( '<a href="https://marc.tv/out/donate">' . __( 'Donate', 'simpletoc' ) . '</a>' ) );
-
-		$links = array_merge( $links, array( '<a href="https://wordpress.org/support/plugin/simpletoc/reviews/#new-post">' . __( 'Write a Review', 'simpletoc' ) . '&nbsp;⭐️⭐️⭐️⭐️⭐️</a>' ) );
-	}
+  if ( false !== strpos( $file, 'simpletoc' ) ) {
+    $links = array_merge( $links, array( '<a href="https://wordpress.org/support/plugin/simpletoc">' . __( 'Support', 'simpletoc' ) . '</a>' ) );
+    $links = array_merge( $links, array( '<a href="https://marc.tv/out/donate">' . __( 'Donate', 'simpletoc' ) . '</a>' ) );
+    $links = array_merge( $links, array( '<a href="https://wordpress.org/support/plugin/simpletoc/reviews/#new-post">' . __( 'Write a Review', 'simpletoc' ) . '&nbsp;⭐️⭐️⭐️⭐️⭐️</a>' ) );
+  }
 
 	return $links;
 }
