@@ -22,7 +22,7 @@ In Gutenberg, add a block and search for "SimpleTOC" or just "TOC". You need to 
 * Inherits the style of your theme.
 * No customizations needed.
 * Compatible with AMP plugins.
-* SEO friendly..
+* SEO friendly.
 * No need for additional javascript or css.
 * Comes with English, French, Spanish and German translations.
 
