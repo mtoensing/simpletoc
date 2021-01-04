@@ -3,7 +3,7 @@
  * Plugin Name: SimpleTOC - Table of Contents Block
  * Plugin URI: https://github.com/mtoensing/simpletoc
  * Description: Adds a basic "Table of Contents" Gutenberg block.
- * Version: 3.2
+ * Version: 3.3
  * Author: MarcDK
  * Author URI: marc.tv
  * Text Domain: simpletoc
@@ -85,8 +85,6 @@ function render_callback($attributes, $content) {
     //add only if block is used in this post.
     add_filter('render_block', __NAMESPACE__ . '\\filter_block', 10, 2);
 
-
-
     $post = get_post();
     $blocks = parse_blocks($post->post_content);
 
@@ -146,6 +144,32 @@ function simpletoc_plugin_meta( $links, $file ) {
 }
 
 
+
+function addAnkerAttribute($html){
+
+    $dom = new \DOMDocument();
+    $dom->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+
+    // Evaluate P tags in HTML. This just shows
+    // that you can be more selective on your tags
+    $xpath = new \DOMXPath($dom);
+    $tags = $xpath->evaluate("//*[self::h1 or self::h2 or self::h3 or self::h4 or self::h5 or self::h6]");
+
+    // Loop through all the found tags
+    foreach ($tags as $tag) {
+
+        // Set id attribute
+        $heading_text = strip_tags($html);
+        $anker= simpletoc_sanitize_string($heading_text);
+        $tag->setAttribute("id", $anker);
+    }
+
+    // Save the HTML changes
+    $content = utf8_decode($dom->saveHTML($dom->documentElement));
+
+    return $content;
+}
+
 function filter_block($block_content, $block) {
     $className = '';
 
@@ -153,15 +177,9 @@ function filter_block($block_content, $block) {
         return $block_content;
     }
 
-    if(isset($block['attrs']) && isset($block['attrs']['className'])){
-      $className = $block['attrs']['className'];
-    }
+    $block_content = addAnkerAttribute($block_content);
 
-    //$block_content = strip_tags($block_content, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
-    preg_match('/\\n<(h[2-4](?:.*))>(.*)<\/(h[2-4])>\\n/', $block_content, $matches);
-    $link = simpletoc_sanitize_string($matches[2]);
-    $start = preg_replace('#\s(id|class)="[^"]+"#', '', $matches[1]);
-    return "\n<{$start} class='{$className}' id='{$link}'>" . $matches[2] . "</{$matches[3]}>\n";
+    return $block_content;
 }
 
 function generateToc($matches) {
