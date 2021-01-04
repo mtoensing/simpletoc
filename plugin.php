@@ -5,7 +5,7 @@
  * Description: Adds a basic "Table of Contents" Gutenberg block.
  * Version: 3.3
  * Author: MarcDK
- * Author URI: marc.tv
+ * Author URI: https://marc.tv
  * Text Domain: simpletoc
  * Domain Path: /languages
  * License: GPL v2 or later
