@@ -31,7 +31,7 @@ This plugin is forked from https://github.com/pdewouters/gutentoc by pdewouters 
 == Changelog ==
 
 = 3.4 =
-* Added support for MathPlugin
+* Added support for Rank Math plugin.
 
 = 3.3 =
 * Fixed missing styles on headlines.
