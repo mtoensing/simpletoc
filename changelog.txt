@@ -1,5 +1,8 @@
 == Changelog ==
 
+= 3.4 =
+* Added support for MathPlugin
+
 = 3.3 =
 * Fixed missing separated styles on headlines.
 * Fixed "id=" fragments on some headings due to not well-formed or non-valid html in headings.

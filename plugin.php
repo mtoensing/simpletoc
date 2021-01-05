@@ -3,7 +3,7 @@
  * Plugin Name: SimpleTOC - Table of Contents Block
  * Plugin URI: https://github.com/mtoensing/simpletoc
  * Description: Adds a basic "Table of Contents" Gutenberg block.
- * Version: 3.3
+ * Version: 3.4
  * Author: MarcDK
  * Author URI: https://marc.tv
  * Text Domain: simpletoc
@@ -22,26 +22,36 @@ defined('ABSPATH') || exit;
 add_action('init', __NAMESPACE__ . '\\init');
 add_action('init', __NAMESPACE__ . '\\register_block');
 
-function init() {
+/**
+ * Filter to add plugins to the TOC list for MathPlugin
+ *
+ * @param array TOC plugins.
+ */
+add_filter( 'rank_math/researches/toc_plugins', function( $toc_plugins ) {
+    $toc_plugins['simpletoc/plugin.php'] = 'SimpleTOC';
+    return $toc_plugins;
+});
 
+
+/* Init SimpleTOC */
+function init() {
     wp_register_script(
-    'simpletoc-js',
-    plugins_url('build/index.js', __FILE__),
-    [ 'wp-i18n', 'wp-blocks', 'wp-editor', 'wp-element', 'wp-server-side-render'],
-    filemtime(plugin_dir_path(__FILE__) . 'build/index.js')
+      'simpletoc-js',
+      plugins_url('build/index.js', __FILE__),
+      [ 'wp-i18n', 'wp-blocks', 'wp-editor', 'wp-element', 'wp-server-side-render'],
+      filemtime(plugin_dir_path(__FILE__) . 'build/index.js')
     );
 
     add_filter('plugin_row_meta', __NAMESPACE__ . '\\simpletoc_plugin_meta', 10, 2);
 
     wp_register_style(
-    'simpletoc-editor',
-    plugins_url('editor.css', __FILE__),
-    array( 'wp-edit-blocks' ),
-    filemtime(plugin_dir_path(__FILE__) . 'editor.css')
+      'simpletoc-editor',
+      plugins_url('editor.css', __FILE__),
+      array( 'wp-edit-blocks' ),
+      filemtime(plugin_dir_path(__FILE__) . 'editor.css')
     );
 
     wp_set_script_translations('simpletoc-js', 'simpletoc');
-
 }
 
 /**

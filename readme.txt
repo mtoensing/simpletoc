@@ -4,7 +4,7 @@ Tags: Gutenberg, blocks, gutenberg blocks, TOC, Table of Contents, Inhaltsverzei
 Requires at least: 5.0
 Donate link: https://marc.tv/out/donate
 Tested up to: 5.6
-Stable tag: 3.3
+Stable tag: 3.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,18 +17,21 @@ In Gutenberg, add a block and search for "SimpleTOC" or just "TOC". You need to 
 = Features =
 
 * Designed for Gutenberg.
-* Works great with all themes.
+* Compatible with AMP plugins.
 * Minimal and valid HTML output.
 * Inherits the style of your theme.
 * No customizations needed.
-* Compatible with AMP plugins.
 * SEO friendly.
-* No need for additional javascript or css.
+* No javascript or css added.
 * Comes with English, French, Spanish and German translations.
+* MathPlugin support.
 
 This plugin is forked from https://github.com/pdewouters/gutentoc by pdewouters and uses code from https://github.com/shazahm1/Easy-Table-of-Contents by shazahm1
 
 == Changelog ==
+
+= 3.4 =
+* Added support for MathPlugin
 
 = 3.3 =
 * Fixed missing styles on headlines.
@@ -37,14 +40,6 @@ This plugin is forked from https://github.com/pdewouters/gutentoc by pdewouters 
 = 3.2 =
 * Fixed missing custom class on headings. Thank you again Douglas Ferraz @douglasferraz89. I am looking forward to the next bug.
 
-= 3.1 =
-* Fixed classNameAttribute warning in line 89
-
-= 3.0 =
-* Fixed className warning in line 88
-
-= 2.9 =
-* Added: Additional CSS Class(es) are correctly wrapped around the html output.
 
 == Installation ==
 
