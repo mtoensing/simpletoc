@@ -4,7 +4,7 @@ Tags: Gutenberg, blocks, gutenberg blocks, TOC, Table of Contents, Inhaltsverzei
 Requires at least: 5.0
 Donate link: https://marc.tv/out/donate
 Tested up to: 5.6
-Stable tag: 3.5
+Stable tag: 3.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,16 +30,12 @@ This plugin is forked from https://github.com/pdewouters/gutentoc by pdewouters 
 
 == Changelog ==
 
+= 3.6 =
+* Code refactoring: moved to JSX and updates dependencies. Makes the code much smaller and easier to read for humans.
+* Better constrast for logo within Gutenberg.
+
 = 3.5 =
 * Added support for Rank Math plugin.
-
-= 3.3 =
-* Fixed missing styles on headlines.
-* Fixed "id=" fragments on some headings.
-
-= 3.2 =
-* Fixed missing custom class on headings. Thank you again Douglas Ferraz @douglasferraz89. I am looking forward to the next bug.
-
 
 == Installation ==
 
