@@ -21,32 +21,25 @@ registerBlockType('simpletoc/toc', {
   icon: simpletocicon,
   category: 'layout',
   edit: function(props) {
-    return [
-      el(
-        BlockControls, { key: 'controls' },
-        el( Toolbar, null,
-          el(
-            IconButton, {
-              className: 'components-icon-button components-toolbar__control',
-              label: __('Update table of contents', 'simpletoc'),
-              onClick: function() {
-                sendfakeAttribute(props)
-              },
-              icon: 'update'
-            }
-          )
-        )
-      ),
-      el(
-        'p', { className: props.className },
-        el(
-          ServerSideRender, {
-            block: props.name,
-            attributes: props.attributes
-          }
-        )
-      )
-    ];
+    return (
+    <div>
+    <BlockControls>
+      <Toolbar>
+        <IconButton
+          className="components-icon-button components-toolbar__control"
+          label={__('Update table of contents', 'simpletoc')}
+          onClick={function() {
+            sendfakeAttribute(props)
+          }}
+          icon="update"
+        />
+      </Toolbar>
+  </BlockControls>
+  <p className={props.className}>
+    <ServerSideRender block={props.name} attributes={props.attributes} />
+  </p>
+  </div>
+    )
   },
   save: props => {
     return null;

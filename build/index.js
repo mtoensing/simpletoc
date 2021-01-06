@@ -75,8 +75,13 @@
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 
 var __ = wp.i18n.__;
 var el = wp.element.createElement;
@@ -104,26 +109,35 @@ registerBlockType('simpletoc/toc', {
   icon: simpletocicon,
   category: 'layout',
   edit: function edit(props) {
-    return [el(BlockControls, {
-      key: 'controls'
-    }, el(Toolbar, null, el(IconButton, {
-      className: 'components-icon-button components-toolbar__control',
+    return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("div", null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(BlockControls, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(Toolbar, null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(IconButton, {
+      className: "components-icon-button components-toolbar__control",
       label: __('Update table of contents', 'simpletoc'),
       onClick: function onClick() {
         sendfakeAttribute(props);
       },
-      icon: 'update'
-    }))), el('p', {
+      icon: "update"
+    }))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("p", {
       className: props.className
-    }, el(ServerSideRender, {
+    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(ServerSideRender, {
       block: props.name,
       attributes: props.attributes
-    }))];
+    })));
   },
   save: function save(props) {
     return null;
   }
 });
+
+/***/ }),
+
+/***/ "@wordpress/element":
+/*!******************************************!*\
+  !*** external {"this":["wp","element"]} ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+(function() { module.exports = this["wp"]["element"]; }());
 
 /***/ })
 
