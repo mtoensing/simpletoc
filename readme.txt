@@ -32,7 +32,7 @@ This plugin is forked from https://github.com/pdewouters/gutentoc by pdewouters 
 
 = 3.6 =
 * Code refactoring: moved to JSX and updates dependencies. Makes the code much smaller and easier to read for humans.
-* Better constrast for logo within Gutenberg.
+* Better contrast for logo within Gutenberg.
 
 = 3.5 =
 * Added support for Rank Math plugin.
