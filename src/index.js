@@ -1,18 +1,12 @@
-const { __ } = wp.i18n;
-const el = wp.element.createElement;
-const registerBlockType = wp.blocks.registerBlockType;
-const BlockControls = wp.blockEditor.BlockControls;
-const ServerSideRender = wp.serverSideRender;
-const Toolbar = wp.components.Toolbar;
-const IconButton = wp.components.Button;
-const simpletocicon = wp.element.createElement('svg', { width: 20, height: 20 },
-  el('path', {
-    d: "M5.5 7C4.67 7 4 6.33 4 5.5 4 4.68 4.67 4 5.5 4 6.32 4 7 4.68 7 5.5 7 6.33 6.32 7 5.5 7zM8 5h9v1H8V5zm-2.5 7c-.83 0-1.5-.67-1.5-1.5C4 9.68 4.67 9 5.5 9c.82 0 1.5.68 1.5 1.5 0 .83-.68 1.5-1.5 1.5zM8 10h9v1H8v-1zm-2.5 7c-.83 0-1.5-.67-1.5-1.5 0-.82.67-1.5 1.5-1.5.82 0 1.5.68 1.5 1.5 0 .83-.68 1.5-1.5 1.5zM8 15h9v1H8v-1z"
-  })
-);
+import { __ } from '@wordpress/i18n';
+import { registerBlockType } from '@wordpress/blocks';
+import { BlockControls } from '@wordpress/block-editor';
+import ServerSideRender from '@wordpress/server-side-render';
+import { IconButton, Toolbar, ToolbarGroup, ToolbarButton } from '@wordpress/components';
+const simpletocicon = <svg clip-rule="evenodd" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg"><path d="m365.983 78.248c2.72-32.415 29.921-57.908 63.029-57.908 34.91 0 63.253 28.342 63.253 63.252s-28.343 63.252-63.253 63.252v269.582c0 25.232-20.485 45.718-45.718 45.718h-313.62c-25.233 0-45.719-20.486-45.719-45.718v-292.46c0-25.233 20.486-45.718 45.719-45.718zm-245.943 324.857c-16.883 0-30.511-13.719-30.511-30.714 0-16.79 13.628-30.714 30.511-30.714 16.679 0 30.511 13.924 30.511 30.714 0 16.995-13.832 30.714-30.511 30.714zm50.851-40.952h183.063v20.476h-183.063zm-50.851-61.428c-16.883 0-30.511-13.719-30.511-30.714 0-16.79 13.628-30.714 30.511-30.714 16.679 0 30.511 13.924 30.511 30.714 0 16.995-13.832 30.714-30.511 30.714zm50.851-40.952h183.063v20.476h-183.063zm-50.851-61.428c-16.883 0-30.511-13.719-30.511-30.714 0-16.791 13.628-30.714 30.511-30.714 16.679 0 30.511 13.923 30.511 30.714 0 16.995-13.832 30.714-30.511 30.714zm50.851-40.952h183.063v20.476h-183.063zm253.007-44.649v-24.188h-24.008v-10.108h24.008v-24.008h10.229v24.008h24.008v10.108h-24.008v24.188z"/></svg>
 
 function sendfakeAttribute(props) {
-  // this acuallty triggers the ServerSideRender again ¯\_(ツ)_/¯
+  // this acuallty triggers the ServerSideRender again and updates the block ¯\_(ツ)_/¯
   props.setAttributes({ updated: Date.now()});
 }
 
@@ -24,8 +18,8 @@ registerBlockType('simpletoc/toc', {
     return (
     <div>
     <BlockControls>
-      <Toolbar>
-        <IconButton
+      <ToolbarGroup>
+        <ToolbarButton
           className="components-icon-button components-toolbar__control"
           label={__('Update table of contents', 'simpletoc')}
           onClick={function() {
@@ -33,7 +27,7 @@ registerBlockType('simpletoc/toc', {
           }}
           icon="update"
         />
-      </Toolbar>
+      </ToolbarGroup>
   </BlockControls>
   <p className={props.className}>
     <ServerSideRender block={props.name} attributes={props.attributes} />
