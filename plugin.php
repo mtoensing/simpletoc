@@ -74,22 +74,11 @@ function register_block() {
         			'type' => 'boolean',
               'default' => false,
         		),
-            'plugin' => array(
-              'default' => array(
-                  'post_id' => 123,
-                  'key' => 'group_duq8f62hf',
-                  'title' => 'My Block',
-              ),
-              '_builtIn' => true,
-            ),
             'updated' => array(
               'type' => 'number',
               'default' => 0,
               '_builtIn' => true,
             ),
-            'others' => array(
-              'type' => 'string',
-            )
     ),
     'render_callback' => __NAMESPACE__ . '\\render_callback'
    ]);
@@ -103,7 +92,10 @@ function render_callback($attributes, $content) {
     $blocks = parse_blocks($post->post_content);
 
     if (empty($blocks)) {
-      $html = '<h2 class="simpletoc-title">' . __('Table of Contents', 'simpletoc') . '</h2>';
+      $html = '';
+      if($attributes['no_title'] == false) {
+        $html = '<h2 class="simpletoc-title">' . __('Table of Contents', 'simpletoc') . '</h2>';
+      }
       $html .= '<div class="components-notice is-warning"><strong>' . __('No blocks found.', 'simpletoc')  . ' </strong><span>' . __('Save or update post first.', 'simpletoc') . '</span></div>';
       return $html;
     }
@@ -113,7 +105,10 @@ function render_callback($attributes, $content) {
     }));
 
     if (empty($headings)) {
-      $html = '<h2 class="simpletoc-title">' . __('Table of Contents', 'simpletoc') . '</h2>';
+      $html = '';
+      if($attributes['no_title'] == false) {
+        $html = '<h2 class="simpletoc-title">' . __('Table of Contents', 'simpletoc') . '</h2>';
+      }
       $html .= '<div class="components-notice is-warning"><strong>' . __('No headings found.', 'simpletoc') . ' </strong><span>' . __('Save or update post first.', 'simpletoc') . '</span></div>';
       return $html;
 		}
@@ -124,7 +119,7 @@ function render_callback($attributes, $content) {
         $heading = trim($heading);
     }
 
-    $output = generateToc($heading_contents);
+    $output = generateToc($heading_contents,$attributes);
 
     if(isset($attributes['className'])){
       $className = strip_tags(htmlspecialchars($attributes['className']));
@@ -193,7 +188,7 @@ function filter_block($block_content, $block) {
     return $block_content;
 }
 
-function generateToc($matches) {
+function generateToc($matches,$attributes) {
     /*  code from https://github.com/shazahm1/Easy-Table-of-Contents */
     $list ='';
     $current_depth      = 7;
@@ -263,7 +258,11 @@ function generateToc($matches) {
 
         }
     }
-    $html = '<h2 class="simpletoc-title">' . __('Table of Contents', 'simpletoc') . '</h2>';
+
+    $html = '';
+    if($attributes['no_title'] == false) {
+      $html = '<h2 class="simpletoc-title">' . __('Table of Contents', 'simpletoc') . '</h2>';
+    }
     $html .= '<ul class="simpletoc">' . $list . "</li></ul>";
     return $html;
 }

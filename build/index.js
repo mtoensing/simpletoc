@@ -146,8 +146,8 @@ Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_2__["registerBlockType"])('sim
   },
   edit: function edit(props) {
     return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("div", null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__["InspectorControls"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__["ToggleControl"], {
-      label: "Disable Title",
-      help: "help",
+      label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])("Disable heading", 'simpletoc'),
+      help: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Hides "Table of contents"  heading.', 'simpletoc'),
       checked: props.attributes.no_title,
       onChange: function onChange() {
         return props.setAttributes({
@@ -161,9 +161,7 @@ Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_2__["registerBlockType"])('sim
         sendfakeAttribute(props);
       },
       icon: "update"
-    }))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("p", {
-      className: props.className
-    }, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_server_side_render__WEBPACK_IMPORTED_MODULE_4___default.a, {
+    }))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("p", null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_server_side_render__WEBPACK_IMPORTED_MODULE_4___default.a, {
       block: props.name,
       attributes: props.attributes
     })));
