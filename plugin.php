@@ -70,22 +70,26 @@ function register_block() {
     'editor_script' => 'simpletoc-js',
     'editor_style' => 'simpletoc-editor',
         'attributes' => array(
-        'plugin' => array(
-            'default' => array(
-                'post_id' => 123,
-                'key' => 'group_duq8f62hf',
-                'title' => 'My Block',
+        		'no_title' => array(
+        			'type' => 'boolean',
+              'default' => false,
+        		),
+            'plugin' => array(
+              'default' => array(
+                  'post_id' => 123,
+                  'key' => 'group_duq8f62hf',
+                  'title' => 'My Block',
+              ),
+              '_builtIn' => true,
             ),
-            '_builtIn' => true,
-        ),
-        'updated' => array(
-            'type' => 'number',
-            'default' => 0,
-            '_builtIn' => true,
-        ),
-        'others' => array(
-            'type' => 'string',
-        )
+            'updated' => array(
+              'type' => 'number',
+              'default' => 0,
+              '_builtIn' => true,
+            ),
+            'others' => array(
+              'type' => 'string',
+            )
     ),
     'render_callback' => __NAMESPACE__ . '\\render_callback'
    ]);
