@@ -30,7 +30,7 @@ registerBlockType('simpletoc/toc', {
           <PanelRow>
             <ToggleControl
                 label={__("Disable heading", 'simpletoc')}
-                help={__('Remove "Table of contents" heading.', 'simpletoc')}
+                help={__('Remove "Table of contents" block heading.', 'simpletoc')}
                 checked={ props.attributes.no_title }
                 onChange={ () => props.setAttributes( {  no_title: ! props.attributes.no_title } ) }
             />

@@ -4,7 +4,7 @@ Tags: Gutenberg, blocks, gutenberg blocks, TOC, Table of Contents, Inhaltsverzei
 Requires at least: 5.0
 Donate link: https://marc.tv/out/donate
 Tested up to: 5.6
-Stable tag: 3.6
+Stable tag: 3.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -21,7 +21,7 @@ In Gutenberg, add a block and search for "SimpleTOC" or just "TOC". You need to 
 * Minimal and valid HTML output.
 * Inherits the style of your theme.
 * No customizations needed.
-* SEO friendly.
+* SEO friendly. Disable the h2 heading in the block.
 * No javascript or css added.
 * Comes with English, French, Spanish and German translations.
 * Rank Math support.
@@ -44,5 +44,6 @@ SimpleTOC can be found and installed via the Plugin menu within WordPress admini
 In Gutenberg, add a block and search for "SimpleTOC" or just "TOC". Please save your content before you use the block.
 
 ## Screenshots ##
-1. SimpleTOC block in Gutenberg editor
-2. SimpleTOC in the post
+1. SimpleTOC block in Gutenberg editor.
+2. SimpleTOC in the post.
+3. Disable "Table of contents" block headings´.

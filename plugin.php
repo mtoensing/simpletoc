@@ -3,7 +3,7 @@
  * Plugin Name: SimpleTOC - Table of Contents Block
  * Plugin URI: https://github.com/mtoensing/simpletoc
  * Description: Adds a basic "Table of Contents" Gutenberg block.
- * Version: 3.6
+ * Version: 3.7
  * Author: MarcDK
  * Author URI: https://marc.tv
  * Text Domain: simpletoc
