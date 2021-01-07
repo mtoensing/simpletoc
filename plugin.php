@@ -96,7 +96,7 @@ function render_callback($attributes, $content) {
       if($attributes['no_title'] == false) {
         $html = '<h2 class="simpletoc-title">' . __('Table of Contents', 'simpletoc') . '</h2>';
       }
-      $html .= '<div class="components-notice is-warning"><strong>' . __('No blocks found.', 'simpletoc')  . ' </strong><span>' . __('Save or update post first.', 'simpletoc') . '</span></div>';
+      $html .= '<p class="components-notice is-warning">' . __('No blocks found.', 'simpletoc')  . ' ' . __('Save or update post first.', 'simpletoc') . '</p>';
       return $html;
     }
 
@@ -109,7 +109,7 @@ function render_callback($attributes, $content) {
       if($attributes['no_title'] == false) {
         $html = '<h2 class="simpletoc-title">' . __('Table of Contents', 'simpletoc') . '</h2>';
       }
-      $html .= '<div class="components-notice is-warning"><strong>' . __('No headings found.', 'simpletoc') . ' </strong><span>' . __('Save or update post first.', 'simpletoc') . '</span></div>';
+      $html .= '<p class="components-notice is-warning">' . __('No headings found.', 'simpletoc') . ' ' . __('Save or update post first.', 'simpletoc') . '</p>';
       return $html;
 		}
 

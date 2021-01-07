@@ -23,14 +23,20 @@ registerBlockType('simpletoc/toc', {
 	},
   edit: function(props) {
     return (
-    <div>
+    <span>
     <InspectorControls>
-    <ToggleControl
-        label={__("Disable heading", 'simpletoc')}
-        help={__('Hides "Table of contents"  heading.', 'simpletoc')}
-        checked={ props.attributes.no_title }
-        onChange={ () => props.setAttributes( {  no_title: ! props.attributes.no_title } ) }
-    />
+      <Panel>
+        <PanelBody>
+          <PanelRow>
+            <ToggleControl
+                label={__("Disable heading", 'simpletoc')}
+                help={__('Remove "Table of contents" heading.', 'simpletoc')}
+                checked={ props.attributes.no_title }
+                onChange={ () => props.setAttributes( {  no_title: ! props.attributes.no_title } ) }
+            />
+          </PanelRow>
+        </PanelBody>
+      </Panel>
     </InspectorControls>
     <BlockControls>
       <ToolbarGroup>
@@ -47,7 +53,7 @@ registerBlockType('simpletoc/toc', {
   <p>
     <ServerSideRender block={props.name} attributes={props.attributes} />
   </p>
-  </div>
+  </span>
     )
   },
   save: props => {
