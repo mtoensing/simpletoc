@@ -1,5 +1,8 @@
 == Changelog ==
 
+= 3.7 =
+* Option to disable block heading added.
+
 = 3.6 =
 * Code refactoring: moved to JSX and updates dependencies. Makes the code much smaller and easier to read for humans.
 * Better constrast for logo within Gutenberg.

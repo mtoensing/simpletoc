@@ -30,6 +30,9 @@ This plugin is forked from https://github.com/pdewouters/gutentoc by pdewouters 
 
 == Changelog ==
 
+= 3.7 =
+* Option to disable block heading added.
+
 = 3.6 =
 * Code refactoring: moved to JSX and updates dependencies. Makes the code much smaller and easier to read for humans.
 * Better contrast for logo within Gutenberg.
