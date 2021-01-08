@@ -143,7 +143,7 @@ function simpletoc_plugin_meta( $links, $file ) {
   if ( false !== strpos( $file, 'simpletoc' ) ) {
     $links = array_merge( $links, array( '<a href="https://wordpress.org/support/plugin/simpletoc">' . __( 'Support', 'simpletoc' ) . '</a>' ) );
     $links = array_merge( $links, array( '<a href="https://marc.tv/out/donate">' . __( 'Donate', 'simpletoc' ) . '</a>' ) );
-    $links = array_merge( $links, array( '<a href="https://wordpress.org/support/plugin/simpletoc/reviews/#new-post">' . __( 'Write a Review', 'simpletoc' ) . '&nbsp;⭐️⭐️⭐️⭐️⭐️</a>' ) );
+    $links = array_merge( $links, array( '<a href="https://wordpress.org/support/plugin/simpletoc/reviews/#new-post">' . __( 'Write a review', 'simpletoc' ) . '&nbsp;⭐️⭐️⭐️⭐️⭐️</a>' ) );
   }
 
   return $links;
