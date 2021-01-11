@@ -22,32 +22,13 @@ registerBlockType('simpletoc/toc', {
 			type: 'boolean',
       default: false,
 		},
-	},
-  attributes: {
 		max_level: {
 			type: 'integer',
       default: 6,
 		},
 	},
   edit: function(props) {
-    const SelectMaxLevel = withState( {
-        level: props.attributes.max_level,
-    } )( ( { level, setState } ) => (
-        <SelectControl
-            label={__("Maximum Level", 'simpletoc')}
-            help={__('Maximum depth of the headings.', 'simpletoc')}
-            value= { level }
-            options={ [
-                { label: __('Including', 'simpletoc') + ' H6 (' + __('Show all', 'simpletoc') + ')' , value: '6' },
-                { label: __('Including', 'simpletoc') + ' H5', value: '5' },
-                { label: __('Including', 'simpletoc') + ' H4', value: '4' },
-                { label: __('Including', 'simpletoc') + ' H3', value: '3' },
-                { label: __('Including', 'simpletoc') + ' H2', value: '2' },
-            ] }
-            onChange={ ( level ) => { setState( props.setAttributes( { max_level: level } )) } }
-        />
-    ) );
-
+    console.info(props.attributes.max_level);
     return (
     <span>
     <InspectorControls>
@@ -62,7 +43,19 @@ registerBlockType('simpletoc/toc', {
             />
           </PanelRow>
           <PanelRow>
-            <SelectMaxLevel />
+            <SelectControl
+                label={__("Maximum Level", 'simpletoc')}
+                help={__('Maximum depth of the headings.', 'simpletoc')}
+                value= { props.attributes.max_level }
+                options={ [
+                    { label: __('Including', 'simpletoc') + ' H6 (' + __('Show all', 'simpletoc') + ')' , value: '6' },
+                    { label: __('Including', 'simpletoc') + ' H5', value: '5' },
+                    { label: __('Including', 'simpletoc') + ' H4', value: '4' },
+                    { label: __('Including', 'simpletoc') + ' H3', value: '3' },
+                    { label: __('Including', 'simpletoc') + ' H2', value: '2' },
+                ] }
+                onChange={ ( level ) => props.setAttributes( { max_level: level } ) }
+            />
           </PanelRow>
         </PanelBody>
       </Panel>

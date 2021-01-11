@@ -197,7 +197,6 @@ function generateToc($matches,$attributes) {
     $list ='';
     $current_depth      = 7;
     $numbered_items     = array();
-    $max_level = $attributes['max_level'];
 
     // find the minimum heading to establish our baseline
     //for ( $i = 0; $i < count( $matches ); $i ++ ) {
@@ -214,7 +213,7 @@ function generateToc($matches,$attributes) {
         $level = $matches[ $i ][2];
         $count = $i + 1;
 
-        if($level > $max_level){
+        if( $level > $attributes['max_level'] ){
           continue;
         }
 
