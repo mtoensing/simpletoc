@@ -74,6 +74,10 @@ function register_block() {
         			'type' => 'boolean',
               'default' => false,
         		),
+            'max_level' => array(
+        			'type' => 'integer',
+              'default' => 6,
+        		),
             'updated' => array(
               'type' => 'number',
               'default' => 0,
@@ -119,7 +123,7 @@ function render_callback($attributes, $content) {
         $heading = trim($heading);
     }
 
-    $output = generateToc($heading_contents,$attributes,7);
+    $output = generateToc($heading_contents,$attributes);
 
     if(isset($attributes['className'])){
       $className = strip_tags(htmlspecialchars($attributes['className']));
@@ -188,11 +192,12 @@ function filter_block($block_content, $block) {
     return $block_content;
 }
 
-function generateToc($matches,$attributes,$max_depth = 7) {
+function generateToc($matches,$attributes) {
     /*  code from https://github.com/shazahm1/Easy-Table-of-Contents */
     $list ='';
     $current_depth      = 7;
     $numbered_items     = array();
+    $max_level = $attributes['max_level'];
 
     // find the minimum heading to establish our baseline
     //for ( $i = 0; $i < count( $matches ); $i ++ ) {
@@ -209,7 +214,7 @@ function generateToc($matches,$attributes,$max_depth = 7) {
         $level = $matches[ $i ][2];
         $count = $i + 1;
 
-        if($level > $max_depth){
+        if($level > $max_level){
           continue;
         }
 
