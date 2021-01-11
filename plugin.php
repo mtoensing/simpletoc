@@ -119,7 +119,7 @@ function render_callback($attributes, $content) {
         $heading = trim($heading);
     }
 
-    $output = generateToc($heading_contents,$attributes);
+    $output = generateToc($heading_contents,$attributes,7);
 
     if(isset($attributes['className'])){
       $className = strip_tags(htmlspecialchars($attributes['className']));
@@ -188,7 +188,7 @@ function filter_block($block_content, $block) {
     return $block_content;
 }
 
-function generateToc($matches,$attributes) {
+function generateToc($matches,$attributes,$max_depth = 7) {
     /*  code from https://github.com/shazahm1/Easy-Table-of-Contents */
     $list ='';
     $current_depth      = 7;
@@ -208,6 +208,10 @@ function generateToc($matches,$attributes) {
 
         $level = $matches[ $i ][2];
         $count = $i + 1;
+
+        if($level > $max_depth){
+          continue;
+        }
 
         if ($current_depth == (int) $matches[ $i ][2]) {
             $list .= '<li>';
@@ -231,6 +235,7 @@ function generateToc($matches,$attributes) {
                 for ($current_depth; $current_depth > (int) $matches[ $i + 1 ][2]; $current_depth--) {
                     $list .= '</li></ul>';
                     $numbered_items[ $current_depth ] = 0;
+
                 }
             }
 
