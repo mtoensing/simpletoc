@@ -4,7 +4,7 @@ Tags: Gutenberg, blocks, gutenberg blocks, TOC, Table of Contents, Inhaltsverzei
 Requires at least: 5.0
 Donate link: https://marc.tv/out/donate
 Tested up to: 5.6
-Stable tag: 3.9
+Stable tag: 4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,8 +20,8 @@ In Gutenberg, add a block and search for "SimpleTOC" or just "TOC". You need to 
 * Compatible with AMP plugins.
 * Minimal and valid HTML output.
 * Inherits the style of your theme.
-* No customizations needed.
-* SEO friendly. Disable the h2 heading in the block.
+* Control the maximum depth of the headings.
+* SEO friendly: Disable the h2 heading of the TOC block and add your own.
 * No javascript or css added.
 * Comes with English, French, Spanish, German, and Brazilian Portuguese translations.
 * Rank Math support.
@@ -29,6 +29,9 @@ In Gutenberg, add a block and search for "SimpleTOC" or just "TOC". You need to 
 This plugin is forked from https://github.com/pdewouters/gutentoc by pdewouters and uses code from https://github.com/shazahm1/Easy-Table-of-Contents by shazahm1
 
 == Changelog ==
+
+= 4.0 =
+* Added option to set maximum level of the headings.
 
 = 3.9 =
 * Option to disable block heading added.

@@ -30,16 +30,15 @@ registerBlockType('simpletoc/toc', {
 		},
 	},
   edit: function(props) {
-
     const SelectMaxLevel = withState( {
         level: props.attributes.max_level,
     } )( ( { level, setState } ) => (
         <SelectControl
             label={__("Maximum Level", 'simpletoc')}
-            help={__('Set the maximum SimpleTOC depth.', 'simpletoc')}
+            help={__('Maximum depth of the headings.', 'simpletoc')}
             value= { level }
             options={ [
-                { label: __('Including', 'simpletoc') + ' H6', value: '6' },
+                { label: __('Including', 'simpletoc') + ' H6 (' + __('Show all', 'simpletoc') + ')' , value: '6' },
                 { label: __('Including', 'simpletoc') + ' H5', value: '5' },
                 { label: __('Including', 'simpletoc') + ' H4', value: '4' },
                 { label: __('Including', 'simpletoc') + ' H3', value: '3' },

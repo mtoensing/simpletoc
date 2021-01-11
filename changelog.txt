@@ -1,9 +1,12 @@
 == Changelog ==
 
+= 4.0 =
+* Added option to set maximum level of the headings.
+
 = 3.9 =
 * Option to disable block heading added.
 * Enhanced the localization strings.
-* Better readme.txt
+* Added Brazilian Portuguese translations to the translations. Thanks Ralden Souza!
 
 = 3.6 =
 * Code refactoring: moved to JSX and updates dependencies. Makes the code much smaller and easier to read for humans.

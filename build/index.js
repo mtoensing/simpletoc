@@ -190,10 +190,10 @@ Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_3__["registerBlockType"])('sim
         setState = _ref.setState;
     return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_6__["SelectControl"], {
       label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])("Maximum Level", 'simpletoc'),
-      help: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Set the maximum SimpleTOC depth.', 'simpletoc'),
+      help: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Maximum depth of the headings.', 'simpletoc'),
       value: level,
       options: [{
-        label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Including', 'simpletoc') + ' H6',
+        label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Including', 'simpletoc') + ' H6 (' + Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Show all', 'simpletoc') + ')',
         value: '6'
       }, {
         label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Including', 'simpletoc') + ' H5',
