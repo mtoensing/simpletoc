@@ -64,7 +64,7 @@ registerBlockType('simpletoc/toc', {
   </BlockControls>
   <ServerSideRender block={props.name} attributes={props.attributes} />
   </>
-    )
+  )
   },
   save: props => {
     return null;

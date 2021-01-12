@@ -193,7 +193,7 @@ function filter_block($block_content, $block) {
 }
 
 function generateToc($matches,$attributes) {
-    /*  original code from https://github.com/shazahm1/Easy-Table-of-Contents */
+    /* original code from https://github.com/shazahm1/Easy-Table-of-Contents */
     $list ='';
     $current_depth      = 7;
     $numbered_items     = array();
