@@ -54,7 +54,7 @@ registerBlockType('simpletoc/toc', {
                     { label: __('Including', 'simpletoc') + ' H3', value: '3' },
                     { label: __('Including', 'simpletoc') + ' H2', value: '2' },
                 ] }
-                onChange={ ( level ) => props.setAttributes( { max_level: level } ) }
+                onChange={ ( level ) => props.setAttributes( { max_level: Number(level) } ) }
             />
           </PanelRow>
         </PanelBody>

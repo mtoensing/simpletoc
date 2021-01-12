@@ -4,7 +4,7 @@ Tags: Gutenberg, blocks, gutenberg blocks, TOC, Table of Contents, Inhaltsverzei
 Requires at least: 5.0
 Donate link: https://marc.tv/out/donate
 Tested up to: 5.6
-Stable tag: 4.0.1
+Stable tag: 4.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -27,8 +27,15 @@ In Gutenberg, add a block and search for "SimpleTOC" or just "TOC". You need to 
 * Rank Math support.
 
 This plugin is forked from https://github.com/pdewouters/gutentoc by pdewouters and uses code from https://github.com/shazahm1/Easy-Table-of-Contents by shazahm1
+Many thanks to Tom J Nowell https://tomjn.comand and Sally CJ who both helped me a lot with my anying questions over at wordpress.stackexchange.com
 
 == Changelog ==
+
+= 4.0.2 =
+* Fix: Block forgot its settings on reload in Gutenberg.
+
+= 4.0.1 =
+* Fix: TOC Headline could not be disabled anymore.
 
 = 4.0 =
 * Added option to set maximum level of the headings.
