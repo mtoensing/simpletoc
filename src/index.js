@@ -22,7 +22,7 @@ registerBlockType('simpletoc/toc', {
   edit: function(props) {
     console.info(props.attributes.max_level);
     return (
-    <span>
+    <>
     <InspectorControls>
       <Panel>
         <PanelBody>
@@ -63,7 +63,7 @@ registerBlockType('simpletoc/toc', {
       </ToolbarGroup>
   </BlockControls>
   <ServerSideRender block={props.name} attributes={props.attributes} />
-  </span>
+  </>
     )
   },
   save: props => {
