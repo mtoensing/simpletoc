@@ -1,5 +1,8 @@
 == Changelog ==
 
+= 4.0.1 =
+* Fix: TOC Headline could not be disabled anymore. 
+
 = 4.0 =
 * Added option to set maximum level of the headings.
 
