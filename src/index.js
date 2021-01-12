@@ -72,9 +72,7 @@ registerBlockType('simpletoc/toc', {
         />
       </ToolbarGroup>
   </BlockControls>
-  <p>
-    <ServerSideRender block={props.name} attributes={props.attributes} />
-  </p>
+  <ServerSideRender block={props.name} attributes={props.attributes} />
   </span>
     )
   },
