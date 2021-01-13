@@ -1,10 +1,10 @@
 === SimpleTOC - Table of Contents Block ===
 Contributors: MarcDK
-Tags: Gutenberg, blocks, gutenberg blocks, TOC, Table of Contents, Inhaltsverzeichnis
+Tags: Gutenberg, blocks, gutenberg blocks, TOC, Table of Contents, AMP
 Requires at least: 5.0
 Donate link: https://marc.tv/out/donate
 Tested up to: 5.6
-Stable tag: 4.0.3
+Stable tag: 4.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,6 +31,8 @@ This plugin is forked from https://github.com/pdewouters/gutentoc by pdewouters 
 Many thanks to Tom J Nowell https://tomjn.com and and Sally CJ who both helped me a lot with my questions over at wordpress.stackexchange.com
 
 == Changelog ==
+= 4.0.4 =
+* Fix: Removed unnecessary debug message.
 
 = 4.0.3 =
 * Fix: Removed unnecessary p tag in Block Editor.
