@@ -28,7 +28,7 @@ In Gutenberg, add a block and search for "SimpleTOC" or just "TOC". You need to 
 
 This plugin is forked from https://github.com/pdewouters/gutentoc by pdewouters and uses code from https://github.com/shazahm1/Easy-Table-of-Contents by shazahm1
 
-Many thanks to Tom J Nowell https://tomjn.comand and Sally CJ who both helped me a lot with my questions over at wordpress.stackexchange.com
+Many thanks to Tom J Nowell https://tomjn.com and and Sally CJ who both helped me a lot with my questions over at wordpress.stackexchange.com
 
 == Changelog ==
 
