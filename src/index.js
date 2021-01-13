@@ -20,7 +20,6 @@ registerBlockType('simpletoc/toc', {
 		},
 	},
   edit: function(props) {
-    console.info(props.attributes.max_level);
     return (
     <>
     <InspectorControls>
