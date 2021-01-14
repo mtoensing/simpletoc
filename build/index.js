@@ -114,7 +114,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var simpletocicon = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])("svg", {
-  "clip-rule": "evenodd",
   "fill-rule": "evenodd",
   "stroke-linejoin": "round",
   "stroke-miterlimit": "2",
