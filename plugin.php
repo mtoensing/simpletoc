@@ -4,7 +4,7 @@
  * Plugin URI: https://github.com/mtoensing/simpletoc
  * Description: Adds a basic "Table of Contents" Gutenberg block.
  * Version: 4.1
- * Author: MarcDK
+ * Author: Marc Tönsing
  * Author URI: https://marc.tv
  * Text Domain: simpletoc
  * Domain Path: /languages
