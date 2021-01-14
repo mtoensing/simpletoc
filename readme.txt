@@ -4,7 +4,7 @@ Tags: Gutenberg, editor, TOC, Table of Contents, amp
 Requires at least: 5.0
 Donate link: https://marc.tv/out/donate
 Tested up to: 5.6
-Stable tag: 4.1
+Stable tag: 4.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,7 +32,7 @@ Many thanks to Tom J Nowell https://tomjn.com and and Sally CJ who both helped m
 
 == Changelog ==
 
-= 4.1 =
+= 4.1.1 =
 * Feature: Experimental support for Arabic Text.
 
 = 4.0.4 =
