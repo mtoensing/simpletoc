@@ -1,6 +1,6 @@
 === SimpleTOC - Table of Contents Block ===
 Contributors: MarcDK
-Tags: Gutenberg, editor, TOC, Table of Contents, amp
+Tags: Gutenberg, block, TOC, Table of Contents, amp
 Requires at least: 5.0
 Donate link: https://marc.tv/out/donate
 Tested up to: 5.6
@@ -35,18 +35,6 @@ Many thanks to Tom J Nowell https://tomjn.com and and Sally CJ who both helped m
 = 4.1.1 =
 * Feature: Experimental support for Arabic Text.
 
-= 4.0.4 =
-* Fix: Removed unnecessary debug message.
-
-= 4.0.3 =
-* Fix: Removed unnecessary p tag in Block Editor.
-
-= 4.0.2 =
-* Fix: Block forgot its settings on reload in Gutenberg.
-
-= 4.0.1 =
-* Fix: TOC Headline could not be disabled anymore.
-
 = 4.0 =
 * Added option to set maximum level of the headings.
 
@@ -54,10 +42,6 @@ Many thanks to Tom J Nowell https://tomjn.com and and Sally CJ who both helped m
 * Option to disable block heading added.
 * Enhanced the localization strings.
 * Added Brazilian Portuguese translations to the translations. Thanks Ralden Souza!
-
-= 3.6 =
-* Code refactoring: moved to JSX and updates dependencies. Makes the code much smaller and easier to read for humans.
-* Better contrast for logo within Gutenberg.
 
 = 3.5 =
 * Added support for Rank Math plugin.
@@ -72,3 +56,4 @@ In Gutenberg, add a block and search for "SimpleTOC" or just "TOC". Please save 
 1. SimpleTOC block in Gutenberg editor.
 2. SimpleTOC in the post.
 3. Disable "Table of contents" block headings´.
+4. Control the maximum depth of the headings.
