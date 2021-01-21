@@ -33,7 +33,7 @@ Many thanks to Tom J Nowell https://tomjn.com and and Sally CJ who both helped m
 == Changelog ==
 
 = 4.2 =
-* Fix: Removed questionmark symbols from headline. Now all html entites are properly decoded before anchor attribute.
+* Fix: HTML entites are properly decoded before anchor attribute is added. This removes encoding problems and questionmark characters in headlines.
 
 = 4.1.1 =
 * Feature: Experimental support for Arabic Text.
