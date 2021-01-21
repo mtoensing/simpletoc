@@ -161,6 +161,7 @@ function addAnchorAttribute($html){
 
     // remove non-breaking space entites and similar characters.
     $html_wo_entites = html_entity_decode($html_wo_entites);
+    
     $dom = new \DOMDocument();
     $dom->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
