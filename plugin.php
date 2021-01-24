@@ -157,14 +157,13 @@ function simpletoc_plugin_meta( $links, $file ) {
 
 function addAnchorAttribute($html){
 
-    // remove non-breaking space entites and similar characters.
+    // remove non-breaking space entites and similar characters from input HTML
     $html_wo_entites = html_entity_decode($html_wo_entites);
 
     $dom = new \DOMDocument();
     $dom->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
-    // Evaluate P tags in HTML. This just shows
-    // that you can be more selective on your tags
+    // use xpath to select the Heading html tags.
     $xpath = new \DOMXPath($dom);
     $tags = $xpath->evaluate("//*[self::h1 or self::h2 or self::h3 or self::h4 or self::h5 or self::h6]");
 
@@ -196,7 +195,7 @@ function filter_block($block_content, $block) {
 }
 
 function generateToc($matches,$attributes) {
-    /* original code from https://github.com/shazahm1/Easy-Table-of-Contents */
+    /* this is customized code from https://github.com/shazahm1/Easy-Table-of-Contents */
     $list ='';
     $current_depth      = 7;
     $numbered_items     = array();
