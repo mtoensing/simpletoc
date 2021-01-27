@@ -4,7 +4,7 @@ Tags: AMP, Gutenberg, block, TOC, Table of Contents
 Requires at least: 5.0
 Donate link: https://marc.tv/out/donate
 Tested up to: 5.6
-Stable tag: 4.2
+Stable tag: 4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,6 +13,8 @@ Adds a custom "table of contents" Gutenberg block.
 == Description ==
 
 In Gutenberg, add a block and search for "SimpleTOC" or just "TOC". You need to save your post before you add the block. It works by parsing the post content and retrieving the heading blocks and creates a new dynamic block with a list of links to the headings.
+
+Hide the headline "Table of Contents" and set a maximum display depth in the blocks' sidebar configuration. Add the CSS class "simpletoc-hidden" to a heading block to remove that specific heading from the generated TOC.
 
 = Features =
 
@@ -24,6 +26,7 @@ In Gutenberg, add a block and search for "SimpleTOC" or just "TOC". You need to 
 * SEO friendly: Disable the h2 heading of the TOC block and add your own.
 * No javascript or css added.
 * Comes with English, French, Spanish, German, and Brazilian Portuguese translations.
+* Works with non-latin texts. Tested with Japanese and Arabic.
 * Rank Math support.
 
 This plugin is forked from https://github.com/pdewouters/gutentoc by pdewouters and uses code from https://github.com/shazahm1/Easy-Table-of-Contents by shazahm1
@@ -31,6 +34,10 @@ This plugin is forked from https://github.com/pdewouters/gutentoc by pdewouters 
 Many thanks to Tom J Nowell https://tomjn.com and and Sally CJ who both helped me a lot with my questions over at wordpress.stackexchange.com
 
 == Changelog ==
+
+= 4.3 =
+* Feature: Support for non-latin headlines. SimpleTOC now uses a character block list rather than an allow list.
+* Feature: Add the CSS class "simpletoc-hidden" to the heading block to remove it from the Table of Contents.
 
 = 4.2 =
 * Fix: HTML entites are properly decoded before anchor attribute is added. This removes encoding problems and questionmark characters in headlines.

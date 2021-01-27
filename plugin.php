@@ -3,7 +3,7 @@
  * Plugin Name: SimpleTOC - Table of Contents Block
  * Plugin URI: https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
  * Description: Adds a basic "Table of Contents" Gutenberg block.
- * Version: 4.2
+ * Version: 4.3
  * Author: Marc Tönsing
  * Author URI: https://marc.tv
  * Text Domain: simpletoc
@@ -137,11 +137,18 @@ function render_callback($attributes, $content) {
 
 function simpletoc_sanitize_string($string){
 
-  $string_without_accents = remove_accents($string);
-  $string_only_letters_numbers_and_whitepace = preg_replace("/[^\x{0600}-\x{06FF}A-Za-z0-9 !@#$%^&*().]/u", "", $string_without_accents);
-  $sanitized_string = sanitize_title_with_dashes($string_only_letters_numbers_and_whitepace);
+  // remove punctuation
+  $zero_punctuation = preg_replace("/\p{P}/u", "", $string);
+  // remove non-breaking spaces
+  $html_wo_nbs = str_replace("&nbsp;", " ", $zero_punctuation);
+  // remove umlauts and accents
+  $string_without_accents = remove_accents($html_wo_nbs);
+  // Sanitizes a title, replacing whitespace and a few other characters with dashes.
+  $sanitized_string = sanitize_title_with_dashes($string_without_accents);
+  // Encode for use in an url
+  $urlencoded = urlencode($sanitized_string);
 
-  return $sanitized_string;
+  return $urlencoded;
 }
 
 function simpletoc_plugin_meta( $links, $file ) {
@@ -157,11 +164,11 @@ function simpletoc_plugin_meta( $links, $file ) {
 
 function addAnchorAttribute($html){
 
-    // remove non-breaking space entites and similar characters from input HTML
-    $html_wo_entites = html_entity_decode($html_wo_entites);
+    // remove non-breaking space entites from input HTML
+    $html_wo_nbs = str_replace("&nbsp;", " ", $html);
 
     $dom = new \DOMDocument();
-    $dom->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+    $dom->loadHTML($html_wo_nbs, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
     // use xpath to select the Heading html tags.
     $xpath = new \DOMXPath($dom);
@@ -171,8 +178,8 @@ function addAnchorAttribute($html){
     foreach ($tags as $tag) {
 
         // Set id attribute
-        $heading_text = strip_tags($html);
-        $anchor= simpletoc_sanitize_string($heading_text);
+        $heading_text = strip_tags( $html );
+        $anchor = simpletoc_sanitize_string( $heading_text );
         $tag->setAttribute("id", $anchor);
     }
 
@@ -215,8 +222,13 @@ function generateToc($matches,$attributes) {
         $level = $matches[ $i ][2];
         $count = $i + 1;
 
-        /* skip this heading because it is not needed. */
+        // skip this heading because it is not needed.
         if( $level > $attributes['max_level'] ){
+          continue;
+        }
+
+        // If CSS class contains "simpletoc-hidden" skip this headline
+        if( strpos($match, 'class="simpletoc-hidden' ) > 0 ) {
           continue;
         }
 
