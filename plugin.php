@@ -32,6 +32,21 @@ add_filter( 'rank_math/researches/toc_plugins', function( $toc_plugins ) {
     return $toc_plugins;
 });
 
+function recurse($item) {
+  $arr = array();
+
+  foreach ($item as $key => $value) {
+      if (is_array($value) ) {
+          $arr = array_merge(recurse($value),$arr);
+      } else {
+          if ( isset($item['blockName']) && $item['blockName'] === 'core/heading' && $value !== 'core/heading')  {       
+            $arr[] = $value;
+          }
+      }
+  }
+
+  return $arr;
+}
 
 /* Init SimpleTOC */
 function init() {
@@ -104,9 +119,16 @@ function render_callback($attributes, $content) {
       return $html;
     }
 
-    $headings = array_values(array_filter($blocks, function ($block) {
-      return $block['blockName'] === 'core/heading';
-    }));
+    //$headings = map_deep( $blocks, 'test_print' );
+
+    /*
+      $headings = array_values(array_filter($blocks, function ($block) {
+        return $block['blockName'] === 'core/heading';
+      }));
+    */
+
+    //var_dump($blocks);
+    $headings = array_reverse(recurse($blocks));
 
     if (empty($headings)) {
       $html = '';
@@ -117,13 +139,7 @@ function render_callback($attributes, $content) {
       return $html;
 		}
 
-    $heading_contents = array_column($headings, 'innerHTML');
-
-    foreach ($heading_contents as  $key => & $heading) {
-        $heading = trim($heading);
-    }
-
-    $output = generateToc($heading_contents,$attributes);
+    $output = generateToc($headings,$attributes);
 
     if(isset($attributes['className'])){
       $className = strip_tags(htmlspecialchars($attributes['className']));
@@ -290,3 +306,4 @@ function generateToc($matches,$attributes) {
     $html .= '<ul class="simpletoc">' . $list . "</li></ul>";
     return $html;
 }
+
