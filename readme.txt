@@ -4,7 +4,7 @@ Tags: AMP, Gutenberg, block, TOC, Table of Contents
 Requires at least: 5.0
 Donate link: https://marc.tv/out/donate
 Tested up to: 5.6
-Stable tag: 4.3
+Stable tag: 4.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -21,6 +21,7 @@ Hide the headline "Table of Contents" and set a maximum display depth in the blo
 * Designed for Gutenberg.
 * Compatible with AMP plugins.
 * Minimal and valid HTML output.
+* Support for column block layouts. 
 * Inherits the style of your theme.
 * Control the maximum depth of the headings.
 * SEO friendly: Disable the h2 heading of the TOC block and add your own.
@@ -34,6 +35,9 @@ This plugin is forked from https://github.com/pdewouters/gutentoc by pdewouters 
 Many thanks to Tom J Nowell https://tomjn.com and and Sally CJ who both helped me a lot with my questions over at wordpress.stackexchange.com
 
 == Changelog ==
+
+= 4.4 =
+* Feature: Works in nested blockes. This means support for column block layouts. 
 
 = 4.3 =
 * Feature: Support for non-latin headlines. SimpleTOC now uses a character block list rather than an allow list.
