@@ -32,15 +32,15 @@ add_filter( 'rank_math/researches/toc_plugins', function( $toc_plugins ) {
     return $toc_plugins;
 });
 
-function recurse($item) {
+function recurse($blocks) {
   $arr = array();
 
-  foreach ($item as $key => $value) {
-      if (is_array($value) ) {
-          $arr = array_merge(recurse($value),$arr);
+  foreach ($blocks as $block => $innerBlock) {
+      if (is_array($innerBlock) ) {
+          $arr = array_merge(recurse($innerBlock),$arr);
       } else {
-          if ( isset($item['blockName']) && $item['blockName'] === 'core/heading' && $value !== 'core/heading')  {       
-            $arr[] = $value;
+          if ( isset($blocks['blockName']) && $blocks['blockName'] === 'core/heading' && $innerBlock !== 'core/heading')  {       
+            $arr[] = $innerBlock;
           }
       }
   }
