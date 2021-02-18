@@ -121,9 +121,9 @@ function render_callback($attributes, $content) {
 
     $headings = array_reverse(recurse($blocks));
 
-  
+    $headings_clean = array_map('trim', $headings);
 
-    if (empty($headings)) {
+    if (empty($headings_clean)) {
       $html = '';
       if($attributes['no_title'] == false) {
         $html = '<h2 class="simpletoc-title">' . __('Table of Contents', 'simpletoc') . '</h2>';
@@ -132,7 +132,7 @@ function render_callback($attributes, $content) {
       return $html;
 		}
 
-    $output = generateToc($headings,$attributes);
+    $output = generateToc($headings_clean,$attributes);
 
     if(isset($attributes['className'])){
       $className = strip_tags(htmlspecialchars($attributes['className']));
