@@ -32,20 +32,21 @@ add_filter( 'rank_math/researches/toc_plugins', function( $toc_plugins ) {
     return $toc_plugins;
 });
 
-function recurse($blocks) {
-  $arr = array();
+function filter_headings_recursive($blocks) {
+  
+    $arr = array();
 
-  foreach ($blocks as $block => $innerBlock) {
-      if (is_array($innerBlock) ) {
-          $arr = array_merge(recurse($innerBlock),$arr);
-      } else {
-          if ( isset($blocks['blockName']) && $blocks['blockName'] === 'core/heading' && $innerBlock !== 'core/heading')  {       
-            $arr[] = $innerBlock;
-          }
-      }
-  }
+    foreach ($blocks as $block => $innerBlock) {
+        if (is_array($innerBlock) ) {
+            $arr = array_merge(filter_headings_recursive($innerBlock),$arr);
+        } else {
+            if ( isset($blocks['blockName']) && $blocks['blockName'] === 'core/heading' && $innerBlock !== 'core/heading')  {       
+              $arr[] = $innerBlock;
+            }
+        }
+    }
 
-  return $arr;
+    return $arr;
 }
 
 /* Init SimpleTOC */
@@ -119,7 +120,7 @@ function render_callback($attributes, $content) {
       return $html;
     }
 
-    $headings = array_reverse(recurse($blocks));
+    $headings = array_reverse(filter_headings_recursive($blocks));
 
     $headings_clean = array_map('trim', $headings);
 
