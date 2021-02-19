@@ -4,7 +4,7 @@ Tags: AMP, Gutenberg, block, TOC, Table of Contents
 Requires at least: 5.0
 Donate link: https://marc.tv/out/donate
 Tested up to: 5.6
-Stable tag: 4.4
+Stable tag: 4.4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,8 +36,9 @@ Many thanks to Tom J Nowell https://tomjn.com and and Sally CJ who both helped m
 
 == Changelog ==
 
-= 4.4 =
+= 4.4.1 =
 * Feature: Works in nested blockes. This means support for column block layouts. 
+* Fix: Added double check to validate headings.
 
 = 4.3 =
 * Feature: Support for non-latin headlines. SimpleTOC now uses a character block list rather than an allow list.

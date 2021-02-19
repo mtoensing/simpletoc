@@ -3,7 +3,7 @@
  * Plugin Name: SimpleTOC - Table of Contents Block
  * Plugin URI: https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
  * Description: Adds a basic "Table of Contents" Gutenberg block.
- * Version: 4.4
+ * Version: 4.4.1
  * Author: Marc Tönsing
  * Author URI: https://marc.tv
  * Text Domain: simpletoc
@@ -40,8 +40,10 @@ function filter_headings_recursive($blocks) {
         if (is_array($innerBlock) ) {
             $arr = array_merge(filter_headings_recursive($innerBlock),$arr);
         } else {
-            if ( isset($blocks['blockName']) && $blocks['blockName'] === 'core/heading' && $innerBlock !== 'core/heading')  {       
-              $arr[] = $innerBlock;
+            if ( isset($blocks['blockName']) && $blocks['blockName'] === 'core/heading' && $innerBlock !== 'core/heading')  {  
+              if(preg_match("/(<h1>|<h2>|<h3>|<h4>|<h5>|<h6>)/i", $innerBlock)){
+                $arr[] = $innerBlock;
+               }     
             }
         }
     }
@@ -174,41 +176,41 @@ function simpletoc_plugin_meta( $links, $file ) {
 
 function addAnchorAttribute($html){
 
-    // remove non-breaking space entites from input HTML
-    $html_wo_nbs = str_replace("&nbsp;", " ", $html);
+  // remove non-breaking space entites from input HTML
+  $html_wo_nbs = str_replace("&nbsp;", " ", $html);
 
-    $dom = new \DOMDocument();
-    $dom->loadHTML($html_wo_nbs, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+  $dom = new \DOMDocument();
+  $dom->loadHTML($html_wo_nbs, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
-    // use xpath to select the Heading html tags.
-    $xpath = new \DOMXPath($dom);
-    $tags = $xpath->evaluate("//*[self::h1 or self::h2 or self::h3 or self::h4 or self::h5 or self::h6]");
+  // use xpath to select the Heading html tags.
+  $xpath = new \DOMXPath($dom);
+  $tags = $xpath->evaluate("//*[self::h1 or self::h2 or self::h3 or self::h4 or self::h5 or self::h6]");
 
-    // Loop through all the found tags
-    foreach ($tags as $tag) {
+  // Loop through all the found tags
+  foreach ($tags as $tag) {
 
-        // Set id attribute
-        $heading_text = strip_tags( $html );
-        $anchor = simpletoc_sanitize_string( $heading_text );
-        $tag->setAttribute("id", $anchor);
-    }
+      // Set id attribute
+      $heading_text = strip_tags( $html );
+      $anchor = simpletoc_sanitize_string( $heading_text );
+      $tag->setAttribute("id", $anchor);
+  }
 
-    // Save the HTML changes
-    $content = utf8_decode($dom->saveHTML($dom->documentElement));
+  // Save the HTML changes
+  $content = utf8_decode($dom->saveHTML($dom->documentElement));
 
-    return $content;
+  return $content;
 }
 
 function filter_block($block_content, $block) {
-    $className = '';
+  $className = '';
 
-    if ($block['blockName'] !== 'core/heading') {
-        return $block_content;
-    }
+  if ($block['blockName'] !== 'core/heading') {
+      return $block_content;
+  }
 
-    $block_content = addAnchorAttribute($block_content);
+  $block_content = addAnchorAttribute($block_content);
 
-    return $block_content;
+  return $block_content;
 }
 
 function generateToc($matches,$attributes) {
