@@ -308,7 +308,7 @@ function generateToc($matches,$attributes) {
     if($attributes['no_title'] == false) {
       $html = '<h2 class="simpletoc-title">' . __('Table of Contents', 'simpletoc') . '</h2>';
     }
-    $html .= '<' . $listtype . ' class="simpletoc">' . $list . '</li><' . $listtype . '>';
+    $html .= '<' . $listtype . ' class="simpletoc">' . $list . '</li></' . $listtype . '>';
     return $html;
 }
 
