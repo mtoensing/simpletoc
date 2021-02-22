@@ -152,7 +152,7 @@ Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_2__["registerBlockType"])('sim
       }
     })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelRow"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["ToggleControl"], {
       label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Use an ordered list', 'simpletoc'),
-      help: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Replace <ul> tag with <ol> tag. This will add decimal numbers to each heading in the TOC.', 'simpletoc'),
+      help: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Replace the <ul> tag with an <ol> tag. This will add decimal numbers to each heading in the TOC.', 'simpletoc'),
       checked: props.attributes.use_ol,
       onChange: function onChange() {
         return props.setAttributes({

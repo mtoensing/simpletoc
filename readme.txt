@@ -4,7 +4,7 @@ Tags: AMP, Gutenberg, block, TOC, Table of Contents
 Requires at least: 5.0
 Donate link: https://marc.tv/out/donate
 Tested up to: 5.6
-Stable tag: 4.4.1
+Stable tag: 4.4.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,6 +24,7 @@ Hide the headline "Table of Contents" and set a maximum display depth in the blo
 * Support for column block layouts. 
 * Inherits the style of your theme.
 * Control the maximum depth of the headings.
+* Choose between an ordered and unordered html list.
 * SEO friendly: Disable the h2 heading of the TOC block and add your own.
 * No javascript or css added.
 * Comes with English, French, Spanish, German, and Brazilian Portuguese translations.
@@ -36,7 +37,8 @@ Many thanks to Tom J Nowell https://tomjn.com and and Sally CJ who both helped m
 
 == Changelog ==
 
-= 4.4.1 =
+= 4.4.2 =
+* Feature: Added option to replace <ul> tag with <ol> tag. This will add decimal numbers to each heading in the TOC.
 * Feature: Works in nested blockes. This means support for column block layouts. 
 * Fix: Added double check to validate headings.
 
@@ -70,5 +72,5 @@ In Gutenberg, add a block and search for "SimpleTOC" or just "TOC". Please save 
 ## Screenshots ##
 1. SimpleTOC block in Gutenberg editor.
 2. SimpleTOC in the post.
-3. Disable "Table of contents" block headings´.
+3. Simple but powerful. Customize each TOC as you like.
 4. Control the maximum depth of the headings.

@@ -38,12 +38,12 @@ registerBlockType('simpletoc/toc', {
             />
           </PanelRow>
           <PanelRow>
-          <ToggleControl
-            label={__('Use an ordered list', 'simpletoc')}
-            help={__('Replace <ul> tag with <ol> tag. This will add decimal numbers to each heading in the TOC.', 'simpletoc')}
-            checked={ props.attributes.use_ol }
-            onChange={ () => props.setAttributes( {  use_ol: ! props.attributes.use_ol } ) }
-          />
+            <ToggleControl
+                label={__('Use an ordered list', 'simpletoc')}
+                help={__('Replace the <ul> tag with an <ol> tag. This will add decimal numbers to each heading in the TOC.', 'simpletoc')}
+                checked={ props.attributes.use_ol }
+                onChange={ () => props.setAttributes( {  use_ol: ! props.attributes.use_ol } ) }
+            />
           </PanelRow>
           <PanelRow>
             <SelectControl
