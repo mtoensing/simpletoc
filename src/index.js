@@ -14,6 +14,10 @@ registerBlockType('simpletoc/toc', {
 			type: 'boolean',
       default: false,
 		},
+    use_ol: {
+			type: 'boolean',
+      default: false,
+		},
 		max_level: {
 			type: 'integer',
       default: 6,
@@ -47,6 +51,14 @@ registerBlockType('simpletoc/toc', {
                 ] }
                 onChange={ ( level ) => props.setAttributes( { max_level: Number(level) } ) }
             />
+          </PanelRow>
+          <PanelRow>
+          <ToggleControl
+            label={__("Use ordered list", 'simpletoc')}
+            help={__('Use an <ol> tag instead of an <ul> tag', 'simpletoc')}
+            checked={ props.attributes.use_ol }
+            onChange={ () => props.setAttributes( {  use_ol: ! props.attributes.use_ol } ) }
+          />
           </PanelRow>
         </PanelBody>
       </Panel>

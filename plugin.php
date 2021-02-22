@@ -92,6 +92,10 @@ function register_block() {
         			'type' => 'boolean',
               'default' => false,
         		),
+            'use_ol' => array(
+        			'type' => 'boolean',
+              'default' => false,
+        		),
             'max_level' => array(
         			'type' => 'integer',
               'default' => 6,
@@ -215,10 +219,15 @@ function filter_block($block_content, $block) {
 
 function generateToc($matches,$attributes) {
     /* this is customized code from https://github.com/shazahm1/Easy-Table-of-Contents */
-    $list ='';
+    $list = '';
     $current_depth      = 7;
     $numbered_items     = array();
+    $listtype = 'ul';
 
+    if($attributes['use_ol'] == true){
+      $listtype = 'ol';
+    }
+    
     // find the minimum heading to establish our baseline
     //for ( $i = 0; $i < count( $matches ); $i ++ ) {
     foreach ($matches as $i => $match) {
@@ -252,7 +261,7 @@ function generateToc($matches,$attributes) {
         if ($current_depth != (int) $matches[ $i ][2]) {
             for ($current_depth; $current_depth < (int) $matches[ $i ][2]; $current_depth++) {
                 $numbered_items[ $current_depth + 1 ] = 0;
-                $list .= '<ul><li>';
+                $list .= '<' . $listtype . '><li>';
             }
         }
 
@@ -264,7 +273,7 @@ function generateToc($matches,$attributes) {
         if ($i != count($matches) - 1) {
             if ($current_depth > (int) $matches[ $i + 1 ][2]) {
                 for ($current_depth; $current_depth > (int) $matches[ $i + 1 ][2]; $current_depth--) {
-                    $list .= '</li></ul>';
+                    $list .= '</li></' . $listtype . '>';
                     $numbered_items[ $current_depth ] = 0;
 
                 }
@@ -286,7 +295,7 @@ function generateToc($matches,$attributes) {
 
                 // is current heading level higher than previous?
                 if( $current_depth > $prevdepth ) {
-                  $list .= '</li></ul>';
+                  $list .= '</li></' . $listtype . '>';
                 }
             }
 
@@ -299,7 +308,7 @@ function generateToc($matches,$attributes) {
     if($attributes['no_title'] == false) {
       $html = '<h2 class="simpletoc-title">' . __('Table of Contents', 'simpletoc') . '</h2>';
     }
-    $html .= '<ul class="simpletoc">' . $list . "</li></ul>";
+    $html .= '<' . $listtype . ' class="simpletoc">' . $list . '</li><' . $listtype . '>';
     return $html;
 }
 
