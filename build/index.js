@@ -150,6 +150,15 @@ Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_2__["registerBlockType"])('sim
           no_title: !props.attributes.no_title
         });
       }
+    })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelRow"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["ToggleControl"], {
+      label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])("Use an ordered list", 'simpletoc'),
+      help: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('This will replace the <ul> tag for an <ol> tag', 'simpletoc'),
+      checked: props.attributes.use_ol,
+      onChange: function onChange() {
+        return props.setAttributes({
+          use_ol: !props.attributes.use_ol
+        });
+      }
     })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelRow"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["SelectControl"], {
       label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])("Maximum Level", 'simpletoc'),
       help: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Maximum depth of the headings.', 'simpletoc'),
@@ -173,15 +182,6 @@ Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_2__["registerBlockType"])('sim
       onChange: function onChange(level) {
         return props.setAttributes({
           max_level: Number(level)
-        });
-      }
-    })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelRow"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["ToggleControl"], {
-      label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])("Use ordered list", 'simpletoc'),
-      help: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Use an <ol> tag instead of an <ul> tag', 'simpletoc'),
-      checked: props.attributes.use_ol,
-      onChange: function onChange() {
-        return props.setAttributes({
-          use_ol: !props.attributes.use_ol
         });
       }
     }))))), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__["BlockControls"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["ToolbarGroup"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["ToolbarButton"], {

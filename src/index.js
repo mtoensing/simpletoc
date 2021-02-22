@@ -38,6 +38,14 @@ registerBlockType('simpletoc/toc', {
             />
           </PanelRow>
           <PanelRow>
+          <ToggleControl
+            label={__("Use an ordered list", 'simpletoc')}
+            help={__('This will replace the <ul> tag for an <ol> tag', 'simpletoc')}
+            checked={ props.attributes.use_ol }
+            onChange={ () => props.setAttributes( {  use_ol: ! props.attributes.use_ol } ) }
+          />
+          </PanelRow>
+          <PanelRow>
             <SelectControl
                 label={__("Maximum Level", 'simpletoc')}
                 help={__('Maximum depth of the headings.', 'simpletoc')}
@@ -51,14 +59,6 @@ registerBlockType('simpletoc/toc', {
                 ] }
                 onChange={ ( level ) => props.setAttributes( { max_level: Number(level) } ) }
             />
-          </PanelRow>
-          <PanelRow>
-          <ToggleControl
-            label={__("Use ordered list", 'simpletoc')}
-            help={__('Use an <ol> tag instead of an <ul> tag', 'simpletoc')}
-            checked={ props.attributes.use_ol }
-            onChange={ () => props.setAttributes( {  use_ol: ! props.attributes.use_ol } ) }
-          />
           </PanelRow>
         </PanelBody>
       </Panel>
