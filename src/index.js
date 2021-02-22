@@ -31,7 +31,7 @@ registerBlockType('simpletoc/toc', {
         <PanelBody>
           <PanelRow>
             <ToggleControl
-                label={__("Disable heading", 'simpletoc')}
+                label={__('Disable heading', 'simpletoc')}
                 help={__('Remove "Table of contents" block heading.', 'simpletoc')}
                 checked={ props.attributes.no_title }
                 onChange={ () => props.setAttributes( {  no_title: ! props.attributes.no_title } ) }
@@ -39,8 +39,8 @@ registerBlockType('simpletoc/toc', {
           </PanelRow>
           <PanelRow>
           <ToggleControl
-            label={__("Use an ordered list", 'simpletoc')}
-            help={__('This will replace the <ul> tag for an <ol> tag', 'simpletoc')}
+            label={__('Use an ordered list', 'simpletoc')}
+            help={__('Replace <ul> tag with <ol> tag. This will add decimal numbers to each heading in the TOC.', 'simpletoc')}
             checked={ props.attributes.use_ol }
             onChange={ () => props.setAttributes( {  use_ol: ! props.attributes.use_ol } ) }
           />
