@@ -22,18 +22,6 @@ defined('ABSPATH') || exit;
 add_action('init', __NAMESPACE__ . '\\init');
 add_action('init', __NAMESPACE__ . '\\register_block');
 add_action( 'plugins_loaded', __NAMESPACE__ . '\\filter_render_block_callback' );
-
-function filter_render_block_callback() {
-    //add only if block is used in this post.
-    add_filter( 'render_block', __NAMESPACE__ . '\\filter_block', 10, 2 );
-};
-
-
-/**
- * Filter to add plugins to the TOC list for Rank Math plugin
- *
- * @param array TOC plugins.
- */
 add_filter( 'rank_math/researches/toc_plugins', function( $toc_plugins ) {
     $toc_plugins['simpletoc/plugin.php'] = 'SimpleTOC';
     return $toc_plugins;
@@ -116,6 +104,11 @@ function register_block() {
     )
    ]);
 }
+
+function filter_render_block_callback() {
+  //add only if block is used in this post.
+  add_filter( 'render_block', __NAMESPACE__ . '\\filter_block', 10, 2 );
+};
 
 function render_callback($attributes, $content) {
 
@@ -276,6 +269,7 @@ function generateToc($matches,$attributes) {
 
         // end lists
         if ($i != count($matches) - 1) {
+          
             if ($current_depth > (int) $matches[ $i + 1 ][2]) {
                 for ($current_depth; $current_depth > (int) $matches[ $i + 1 ][2]; $current_depth--) {
                     $list .= '</li></' . $listtype . '>';
