@@ -87,27 +87,26 @@ function register_block() {
     register_block_type('simpletoc/toc', [
     'editor_script' => 'simpletoc-js',
     'editor_style' => 'simpletoc-editor',
-        'attributes' => array(
-        		'no_title' => array(
-        			'type' => 'boolean',
-              'default' => false,
-        		),
-            'use_ol' => array(
-        			'type' => 'boolean',
-              'default' => false,
-        		),
-            'max_level' => array(
-        			'type' => 'integer',
-              'default' => 6,
-        		),
-            'updated' => array(
-              'type' => 'number',
-              'default' => 0,
-              '_builtIn' => true,
-            ),
-    ),
-    'render_callback' => __NAMESPACE__ . '\\render_callback'
-   ]);
+    'render_callback' => __NAMESPACE__ . '\\render_callback',
+    'attributes' => array(
+        'no_title' => array(
+          'type' => 'boolean',
+          'default' => false,
+        ),
+        'use_ol' => array(
+          'type' => 'boolean',
+          'default' => false,
+        ),
+        'max_level' => array(
+          'type' => 'integer',
+          'default' => 6,
+        ),
+        'updated' => array(
+          'type' => 'number',
+          'default' => 0,
+          '_builtIn' => true,
+        ),
+    )]);
 }
 
 function render_callback($attributes, $content) {
