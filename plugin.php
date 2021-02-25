@@ -3,7 +3,7 @@
  * Plugin Name: SimpleTOC - Table of Contents Block
  * Plugin URI: https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
  * Description: Adds a basic "Table of Contents" Gutenberg block.
- * Version: 4.4.6
+ * Version: 4.4.7
  * Author: Marc Tönsing
  * Author URI: https://marc.tv
  * Text Domain: simpletoc
@@ -21,7 +21,12 @@ defined('ABSPATH') || exit;
 **/
 add_action('init', __NAMESPACE__ . '\\init');
 add_action('init', __NAMESPACE__ . '\\register_block');
-add_action( 'plugins_loaded', __NAMESPACE__ . '\\filter_render_block_callback' );
+
+/**
+ * Filter to add plugins to the TOC list for Rank Math plugin
+ *
+ * @param array TOC plugins.
+ */
 add_filter( 'rank_math/researches/toc_plugins', function( $toc_plugins ) {
     $toc_plugins['simpletoc/plugin.php'] = 'SimpleTOC';
     return $toc_plugins;
@@ -82,35 +87,32 @@ function register_block() {
     register_block_type('simpletoc/toc', [
     'editor_script' => 'simpletoc-js',
     'editor_style' => 'simpletoc-editor',
-    'render_callback' => __NAMESPACE__ . '\\render_callback',
-    'attributes' => array(
-        'no_title' => array(
-          'type' => 'boolean',
-          'default' => false,
-        ),
-        'use_ol' => array(
-          'type' => 'boolean',
-          'default' => false,
-        ),
-        'max_level' => array(
-          'type' => 'integer',
-          'default' => 6,
-        ),
-        'updated' => array(
-          'type' => 'number',
-          'default' => 0,
-          '_builtIn' => true,
-        ),
-    )
+        'attributes' => array(
+        		'no_title' => array(
+        			'type' => 'boolean',
+              'default' => false,
+        		),
+            'use_ol' => array(
+        			'type' => 'boolean',
+              'default' => false,
+        		),
+            'max_level' => array(
+        			'type' => 'integer',
+              'default' => 6,
+        		),
+            'updated' => array(
+              'type' => 'number',
+              'default' => 0,
+              '_builtIn' => true,
+            ),
+    ),
+    'render_callback' => __NAMESPACE__ . '\\render_callback'
    ]);
 }
 
-function filter_render_block_callback() {
-  //add only if block is used in this post.
-  add_filter( 'render_block', __NAMESPACE__ . '\\filter_block', 10, 2 );
-};
-
 function render_callback($attributes, $content) {
+    //add only if block is used in this post.
+    add_filter('render_block', __NAMESPACE__ . '\\filter_block', 10, 2);
 
     $post = get_post();
     $blocks = parse_blocks($post->post_content);
@@ -269,7 +271,6 @@ function generateToc($matches,$attributes) {
 
         // end lists
         if ($i != count($matches) - 1) {
-
             if ($current_depth > (int) $matches[ $i + 1 ][2]) {
                 for ($current_depth; $current_depth > (int) $matches[ $i + 1 ][2]; $current_depth--) {
                     $list .= '</li></' . $listtype . '>';

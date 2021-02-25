@@ -4,7 +4,7 @@ Tags: AMP, Gutenberg, block, TOC, Table of Contents
 Requires at least: 5.0
 Donate link: https://marc.tv/out/donate
 Tested up to: 5.6.2
-Stable tag: 4.4.6
+Stable tag: 4.4.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -37,8 +37,8 @@ Many thanks to Tom J Nowell https://tomjn.com and and Sally CJ who both helped m
 
 == Changelog ==
 
-= 4.4.6 =
-* Fix: Added compatibility for Full Site Editing.
+= 4.4.7 =
+* Fix: Heading ids won't be added to all posts anymore. 
 * Fix: Headings with attributes like align-center will now appear in your TOC. 
 * Feature: Added option to replace ul tag with ol tag. This will add decimal numbers to each heading in the TOC.
 * Feature: Works in nested blockes. This means support for column block layouts. 
