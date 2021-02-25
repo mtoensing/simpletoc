@@ -135,6 +135,10 @@ Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_2__["registerBlockType"])('sim
       type: 'boolean',
       default: false
     },
+    use_absolute_urls: {
+      type: 'boolean',
+      default: false
+    },
     max_level: {
       type: 'integer',
       default: 6
@@ -157,6 +161,15 @@ Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_2__["registerBlockType"])('sim
       onChange: function onChange() {
         return props.setAttributes({
           use_ol: !props.attributes.use_ol
+        });
+      }
+    })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelRow"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["ToggleControl"], {
+      label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Use absolute urls', 'simpletoc'),
+      help: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Adds the permalink url to the fragment. Important for paginated articles.', 'simpletoc'),
+      checked: props.attributes.use_absolute_urls,
+      onChange: function onChange() {
+        return props.setAttributes({
+          use_absolute_urls: !props.attributes.use_absolute_urls
         });
       }
     })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelRow"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["SelectControl"], {

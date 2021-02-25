@@ -18,6 +18,10 @@ registerBlockType('simpletoc/toc', {
 			type: 'boolean',
       default: false,
 		},
+    use_absolute_urls: {
+			type: 'boolean',
+      default: false,
+		},
 		max_level: {
 			type: 'integer',
       default: 6,
@@ -43,6 +47,14 @@ registerBlockType('simpletoc/toc', {
                 help={__('Replace the <ul> tag with an <ol> tag. This will add decimal numbers to each heading in the TOC.', 'simpletoc')}
                 checked={ props.attributes.use_ol }
                 onChange={ () => props.setAttributes( {  use_ol: ! props.attributes.use_ol } ) }
+            />
+          </PanelRow>
+          <PanelRow>
+            <ToggleControl
+                label={__('Use absolute urls', 'simpletoc')}
+                help={__('Adds the permalink url to the fragment. Important for paginated articles.', 'simpletoc')}
+                checked={ props.attributes.use_absolute_urls }
+                onChange={ () => props.setAttributes( {  use_absolute_urls: ! props.attributes.use_absolute_urls } ) }
             />
           </PanelRow>
           <PanelRow>

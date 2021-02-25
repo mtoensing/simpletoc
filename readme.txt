@@ -4,7 +4,7 @@ Tags: AMP, Gutenberg, block, TOC, Table of Contents
 Requires at least: 5.0
 Donate link: https://marc.tv/out/donate
 Tested up to: 5.6.2
-Stable tag: 4.4.7
+Stable tag: 4.4.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,6 +36,9 @@ This plugin is forked from https://github.com/pdewouters/gutentoc by pdewouters 
 Many thanks to Tom J Nowell https://tomjn.com and and Sally CJ who both helped me a lot with my questions over at wordpress.stackexchange.com
 
 == Changelog ==
+
+= 4.4.8 =
+* Feature: Added option to toggle absolute urls. 
 
 = 4.4.7 =
 * Fix: Heading ids won't be added to all posts anymore. 
