@@ -4,7 +4,7 @@ Tags: AMP, Gutenberg, block, TOC, Table of Contents
 Requires at least: 5.0
 Donate link: https://marc.tv/out/donate
 Tested up to: 5.6.2
-Stable tag: 4.4.3
+Stable tag: 4.4.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,10 +18,10 @@ Hide the headline "Table of Contents" and set a maximum display depth in the blo
 
 = Features =
 
+* No javascript or css added.
 * Designed for Gutenberg.
 * Compatible with AMP plugins.
 * Minimal and valid HTML output.
-* No javascript or css added.
 * Inherits the style of your theme.
 * Support for column block layouts. 
 * Control the maximum depth of the headings.
@@ -37,7 +37,8 @@ Many thanks to Tom J Nowell https://tomjn.com and and Sally CJ who both helped m
 
 == Changelog ==
 
-= 4.4.2 =
+= 4.4.5 =
+* Fix: Headings with attributes like align-center will now appear in your TOC. 
 * Feature: Added option to replace ul tag with ol tag. This will add decimal numbers to each heading in the TOC.
 * Feature: Works in nested blockes. This means support for column block layouts. 
 
@@ -62,6 +63,20 @@ Many thanks to Tom J Nowell https://tomjn.com and and Sally CJ who both helped m
 SimpleTOC can be found and installed via the Plugin menu within WordPress administration (Plugins -> Add New). Alternatively, it can be downloaded from WordPress.org and installed manually...
 
 In Gutenberg, add a block and search for "SimpleTOC" or just "TOC". Please save your content before you use the block.
+
+== Frequently Asked Questions ==
+
+= Why did you do this? =
+
+Because I needed a simple plugin to do this job and decided to do it on his own. I believe that a Table of Contents does not need Javascript and additional css. Furthermore the plugin should work out-of-the-box without any configuration. 
+
+= How do I change the TOC heading ‘Table of contents’ to some other words? =
+
+Hide the headline in the sidebar options of SimpleTOC and add your own heading.
+
+= How do I add SimpleTOC to all articles automatically?  =
+
+I don’t see an easy solution at the moment. SimpleTOC is only a block that can be placed in your post. If there would be a plugin that adds blocks to every post then this would be the solution. I think this should be another separate plug-in to keep the code of SimpleTOC clean and … well, simple. Maybe someone knows of a plug-in that adds blocks automatically to all posts with some parameters and settings? What about site editing in WordPress? I think the core team is working on something like that. I will keep this post open. If I have gained more knowledge how to solve this I will add this feature. 
 
 ## Screenshots ##
 1. SimpleTOC block in Gutenberg editor.
