@@ -21,6 +21,13 @@ defined('ABSPATH') || exit;
 **/
 add_action('init', __NAMESPACE__ . '\\init');
 add_action('init', __NAMESPACE__ . '\\register_block');
+add_action( 'plugins_loaded', __NAMESPACE__ . '\\filter_render_block_callback' );
+
+function filter_render_block_callback() {
+    //add only if block is used in this post.
+    add_filter( 'render_block', __NAMESPACE__ . '\\filter_block', 10, 2 );
+};
+
 
 /**
  * Filter to add plugins to the TOC list for Rank Math plugin
@@ -87,32 +94,30 @@ function register_block() {
     register_block_type('simpletoc/toc', [
     'editor_script' => 'simpletoc-js',
     'editor_style' => 'simpletoc-editor',
-        'attributes' => array(
-        		'no_title' => array(
-        			'type' => 'boolean',
-              'default' => false,
-        		),
-            'use_ol' => array(
-        			'type' => 'boolean',
-              'default' => false,
-        		),
-            'max_level' => array(
-        			'type' => 'integer',
-              'default' => 6,
-        		),
-            'updated' => array(
-              'type' => 'number',
-              'default' => 0,
-              '_builtIn' => true,
-            ),
-    ),
-    'render_callback' => __NAMESPACE__ . '\\render_callback'
+    'render_callback' => __NAMESPACE__ . '\\render_callback',
+    'attributes' => array(
+        'no_title' => array(
+          'type' => 'boolean',
+          'default' => false,
+        ),
+        'use_ol' => array(
+          'type' => 'boolean',
+          'default' => false,
+        ),
+        'max_level' => array(
+          'type' => 'integer',
+          'default' => 6,
+        ),
+        'updated' => array(
+          'type' => 'number',
+          'default' => 0,
+          '_builtIn' => true,
+        ),
+    )
    ]);
 }
 
 function render_callback($attributes, $content) {
-    //add only if block is used in this post.
-    add_filter('render_block', __NAMESPACE__ . '\\filter_block', 10, 2);
 
     $post = get_post();
     $blocks = parse_blocks($post->post_content);
