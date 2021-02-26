@@ -4,7 +4,7 @@ Tags: AMP, Gutenberg, block, TOC, Table of Contents
 Requires at least: 5.0
 Donate link: https://marc.tv/out/donate
 Tested up to: 5.6.2
-Stable tag: 4.4.8
+Stable tag: 4.4.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,10 +30,6 @@ Hide the headline "Table of Contents" and set a maximum display depth in the blo
 * Comes with English, French, Spanish, German, and Brazilian Portuguese translations.
 * Works with non-latin texts. Tested with Japanese and Arabic.
 * Rank Math support.
-
-This plugin is forked from https://github.com/pdewouters/gutentoc by pdewouters and uses code from https://github.com/shazahm1/Easy-Table-of-Contents by shazahm1
-
-Many thanks to Tom J Nowell https://tomjn.com and and Sally CJ who both helped me a lot with my questions over at wordpress.stackexchange.com
 
 == Changelog ==
 
@@ -82,8 +78,32 @@ Hide the headline in the sidebar options of SimpleTOC and add your own heading.
 
 I don’t see an easy solution at the moment. SimpleTOC is only a block that can be placed in your post. If there would be a plugin that adds blocks to every post then this would be the solution. I think this should be another separate plug-in to keep the code of SimpleTOC clean and … well, simple. Maybe someone knows of a plug-in that adds blocks automatically to all posts with some parameters and settings? What about site editing in WordPress? I think the core team is working on something like that. I will keep this post open. If I have gained more knowledge how to solve this I will add this feature. 
 
-## Screenshots ##
+= How do I add a background color to SimpleTOC? =
+
+SimpleTOC is simple. It will never load JavaScript or CSS. But you can add custom CSS yourself to your theme: 
+
+`.simpletoc {
+    padding: 1em 2em;
+    background: #bada55;
+}`
+
+If you want to add a color including the headline, add a custom css class to the SimpleTOC block. Name it "toctoc" or something like that. 
+
+`.toctoc {
+    padding: 1em 1em;
+    background: #bada55;
+}`
+
+If you use that CSS it will add a colored background to the whole TOC including the heading.
+
+== Screenshots ==
 1. SimpleTOC block in Gutenberg editor.
 2. SimpleTOC in the post.
 3. Simple but powerful. Customize each TOC as you like.
 4. Control the maximum depth of the headings.
+
+== Credits ==
+
+This plugin is forked from https://github.com/pdewouters/gutentoc by pdewouters and uses code from https://github.com/shazahm1/Easy-Table-of-Contents by shazahm1
+
+Many thanks to Tom J Nowell https://tomjn.com and and Sally CJ who both helped me a lot with my questions over at wordpress.stackexchange.com
