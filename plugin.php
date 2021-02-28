@@ -94,6 +94,11 @@ function register_block() {
     )]);
 }
 
+/**
+ * Render block output 
+ *
+ */
+
 function render_callback($attributes, $content) {
     //add only if block is used in this post.
     add_filter('render_block', __NAMESPACE__ . '\\filter_block', 10, 2);
@@ -135,6 +140,11 @@ function render_callback($attributes, $content) {
     return $output;
 }
 
+/**
+ * Return all headings with a recursive walk through all blocks. 
+ * This includes groups and reusable block with groups within reusable blocks. 
+ */
+
 function filter_headings_recursive($blocks) {
   
   $arr = array();
@@ -163,6 +173,10 @@ function filter_headings_recursive($blocks) {
 
   return $arr;
 }
+
+/**
+ * Remove all problematic characters for toc links 
+ */
 
 function simpletoc_sanitize_string($string){
 
@@ -329,4 +343,3 @@ function generateToc($matches,$attributes) {
     $html .= '<' . $listtype . ' class="simpletoc">' . $list . '</li></' . $listtype . '>';
     return $html;
 }
-
