@@ -29,11 +29,12 @@ Hide the headline "Table of Contents" and set a maximum display depth in the blo
 * SEO friendly: Disable the h2 heading of the TOC block and add your own.
 * Comes with English, French, Spanish, German, and Brazilian Portuguese translations.
 * Works with non-latin texts. Tested with Japanese and Arabic.
+* Finds headlines in groups and reusable blocks. And in groups within reusable blocks.
 * Rank Math support.
 
 == Changelog ==
 
-= 4.5 =
+= 4.4.9 =
 * Feature: Support for headlines in reusable blocks. 
 
 = 4.4.8 =

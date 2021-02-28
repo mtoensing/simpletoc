@@ -150,19 +150,22 @@ function filter_headings_recursive($blocks) {
   $arr = array();
 
   foreach ($blocks as $block => $innerBlock) {
-    
+      
       if ( is_array($innerBlock) ) {
 
         if( isset($innerBlock['attrs']['ref']) ) {
+          // search in reusable blocks
           $e_arr = parse_blocks(get_post($innerBlock['attrs']['ref'] )->post_content);
           $arr = array_merge(filter_headings_recursive($e_arr),$arr);
         } else {
+          // search in groups
           $arr = array_merge(filter_headings_recursive($innerBlock),$arr);
         }
 
       } else {
 
           if ( isset($blocks['blockName']) && $blocks['blockName'] === 'core/heading' && $innerBlock !== 'core/heading')  {  
+            // make sure its a headline.
             if ( preg_match("/(<h1|<h2|<h3|<h4|<h5|<h6)/i", $innerBlock ) ) {
               $arr[] = $innerBlock;
              }     
