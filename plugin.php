@@ -32,25 +32,6 @@ add_filter( 'rank_math/researches/toc_plugins', function( $toc_plugins ) {
     return $toc_plugins;
 });
 
-function filter_headings_recursive($blocks) {
-  
-    $arr = array();
-
-    foreach ($blocks as $block => $innerBlock) {
-        if (is_array($innerBlock) ) {
-            $arr = array_merge(filter_headings_recursive($innerBlock),$arr);
-        } else {
-            if ( isset($blocks['blockName']) && $blocks['blockName'] === 'core/heading' && $innerBlock !== 'core/heading')  {  
-              if ( preg_match("/(<h1|<h2|<h3|<h4|<h5|<h6)/i", $innerBlock ) ) {
-                $arr[] = $innerBlock;
-               }     
-            }
-        }
-    }
-
-    return $arr;
-}
-
 /* Init SimpleTOC */
 function init() {
     wp_register_script(
@@ -152,6 +133,30 @@ function render_callback($attributes, $content) {
     }
 
     return $output;
+}
+
+function filter_headings_recursive($blocks) {
+  
+  $arr = array();
+
+  foreach ($blocks as $block => $innerBlock) {
+    
+      if(isset($innerBlock['attrs']['ref'])){
+        $arr = filter_headings_recursive(parse_blocks(get_post($innerBlock['attrs']['ref'] )->post_content));
+      }
+
+      if (is_array($innerBlock) ) {
+          $arr = array_merge(filter_headings_recursive($innerBlock),$arr);
+      } else {
+          if ( isset($blocks['blockName']) && $blocks['blockName'] === 'core/heading' && $innerBlock !== 'core/heading')  {  
+            if ( preg_match("/(<h1|<h2|<h3|<h4|<h5|<h6)/i", $innerBlock ) ) {
+              $arr[] = $innerBlock;
+             }     
+          }
+      }
+  }
+
+  return $arr;
 }
 
 function simpletoc_sanitize_string($string){
