@@ -33,6 +33,9 @@ Hide the headline "Table of Contents" and set a maximum display depth in the blo
 
 == Changelog ==
 
+= 4.5 =
+* Feature: Support for headlines in reusable blocks. 
+
 = 4.4.8 =
 * Feature: Added option to toggle absolute urls. 
 
