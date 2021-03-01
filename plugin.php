@@ -3,7 +3,7 @@
  * Plugin Name: SimpleTOC - Table of Contents Block
  * Plugin URI: https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
  * Description: Adds a basic "Table of Contents" Gutenberg block.
- * Version: 4.4.9
+ * Version: 4.4.9.1
  * Author: Marc Tönsing
  * Author URI: https://marc.tv
  * Text Domain: simpletoc
@@ -247,102 +247,87 @@ function filter_block($block_content, $block) {
   return $block_content;
 }
 
-function generateToc($matches,$attributes) {
-    /* this is customized code from https://github.com/shazahm1/Easy-Table-of-Contents */
-    $list = '';
-    $current_depth      = 7;
-    $numbered_items     = array();
-    $listtype = 'ul';
+function generateToc($headings,$attributes) {
 
-    if ( $attributes['use_ol'] == true ) {
-      $listtype = 'ol';
+  $list = '';
+  $html = '';
+  $min_depth = 6;
+  $listtype = 'ul';
+  $absolute_url = '';
+
+  if ( $attributes['use_ol'] == true ) {
+    $listtype = 'ol';
+  }
+  
+  if ( $attributes['use_absolute_urls'] == true ) {
+    $absolute_url = get_permalink();
+  }
+
+  foreach ($headings as $line => $headline) {
+    if ($min_depth > $headings[ $line ][2]) {
+      // search for lowest level
+      $min_depth = (int) $headings[ $line ][2];
     }
-    
-    // find the minimum heading to establish our baseline
-    //for ( $i = 0; $i < count( $matches ); $i ++ ) {
-    foreach ($matches as $i => $match) {
-        if ($current_depth > $matches[ $i ][2]) {
-            $current_depth = (int) $matches[ $i ][2];
-        }
+  } 
+
+  foreach ($headings as $line => $headline) {
+
+    $title = strip_tags($headline);
+    $link = simpletoc_sanitize_string( $title );
+    $this_depth = (int) $headings[ $line ][2];
+    if( isset($headings[ $line + 1 ][2])) {
+      $next_depth = (int) $headings[ $line + 1 ][2];
+    } else {
+      $next_depth = '';
     }
 
-    $numbered_items[ $current_depth ] = 0;
+    // skip this heading because a max depth is set.
+    if( $this_depth > $attributes['max_level'] ){
+      continue;
+    }
 
-    foreach ($matches as $i => $match) {
+    // If CSS class contains "simpletoc-hidden" skip this headline
+    if( strpos ( $headline, 'class="simpletoc-hidden' ) > 0 ) {
+      continue;
+    }
 
-        $level = $matches[ $i ][2];
-        $count = $i + 1;
-
-        // skip this heading because it is not needed.
-        if( $level > $attributes['max_level'] ){
-          continue;
+    // start list 
+    if ($this_depth == $min_depth ) {
+      $list .= "<li>\n"; 
+    } else {
+        // we are not as base level. Start opening levels until base is reached.
+        for ($min_depth; $min_depth < $this_depth; $min_depth++) {
+            $list .= "\n\t\t<" . $listtype . "><li>\n";
         }
+    }
+  
+    $list .= "<a href=\"" . $absolute_url . "#" . $link . "\">" . $title . "</a>";
 
-        // If CSS class contains "simpletoc-hidden" skip this headline
-        if( strpos($match, 'class="simpletoc-hidden' ) > 0 ) {
-          continue;
-        }
-
-        if ($current_depth == (int) $matches[ $i ][2]) {
-            $list .= '<li>';
-        }
-
-        // start lists
-        if ($current_depth != (int) $matches[ $i ][2]) {
-            for ($current_depth; $current_depth < (int) $matches[ $i ][2]; $current_depth++) {
-                $numbered_items[ $current_depth + 1 ] = 0;
-                $list .= '<' . $listtype . '><li>';
-            }
-        }
-
-        $title = strip_tags($match);
-        $link = simpletoc_sanitize_string( $title );
-        $absolute_url = '';
-        if ( $attributes['use_absolute_urls'] == true ) {
-          $absolute_url = get_permalink();
-        }
-
-        $list .= '<a href="' . $absolute_url . '#' . $link . '">' . $title . '</a>';
-
-        // end lists
-        if ($i != count($matches) - 1) {
-            if ($current_depth > (int) $matches[ $i + 1 ][2]) {
-                for ($current_depth; $current_depth > (int) $matches[ $i + 1 ][2]; $current_depth--) {
-                    $list .= '</li></' . $listtype . '>';
-                    $numbered_items[ $current_depth ] = 0;
-
-                }
-            }
-
-            if ($current_depth == (int) @$matches[ $i + 1 ][2]) {
-                $list .= '</li>';
-            }
-        // last heading
-        } else {
-
-          // traverse heading in reverse from bottom to top
-          for (end($matches); ($currentKey=key($matches))!==null; prev($matches)){
-
-            // make sure it is not the first heading
-            if( $currentKey != 0 ) {
-                $current_depth = $matches[ $currentKey ][2];
-                $prevdepth = $matches[ $currentKey - 1 ][2];
-
-                // is current heading level higher than previous?
-                if( $current_depth > $prevdepth ) {
-                  $list .= '</li></' . $listtype . '>';
-                }
-            }
-
+    // close lists
+    // check if this is not the last heading
+    if ($line != count($headings) - 1) {
+      // do we need to close the door behind us? 
+      if ($min_depth > $next_depth) {
+          // If yes, how many times?
+          for ($min_depth; $min_depth > $next_depth; $min_depth--) {
+              $list .= "</li></" . $listtype . ">\n";
           }
-
-        }
+      }
+      if ($min_depth == $next_depth) {
+          $list .= "</li>";
+      }
+    // last heading
+    } else {
+      $list .= "</li></" . $listtype . ">\n";
     }
+   
+  }
 
-    $html = '';
-    if($attributes['no_title'] == false) {
-      $html = '<h2 class="simpletoc-title">' . __('Table of Contents', 'simpletoc') . '</h2>';
-    }
-    $html .= '<' . $listtype . ' class="simpletoc">' . $list . '</li></' . $listtype . '>';
-    return $html;
+  if($attributes['no_title'] == false) {
+    $html = "<h2 class=\"simpletoc-title\">" . __("Table of Contents", "simpletoc") . "</h2>";
+  }
+  $html .= "<" . $listtype . " class=\"simpletoc\">\n" . $list . "</li></" . $listtype . ">";
+
+  return $html;
+
 }
