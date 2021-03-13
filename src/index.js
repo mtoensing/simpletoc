@@ -39,8 +39,8 @@ registerBlockType('simpletoc/toc', {
         <PanelBody>
           <PanelRow>
             <ToggleControl
-                label={__('Disable heading', 'simpletoc')}
-                help={__('Remove "Table of contents" block heading.', 'simpletoc')}
+                label={__('Remove heading', 'simpletoc')}
+                help={__('Disable the "Table of contents" block heading.', 'simpletoc')}
                 checked={ props.attributes.no_title }
                 onChange={ () => props.setAttributes( {  no_title: ! props.attributes.no_title } ) }
             />
@@ -48,7 +48,7 @@ registerBlockType('simpletoc/toc', {
           <PanelRow>
             <ToggleControl
                 label={__('Use an ordered list', 'simpletoc')}
-                help={__('Replace the <ul> tag with an <ol> tag. This will add decimal numbers to each heading in the TOC.', 'simpletoc')}
+                help={__('Replace the <ul> tag with an <ol> tag. This adds decimal numbers to each heading in the TOC.', 'simpletoc')}
                 checked={ props.attributes.use_ol }
                 onChange={ () => props.setAttributes( {  use_ol: ! props.attributes.use_ol } ) }
             />
@@ -56,15 +56,15 @@ registerBlockType('simpletoc/toc', {
           <PanelRow>
             <ToggleControl
                 label={__('Use absolute urls', 'simpletoc')}
-                help={__('Adds the permalink url to the fragment. Important for paginated articles.', 'simpletoc')}
+                help={__('Add the permalink url to the fragment. Important for paginated articles.', 'simpletoc')}
                 checked={ props.attributes.use_absolute_urls }
                 onChange={ () => props.setAttributes( {  use_absolute_urls: ! props.attributes.use_absolute_urls } ) }
             />
           </PanelRow>
           <PanelRow>
             <ToggleControl
-                label={__('Enable smooth scrolling support', 'simpletoc')}
-                help={__('Adds a css class "smooth-scroll" to the links. This enables smooth scrolling in themes like GeneratePress.', 'simpletoc')}
+                label={__('Smooth scrolling support', 'simpletoc')}
+                help={__('Add the css class "smooth-scroll" to the links. This enables smooth scrolling in some themes like GeneratePress.', 'simpletoc')}
                 checked={ props.attributes.add_smooth }
                 onChange={ () => props.setAttributes( {  add_smooth: ! props.attributes.add_smooth } ) }
             />

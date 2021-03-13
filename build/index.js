@@ -150,8 +150,8 @@ Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_2__["registerBlockType"])('sim
   },
   edit: function edit(props) {
     return Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__["InspectorControls"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["Panel"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelBody"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelRow"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["ToggleControl"], {
-      label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Disable heading', 'simpletoc'),
-      help: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Remove "Table of contents" block heading.', 'simpletoc'),
+      label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Remove heading', 'simpletoc'),
+      help: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Disable the "Table of contents" block heading.', 'simpletoc'),
       checked: props.attributes.no_title,
       onChange: function onChange() {
         return props.setAttributes({
@@ -160,7 +160,7 @@ Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_2__["registerBlockType"])('sim
       }
     })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelRow"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["ToggleControl"], {
       label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Use an ordered list', 'simpletoc'),
-      help: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Replace the <ul> tag with an <ol> tag. This will add decimal numbers to each heading in the TOC.', 'simpletoc'),
+      help: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Replace the <ul> tag with an <ol> tag. This adds decimal numbers to each heading in the TOC.', 'simpletoc'),
       checked: props.attributes.use_ol,
       onChange: function onChange() {
         return props.setAttributes({
@@ -169,7 +169,7 @@ Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_2__["registerBlockType"])('sim
       }
     })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelRow"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["ToggleControl"], {
       label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Use absolute urls', 'simpletoc'),
-      help: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Adds the permalink url to the fragment. Important for paginated articles.', 'simpletoc'),
+      help: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Add the permalink url to the fragment. Important for paginated articles.', 'simpletoc'),
       checked: props.attributes.use_absolute_urls,
       onChange: function onChange() {
         return props.setAttributes({
@@ -177,8 +177,8 @@ Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_2__["registerBlockType"])('sim
         });
       }
     })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelRow"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["ToggleControl"], {
-      label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Enable smooth scrolling support', 'simpletoc'),
-      help: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Adds a css class "smooth_scroll" to the links. This enabled smooth scrolling in themes like GeneratePress.', 'simpletoc'),
+      label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Smooth scrolling support', 'simpletoc'),
+      help: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Add the css class "smooth-scroll" to the links. This enables smooth scrolling in some themes like GeneratePress.', 'simpletoc'),
       checked: props.attributes.add_smooth,
       onChange: function onChange() {
         return props.setAttributes({
