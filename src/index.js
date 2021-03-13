@@ -18,6 +18,10 @@ registerBlockType('simpletoc/toc', {
 			type: 'boolean',
       default: false,
 		},
+    add_smooth: {
+			type: 'boolean',
+      default: false,
+		},
     use_absolute_urls: {
 			type: 'boolean',
       default: false,
@@ -55,6 +59,14 @@ registerBlockType('simpletoc/toc', {
                 help={__('Adds the permalink url to the fragment. Important for paginated articles.', 'simpletoc')}
                 checked={ props.attributes.use_absolute_urls }
                 onChange={ () => props.setAttributes( {  use_absolute_urls: ! props.attributes.use_absolute_urls } ) }
+            />
+          </PanelRow>
+          <PanelRow>
+            <ToggleControl
+                label={__('Add "smooth_scroll" class', 'simpletoc')}
+                help={__('Adds the css class to all links. This enabled smooth scrolling in themes like GeneratePress', 'simpletoc')}
+                checked={ props.attributes.add_smooth }
+                onChange={ () => props.setAttributes( {  add_smooth: ! props.attributes.add_smooth } ) }
             />
           </PanelRow>
           <PanelRow>

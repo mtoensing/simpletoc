@@ -3,7 +3,7 @@
  * Plugin Name: SimpleTOC - Table of Contents Block
  * Plugin URI: https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
  * Description: Adds a basic "Table of Contents" Gutenberg block.
- * Version: 4.4.9.2
+ * Version: 4.4.9.3
  * Author: Marc Tönsing
  * Author URI: https://marc.tv
  * Text Domain: simpletoc
@@ -75,6 +75,10 @@ function register_block() {
           'default' => false,
         ),
         'use_ol' => array(
+          'type' => 'boolean',
+          'default' => false,
+        ),
+        'add_smooth' => array(
           'type' => 'boolean',
           'default' => false,
         ),
@@ -255,6 +259,11 @@ function generateToc($headings,$attributes) {
   $listtype = 'ul';
   $absolute_url = '';
   $inital_depth = 6;
+  $link_class = '';
+
+  if ( $attributes['add_smooth'] == true ) {
+    $link_class = 'class="smooth-scroll"';
+  }
 
   if ( $attributes['use_ol'] == true ) {
     $listtype = 'ol';
@@ -303,7 +312,7 @@ function generateToc($headings,$attributes) {
         }
     }
   
-    $list .= "<a href=\"" . $absolute_url . "#" . $link . "\">" . $title . "</a>";
+    $list .= "<a " . $link_class . " href=\"" . $absolute_url . "#" . $link . "\">" . $title . "</a>";
 
     // close lists
     // check if this is not the last heading

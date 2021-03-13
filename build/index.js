@@ -135,6 +135,10 @@ Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_2__["registerBlockType"])('sim
       type: 'boolean',
       default: false
     },
+    add_smooth: {
+      type: 'boolean',
+      default: false
+    },
     use_absolute_urls: {
       type: 'boolean',
       default: false
@@ -170,6 +174,15 @@ Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_2__["registerBlockType"])('sim
       onChange: function onChange() {
         return props.setAttributes({
           use_absolute_urls: !props.attributes.use_absolute_urls
+        });
+      }
+    })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelRow"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["ToggleControl"], {
+      label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Add "smooth_scroll" class', 'simpletoc'),
+      help: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Adds the css class to all links. This enabled smooth scrolling in themes like GeneratePress', 'simpletoc'),
+      checked: props.attributes.add_smooth,
+      onChange: function onChange() {
+        return props.setAttributes({
+          add_smooth: !props.attributes.add_smooth
         });
       }
     })), Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["PanelRow"], null, Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__["createElement"])(_wordpress_components__WEBPACK_IMPORTED_MODULE_5__["SelectControl"], {
