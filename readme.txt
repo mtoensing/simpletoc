@@ -35,7 +35,7 @@ Hide the headline "Table of Contents" and set a maximum display depth in the blo
 == Changelog ==
 
 = 4.4.9.3 =
-* Feature: Adds the css class "smooth_scroll" to the links. This enabled smooth scrolling in themes like GeneratePress. 
+* Feature: Adds the css class "smooth-scroll" to the links. This enables smooth scrolling in themes like GeneratePress. 
 
 = 4.4.9.2 =
 * Refactoring: Better TOC generation with less HTML validation errors. 
