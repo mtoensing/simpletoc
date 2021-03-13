@@ -63,8 +63,8 @@ registerBlockType('simpletoc/toc', {
           </PanelRow>
           <PanelRow>
             <ToggleControl
-                label={__('Add "smooth_scroll" class', 'simpletoc')}
-                help={__('Adds the css class to all links. This enabled smooth scrolling in themes like GeneratePress', 'simpletoc')}
+                label={__('Enable smooth scrolling support', 'simpletoc')}
+                help={__('Adds a css class "smooth_scroll" to the links. This enabled smooth scrolling in themes like GeneratePress.', 'simpletoc')}
                 checked={ props.attributes.add_smooth }
                 onChange={ () => props.setAttributes( {  add_smooth: ! props.attributes.add_smooth } ) }
             />
