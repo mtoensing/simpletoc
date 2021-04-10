@@ -14,7 +14,7 @@
     "@wordpress/scripts": "3.3.0"
   },
   "dependencies": {
-    "@wordpress/i18n": "^3.18.0",
-    "@wordpress/server-side-render": "^1.20.7"
+    "@wordpress/i18n": "^3.19.1",
+    "@wordpress/server-side-render": "^1.21.1"
   }
 }

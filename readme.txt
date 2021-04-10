@@ -3,7 +3,7 @@ Contributors: MarcDK
 Tags: AMP, Gutenberg, block, TOC, Table of Contents
 Requires at least: 5.0
 Donate link: https://marc.tv/out/donate
-Tested up to: 5.6.2
+Tested up to: 5.7
 Stable tag: 4.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -105,6 +105,10 @@ If you want to add a color including the headline, add a custom css class to the
 }`
 
 If you use that CSS it will add a colored background to the whole TOC including the heading.
+
+= How do I add smooth scrolling? =
+
+You can optionally add the css class "smooth-scroll" to each link the TOC. Then you can install plugin that uses these classes.
 
 == Screenshots ==
 1. SimpleTOC block in Gutenberg editor.
