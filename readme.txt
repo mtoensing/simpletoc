@@ -4,7 +4,7 @@ Tags: AMP, Gutenberg, block, TOC, Table of Contents
 Requires at least: 5.0
 Donate link: https://marc.tv/out/donate
 Tested up to: 5.7
-Stable tag: 4.5
+Stable tag: 4.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,9 @@ Hide the headline "Table of Contents" and set a maximum display depth in the blo
 * Rank Math support.
 
 == Changelog ==
+
+= 4.6 =
+* Fixed: setting the maximum level resulted in unvalid markup if last item was at least a level 3 heading. 
 
 = 4.5 =
 * Feature: Add the css class "smooth-scroll" to the links. This enables smooth scrolling in themes like GeneratePress. 
