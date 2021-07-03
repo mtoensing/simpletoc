@@ -3,7 +3,7 @@
  * Plugin Name: SimpleTOC - Table of Contents Block
  * Plugin URI: https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
  * Description: Adds a basic "Table of Contents" Gutenberg block.
- * Version: 4.6
+ * Version: 4.7
  * Author: Marc Tönsing
  * Author URI: https://marc.tv
  * Text Domain: simpletoc
@@ -216,6 +216,11 @@ function addAnchorAttribute($html){
 
   // remove non-breaking space entites from input HTML
   $html_wo_nbs = str_replace("&nbsp;", " ", $html);
+
+  // Thank you Nick Diego 
+  if ( ! $html_wo_nbs ) {
+    return $html;
+  }
 
   $dom = new \DOMDocument();
   $dom->loadHTML($html_wo_nbs, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
