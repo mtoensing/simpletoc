@@ -341,6 +341,6 @@ function generateToc($headings,$attributes) {
   }
   $html .= "<" . $listtype . " class=\"simpletoc\">\n" . $list . "</li></" . $listtype . ">";
 
-  return $html;
+  return "<div class=\"simpletoc-container\">". $html ."</div>";
 
 }
