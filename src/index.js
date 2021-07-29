@@ -9,7 +9,7 @@ registerBlockType('simpletoc/toc', {
   title: __('SimpleTOC', 'simpletoc'),
   icon: simpletocicon,
   category: 'layout',
-  keywords: [ __( 'TOC' ), __( 'Table of Contents' )],
+  keywords: [ __( 'TOC' ), __( 'Table of Contents' ), 'Inhaltsverzeichnis' ],
   attributes: {
 		no_title: {
 			type: 'boolean',

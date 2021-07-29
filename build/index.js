@@ -111,7 +111,7 @@ Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_2__["registerBlockType"])('sim
   title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('SimpleTOC', 'simpletoc'),
   icon: simpletocicon,
   category: 'layout',
-  keywords: [Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('TOC'), Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Table of Contents')],
+  keywords: [Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('TOC'), Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__["__"])('Table of Contents'), 'Inhaltsverzeichnis'],
   attributes: {
     no_title: {
       type: 'boolean',
