@@ -4,7 +4,7 @@ Tags: AMP, Gutenberg, block, TOC, Table of Contents
 Requires at least: 5.0
 Donate link: https://marc.tv/out/donate
 Tested up to: 5.8
-Stable tag: 4.7
+Stable tag: 4.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,17 +34,11 @@ Hide the headline "Table of Contents" and set a maximum display depth in the blo
 
 == Changelog ==
 
-= 4.7 =
-* Fixed: php warning for empty html.
-
-= 4.6 =
-* Fixed: setting the maximum level resulted in unvalid markup if last item was at least a level 3 heading. 
+= 4.8 =
+* Feature: SimpleTOC can be found in Gutenberg by entering "Table of Contents".
 
 = 4.5 =
 * Feature: Add the css class "smooth-scroll" to the links. This enables smooth scrolling in themes like GeneratePress. 
-
-= 4.4.9.2 =
-* Refactoring: Better TOC generation with less HTML validation errors. 
 
 = 4.4.9 =
 * Feature: Support for headlines in reusable blocks. 
@@ -53,8 +47,6 @@ Hide the headline "Table of Contents" and set a maximum display depth in the blo
 * Feature: Added option to toggle absolute urls. 
 
 = 4.4.7 =
-* Fix: Heading ids won't be added to all posts anymore. 
-* Fix: Headings with attributes like align-center will now appear in your TOC. 
 * Feature: Added option to replace ul tag with ol tag. This will add decimal numbers to each heading in the TOC.
 * Feature: Works in nested blockes. This means support for column block layouts. 
 
