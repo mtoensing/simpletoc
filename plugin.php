@@ -224,7 +224,7 @@ function addAnchorAttribute($html){
   
   $dom = new \DOMDocument();
   libxml_use_internal_errors(true);
-  $dom->loadHTML($html_wo_nbs, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+  @$dom->loadHTML($html_wo_nbs, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
   // use xpath to select the Heading html tags.
   $xpath = new \DOMXPath($dom);
