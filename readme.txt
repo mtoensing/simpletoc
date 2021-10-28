@@ -4,7 +4,7 @@ Tags: AMP, Gutenberg, block, TOC, Table of Contents
 Requires at least: 5.0
 Donate link: https://marc.tv/out/donate
 Tested up to: 5.8
-Stable tag: 4.8
+Stable tag: 4.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,9 @@ Hide the headline "Table of Contents" and set a maximum display depth in the blo
 * Rank Math support.
 
 == Changelog ==
+
+= 4.9 =
+* Feature: Prevent warnings when HTML of posts is not valid.
 
 = 4.8 =
 * Feature: SimpleTOC can be found in Gutenberg by entering "Table of Contents".
