@@ -35,7 +35,7 @@ Hide the headline "Table of Contents" and set a maximum display depth in the blo
 == Changelog ==
 
 = 4.9 =
-* Feature: Prevent warnings when HTML of posts is not valid.
+* Feature: Prevent php warnings when HTML of posts is not valid.
 
 = 4.8 =
 * Feature: SimpleTOC can be found in Gutenberg by entering "Table of Contents".
