@@ -7,6 +7,7 @@ const simpletocicon = <svg fill-rule="evenodd" stroke-linejoin="round" stroke-mi
 
 registerBlockType('simpletoc/toc', {
   title: __('SimpleTOC', 'simpletoc'),
+  description: __( 'Adds a Table of Contents.' ),
   icon: simpletocicon,
   category: 'layout',
   keywords: [ __( 'TOC' ), __( 'Table of Contents' ), 'Inhaltsverzeichnis', 'TOC', 'SimpleTOC' ],
