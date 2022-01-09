@@ -11,10 +11,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@wordpress/scripts": "19.2.2"
+    "@wordpress/scripts": ">=19.2.2"
   },
   "dependencies": {
-    "@wordpress/i18n": "4.2.4",
-    "@wordpress/server-side-render": "3.0.17"
+    "@wordpress/i18n": ">=4.2.4",
+    "@wordpress/server-side-render": ">=3.0.17"
   }
 }
