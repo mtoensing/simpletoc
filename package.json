@@ -5,16 +5,20 @@
   "main": "src/index.js",
   "scripts": {
     "start": "wp-scripts start",
-    "build": "wp-scripts build"
+    "build": "wp-scripts build",
+    "format": "wp-scripts format",
+    "format:src": "wp-scripts format ./src"
   },
   "keywords": [],
-  "author": "",
+  "author": "Marc Tönsing",
   "license": "ISC",
   "devDependencies": {
     "@wordpress/scripts": ">=19.2.2"
   },
   "dependencies": {
     "@wordpress/i18n": ">=4.2.4",
-    "@wordpress/server-side-render": "^3.0.0"
+    "@wordpress/server-side-render": "^3.0.17",
+    "ansi-regex": ">=5.0.1",
+    "postcss": ">=8.2.13"
   }
 }
