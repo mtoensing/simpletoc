@@ -4,7 +4,7 @@ Tags: AMP, Gutenberg, block, TOC, Table of Contents
 Requires at least: 5.0
 Donate link: https://marc.tv/out/donate
 Tested up to: 5.8
-Stable tag: 4.9.1
+Stable tag: 4.9.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,9 +34,10 @@ Hide the headline "Table of Contents" and set a maximum display depth in the blo
 
 == Changelog ==
 
-= 4.9.1 =
+= 4.9.2 =
 
-* Fixed: Security warning on GitHub
+* Fixed: Security warning on GitHub.
+* Feature: Added block.json and new coding standards for Gutenberg blocks.
 
 = 4.9 =
 * Feature: Prevent php warnings when HTML of posts is not valid.
