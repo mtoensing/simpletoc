@@ -17,7 +17,9 @@
     "markdown-it": ">=12.3.2",
     "nanoid": ">=3.1.31",
     "ansi-regex": ">=6.0.1",
-    "postcss": ">=8.4.5"
+    "postcss": ">=8.4.5",
+    "node-fetch": ">=2.6.7",
+    "nth-check": ">=2.0.1"
   },
   "dependencies": {
     "@wordpress/i18n": "^4.2.4",
