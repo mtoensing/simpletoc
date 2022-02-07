@@ -1,0 +1,43 @@
+{
+	"$schema": "https://json.schemastore.org/block.json",
+	"apiVersion": 2,
+	"name": "simpletoc/toc",
+	"textdomain": "simpletoc",
+	"version": "0.1.0",
+	"title": "SimpleTOC",
+	"category": "layout",
+	"keywords": [ "TOC", "Table of Contents", "SimpleTOC", "Inhaltsverzeichnis" ],
+	"icon": "simpletocicon",
+	"description": "Adds a Table of Contents.",
+	"attributes": {
+		"no_title": {
+			"type": "boolean",
+			"default": false
+		},
+		"use_ol": {
+			"type": "boolean",
+			"default": false
+		},
+		"remove_indent": {
+			"type": "boolean",
+			"default": false
+		},
+		"add_smooth": {
+			"type": "boolean",
+			"default": false
+		},
+		"use_absolute_urls": {
+			"type": "boolean",
+			"default": false
+		},
+		"max_level": {
+			"type": "integer",
+			"default": 6
+		}
+	},
+	"supports": {
+		"align": [ "wide" , "full"]
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./editor.css"
+}

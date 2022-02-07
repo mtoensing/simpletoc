@@ -31,7 +31,7 @@ add_action('init', __NAMESPACE__ . '\\register_block');
 
 function register_block()
 {
-  register_block_type(plugin_dir_path(__FILE__), [
+  register_block_type( __DIR__ . '/build' , [
     'render_callback' => __NAMESPACE__ . '\\render_callback'
   ]);
 }
@@ -49,8 +49,12 @@ add_filter('rank_math/researches/toc_plugins', function ($toc_plugins) {
 /* Init SimpleTOC */
 function init()
 {
+
   add_filter('plugin_row_meta', __NAMESPACE__ . '\\simpletoc_plugin_meta', 10, 2);
+
+
 }
+
 
 /**
  * Render block output 
