@@ -36,7 +36,7 @@ Hide the headline "Table of Contents" and set a maximum display depth in the blo
 
 == Changelog ==
 
-= 5.1 =
+= 5.0.1 =
 
 * Feature: *Important*: New "simpletoc" and "simpletoc-list" css classes for custom styles. But this might break existing custom css styles that have not been applied with Gutenberg. 
 * Feature: Toggle list indent.
