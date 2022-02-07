@@ -17,6 +17,10 @@
 			"type": "boolean",
 			"default": false
 		},
+		"remove_indent": {
+			"type": "boolean",
+			"default": false
+		},
 		"add_smooth": {
 			"type": "boolean",
 			"default": false

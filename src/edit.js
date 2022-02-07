@@ -46,6 +46,17 @@ export default function Edit({ attributes, setAttributes }) {
             </PanelRow>
             <PanelRow>
               <ToggleControl
+                label={__("Remove list indent", "simpletoc")}
+                help={__(
+                  "No bullet points or numbers at the first level.",
+                  "simpletoc"
+                )}
+                checked={attributes.remove_indent}
+                onChange={() => setAttributes({ remove_indent: !attributes.remove_indent })}
+              />
+            </PanelRow>
+            <PanelRow>
+              <ToggleControl
                 label={__("Use absolute urls", "simpletoc")}
                 help={__(
                   "Adds the permalink url to the fragment.",

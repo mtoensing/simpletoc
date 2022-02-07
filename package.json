@@ -1,6 +1,6 @@
 {
   "name": "simpletoc",
-  "version": "4.9.2",
+  "version": "5.0.1",
   "description": "",
   "main": "src/index.js",
   "scripts": {
@@ -14,16 +14,16 @@
   "author": "Marc Tönsing",
   "license": "ISC",
   "devDependencies": {
+    "@wordpress/scripts": "^20.0.2",
+    "ansi-regex": ">=6.0.1",
     "markdown-it": ">=12.3.2",
     "nanoid": ">=3.1.31",
-    "ansi-regex": ">=6.0.1",
-    "postcss": ">=8.4.5",
     "node-fetch": ">=2.6.7",
-    "nth-check": ">=2.0.1"
+    "nth-check": ">=2.0.1",
+    "postcss": ">=8.4.5"
   },
   "dependencies": {
     "@wordpress/i18n": "^4.2.4",
-    "@wordpress/server-side-render": "^3.0.17",
-    "@wordpress/scripts": "19.2.3"
+    "@wordpress/server-side-render": "^3.0.17"
   }
 }
