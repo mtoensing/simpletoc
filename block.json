@@ -30,6 +30,9 @@
 			"default": 6
 		}
 	},
+	"supports": {
+		"align": [ "wide" , "full"]
+	},
 	"textdomain": "simpletoc",
 	"editorScript": "file:./build/index.js",
 	"editorStyle": "file:./editor.css"

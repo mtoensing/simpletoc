@@ -3,8 +3,8 @@ Contributors: MarcDK
 Tags: AMP, Gutenberg, block, TOC, Table of Contents
 Requires at least: 5.0
 Donate link: https://marc.tv/out/donate
-Tested up to: 5.8
-Stable tag: 4.9.2
+Tested up to: 5.9
+Stable tag: 5.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,9 +19,10 @@ Hide the headline "Table of Contents" and set a maximum display depth in the blo
 = Features =
 
 * No javascript or css added.
-* Designed for Gutenberg.
-* Compatible with AMP plugins.
 * Minimal and valid HTML output.
+* Designed for Gutenberg.
+* Style SimpleTOC with Gutenbergs native group styling options.
+* Convert the styled group to a reusable block for future posts.
 * Inherits the style of your theme.
 * Support for column block layouts. 
 * Control the maximum depth of the headings.
@@ -30,14 +31,18 @@ Hide the headline "Table of Contents" and set a maximum display depth in the blo
 * Comes with English, French, Spanish, German, and Brazilian Portuguese translations.
 * Works with non-latin texts. Tested with Japanese and Arabic.
 * Finds headlines in groups and reusable blocks. And in groups within reusable blocks.
+* Compatible with AMP plugins.
 * Rank Math support.
 
 == Changelog ==
 
-= 4.9.2 =
+= 5.0 =
 
-* Fixed: Security warning on GitHub.
-* Feature: Added block.json and new coding standards for Gutenberg blocks.
+* Feature: *Important*: New "simpletoc" and "simpletoc-list" css class for easier custom styles. But this might break existing custom css styles that have not been applied with Gutenberg. 
+* Feature: Better "group" support. Put SimpleTOC in a group and style it with Gutenberg. See FAQ for details.
+* Feature: Native block support for wide and full width.
+* Feature: Added block.json and refactoring with coding standards for Gutenberg blocks.
+* Fixed: Warning on GitHub. This is only relevant for the build process. 
 
 = 4.9 =
 * Feature: Prevent php warnings when HTML of posts is not valid.
@@ -94,23 +99,9 @@ Hide the headline in the sidebar options of SimpleTOC and add your own heading.
 
 I don’t see an easy solution at the moment. SimpleTOC is only a block that can be placed in your post. If there would be a plugin that adds blocks to every post then this would be the solution. I think this should be another separate plug-in to keep the code of SimpleTOC clean and … well, simple. Maybe someone knows of a plug-in that adds blocks automatically to all posts with some parameters and settings? What about site editing in WordPress? I think the core team is working on something like that. I will keep this post open. If I have gained more knowledge how to solve this I will add this feature. 
 
-= How do I add a background color to SimpleTOC? =
+= How do I add a background color to SimpleTOC using Gutenberg groups? =
 
-SimpleTOC is simple. It will never load JavaScript or CSS. But you can add custom CSS yourself to your theme: 
-
-`.simpletoc {
-    padding: 1em 2em;
-    background: #bada55;
-}`
-
-If you want to add a color including the headline, add a custom css class to the SimpleTOC block. Name it "toctoc" or something like that. 
-
-`.toctoc {
-    padding: 1em 1em;
-    background: #bada55;
-}`
-
-If you use that CSS it will add a colored background to the whole TOC including the heading.
+Select the block and select "group" in the context menu. Apply "background color", "link color" and "text color" to this group. SimpleTOC will inherit these styles. You would like to use this styled SimpleTOC group next time you write a post? Convert it to a reusable block.
 
 = How do I add smooth scrolling? =
 
@@ -121,6 +112,7 @@ You can optionally add the css class "smooth-scroll" to each link the TOC. Then 
 2. SimpleTOC in the post.
 3. Simple but powerful. Customize each TOC as you like.
 4. Control the maximum depth of the headings.
+5. Style SimpleTOC with Gutenbergs native group styling options.
 
 == Credits ==
 
