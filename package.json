@@ -1,8 +1,10 @@
 {
   "name": "simpletoc",
   "version": "5.0.1",
+  "author": "Marc Tönsing",
   "description": "",
-  "main": "src/index.js",
+  "main": "build/index.js",
+  "license": "GPL-2.0-or-later",
   "scripts": {
     "start": "wp-scripts start",
     "build": "wp-scripts build",
@@ -10,9 +12,8 @@
     "format:src": "wp-scripts format ./src",
     "packages-update": "wp-scripts packages-update"
   },
-  "keywords": [],
-  "author": "Marc Tönsing",
-  "license": "ISC",
+
+
   "devDependencies": {
     "@wordpress/scripts": "^20.0.2",
     "ansi-regex": ">=6.0.1",

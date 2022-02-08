@@ -1,5 +1,5 @@
-import { __ } from '@wordpress/i18n';
 import { registerBlockType } from '@wordpress/blocks';
+import metadata from './block.json';
 
 const simpletocicon = (
 	<svg
@@ -20,7 +20,7 @@ const simpletocicon = (
   import save from './save';
  
 
-registerBlockType('simpletoc/toc', {
+registerBlockType(metadata, {
 	icon: simpletocicon,
 	/**
 	 * @see ./edit.js

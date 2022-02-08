@@ -1,40 +1,31 @@
 <?php
 
 /**
- * Plugin Name: SimpleTOC - Table of Contents Block
- * Plugin URI: https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
- * Description: Adds a basic "Table of Contents" Gutenberg block.
- * Version: 5.0.1
- * Author: Marc Tönsing
- * Author URI: https://marc.tv
- * Text Domain: simpletoc
- * Domain Path: /languages
- * License: GPL v2 or later
- * License URI: http://www.gnu.org/licenses/gpl-2.0.html
+ * Plugin Name:   SimpleTOC - Table of Contents Block
+ * Plugin URI:    https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
+ * Description:   Adds a basic "Table of Contents" Gutenberg block.
+ * Version:       5.0.2
+ * Author:        Marc Tönsing
+ * Author URI:    https://marc.tv
+ * Text Domain:   simpletoc
+ * License: GPL   v2 or later
+ * License URI:   http://www.gnu.org/licenses/gpl-2.0.html
+ * 
  */
-
-namespace SimpleTOC;
-
-defined('ABSPATH') || exit;
 
 /**
  * Initalise frontend and backend and register block
  **/
-add_action('init', __NAMESPACE__ . '\\init');
-add_action('init', __NAMESPACE__ . '\\register_block');
-
-/**
- * Registers all block assets so that they can be enqueued through Gutenberg in
- * the corresponding context.
- *
- */
-
-function register_block()
+function register_simpletoc_block()
 {
+  add_filter('plugin_row_meta', __NAMESPACE__ . '\\simpletoc_plugin_meta', 10, 2);
+
   register_block_type( __DIR__ . '/build' , [
     'render_callback' => __NAMESPACE__ . '\\render_callback'
   ]);
 }
+
+add_action( 'init', 'register_simpletoc_block' );
 
 /**
  * Filter to add plugins to the TOC list for Rank Math plugin
@@ -45,16 +36,6 @@ add_filter('rank_math/researches/toc_plugins', function ($toc_plugins) {
   $toc_plugins['simpletoc/plugin.php'] = 'SimpleTOC';
   return $toc_plugins;
 });
-
-/* Init SimpleTOC */
-function init()
-{
-
-  add_filter('plugin_row_meta', __NAMESPACE__ . '\\simpletoc_plugin_meta', 10, 2);
-
-
-}
-
 
 /**
  * Render block output 
@@ -83,7 +64,7 @@ function render_callback( $attributes )
   if (empty($blocks)) {
     $html = '';
     if ($attributes['no_title'] == false) {
-      $html = '<h2 class="simpletoc-title">' . __('Table of Contents', 'simpletoc') . '</h2>';
+      $html = '<h2 class="simpletoc-title">' . __('Table of Contents2', 'simpletoc') . '</h2>';
     }
     $html .= '<p class="components-notice is-warning ' . $alignclass . '">' . __('No blocks found.', 'simpletoc')  . ' ' . __('Save or update post first.', 'simpletoc') . '</p>';
     return $html;

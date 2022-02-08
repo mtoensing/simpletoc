@@ -1,4 +1,4 @@
-import { __ } from "@wordpress/i18n";
+import { __ } from '@wordpress/i18n';
 import { InspectorControls, BlockControls } from "@wordpress/block-editor";
 import ServerSideRender from "@wordpress/server-side-render";
 import {

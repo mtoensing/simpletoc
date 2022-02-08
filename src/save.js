@@ -1,4 +1,4 @@
-import { __ } from '@wordpress/i18n';
+
 
 /**
  * The save function defines the way in which the different attributes should
