@@ -16,13 +16,18 @@
 /**
  * Initalise frontend and backend and register block
  **/
+
 function register_simpletoc_block()
 {
+
+  wp_set_script_translations( 'simpletoc-toc-editor-script', 'simpletoc' );
+
   add_filter('plugin_row_meta', __NAMESPACE__ . '\\simpletoc_plugin_meta', 10, 2);
 
   register_block_type( __DIR__ . '/build' , [
     'render_callback' => __NAMESPACE__ . '\\render_callback'
   ]);
+
 }
 
 add_action( 'init', 'register_simpletoc_block' );
@@ -32,6 +37,7 @@ add_action( 'init', 'register_simpletoc_block' );
  *
  * @param array TOC plugins.
  */
+
 add_filter('rank_math/researches/toc_plugins', function ($toc_plugins) {
   $toc_plugins['simpletoc/plugin.php'] = 'SimpleTOC';
   return $toc_plugins;
