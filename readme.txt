@@ -4,7 +4,7 @@ Tags: AMP, Gutenberg, block, TOC, Table of Contents
 Requires at least: 5.0
 Donate link: https://marc.tv/out/donate
 Tested up to: 5.9
-Stable tag: 5.0.2
+Stable tag: 5.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,7 +36,7 @@ Hide the headline "Table of Contents" and set a maximum display depth in the blo
 
 == Changelog ==
 
-= 5.0.2 =
+= 5.0.3 =
 
 * Feature: *Important*: New "simpletoc" and "simpletoc-list" css classes for custom styles. But this might break existing custom css styles that have not been applied with Gutenberg. 
 * Feature: Toggle list indent.

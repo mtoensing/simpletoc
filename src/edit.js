@@ -20,6 +20,42 @@ export default function Edit({ attributes, setAttributes }) {
       <InspectorControls>
         <Panel>
           <PanelBody>
+          <PanelRow>
+              <SelectControl
+                label={__("Maximum Level", "simpletoc")}
+                help={__("Maximum depth of the headings.", "simpletoc")}
+                value={attributes.max_level}
+                options={[
+                  {
+                    label:
+                      __("Including", "simpletoc") +
+                      " H6 (" +
+                      __("Show all", "simpletoc") +
+                      ")",
+                    value: "6",
+                  },
+                  {
+                    label: __("Including", "simpletoc") + " H5",
+                    value: "5",
+                  },
+                  {
+                    label: __("Including", "simpletoc") + " H4",
+                    value: "4",
+                  },
+                  {
+                    label: __("Including", "simpletoc") + " H3",
+                    value: "3",
+                  },
+                  {
+                    label: __("Including", "simpletoc") + " H2",
+                    value: "2",
+                  },
+                ]}
+                onChange={(level) =>
+                  setAttributes({ max_level: Number(level) })
+                }
+              />
+            </PanelRow>
             <PanelRow>
               <ToggleControl
                 label={__("Remove heading", "simpletoc")}
@@ -82,42 +118,6 @@ export default function Edit({ attributes, setAttributes }) {
                   setAttributes({
                     add_smooth: !attributes.add_smooth,
                   })
-                }
-              />
-            </PanelRow>
-            <PanelRow>
-              <SelectControl
-                label={__("Maximum Level", "simpletoc")}
-                help={__("Maximum depth of the headings.", "simpletoc")}
-                value={attributes.max_level}
-                options={[
-                  {
-                    label:
-                      __("Including", "simpletoc") +
-                      " H6 (" +
-                      __("Show all", "simpletoc") +
-                      ")",
-                    value: "6",
-                  },
-                  {
-                    label: __("Including", "simpletoc") + " H5",
-                    value: "5",
-                  },
-                  {
-                    label: __("Including", "simpletoc") + " H4",
-                    value: "4",
-                  },
-                  {
-                    label: __("Including", "simpletoc") + " H3",
-                    value: "3",
-                  },
-                  {
-                    label: __("Including", "simpletoc") + " H2",
-                    value: "2",
-                  },
-                ]}
-                onChange={(level) =>
-                  setAttributes({ max_level: Number(level) })
                 }
               />
             </PanelRow>
