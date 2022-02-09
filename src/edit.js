@@ -60,7 +60,7 @@ export default function Edit({ attributes, setAttributes }) {
               <ToggleControl
                 label={__("Remove heading", "simpletoc")}
                 help={__(
-                  'Disable the "Table of contents" block heading.',
+                  'Disable the "Table of contents" block heading and add your own heading block.',
                   "simpletoc"
                 )}
                 checked={attributes.no_title}

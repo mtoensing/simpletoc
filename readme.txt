@@ -1,10 +1,10 @@
 === SimpleTOC - Table of Contents Block ===
 Contributors: MarcDK
 Tags: AMP, Gutenberg, block, TOC, Table of Contents
-Requires at least: 5.0
+Requires at least: 5.9
 Donate link: https://marc.tv/out/donate
 Tested up to: 5.9
-Stable tag: 5.0.5
+Stable tag: 5.0.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +12,7 @@ Adds a custom Table of Contents Gutenberg block.
 
 == Description ==
 
-In Gutenberg, add a block and search for "SimpleTOC" or just "TOC". You need to save your post before you add the block. It works by parsing the post content and retrieving the heading blocks and creates a new dynamic block with a list of links to the headings.
+Add a Table of Contents block to your posts and pages. The TOC is a nested list of links to all heading found in the post or page. To use it simply asdd a block and search for "SimpleTOC" or just "TOC". 
 
 Hide the headline "Table of Contents" and set a maximum display depth in the blocks' sidebar configuration. Add the CSS class "simpletoc-hidden" to a heading block to remove that specific heading from the generated TOC.
 
@@ -45,12 +45,6 @@ Hide the headline "Table of Contents" and set a maximum display depth in the blo
 * Feature: Added block.json and refactoring with coding standards for Gutenberg blocks.
 * Fix: Localization is back again.
 
-= 4.9 =
-* Feature: Prevent php warnings when HTML of posts is not valid.
-
-= 4.8 =
-* Feature: SimpleTOC can be found in Gutenberg by entering "Table of Contents".
-
 = 4.5 =
 * Feature: Add the css class "smooth-scroll" to the links. This enables smooth scrolling in themes like GeneratePress. 
 
@@ -62,7 +56,6 @@ Hide the headline "Table of Contents" and set a maximum display depth in the blo
 
 = 4.4.7 =
 * Feature: Added option to replace ul tag with ol tag. This will add decimal numbers to each heading in the TOC.
-* Feature: Works in nested blockes. This means support for column block layouts. 
 
 = 4.3 =
 * Feature: Support for non-latin headlines. SimpleTOC now uses a character block list rather than an allow list.
@@ -70,9 +63,6 @@ Hide the headline "Table of Contents" and set a maximum display depth in the blo
 
 = 4.1.1 =
 * Feature: Experimental support for Arabic Text.
-
-= 4.0 =
-* Feature: Added option to set maximum level of the headings.
 
 = 3.9 =
 * Added Brazilian Portuguese translations to the translations. Thanks Ralden Souza!
@@ -120,3 +110,7 @@ You can optionally add the css class "smooth-scroll" to each link the TOC. Then 
 This plugin is forked from https://github.com/pdewouters/gutentoc by pdewouters and uses code from https://github.com/shazahm1/Easy-Table-of-Contents by shazahm1
 
 Many thanks to Tom J Nowell https://tomjn.com and and Sally CJ who both helped me a lot with my questions over at wordpress.stackexchange.com
+
+Thanks to Quintus Valerius Soranus for inventing the Table of Contents around 100 BC. 
+
+SimpleTOC is developed on GitHub: https://github.com/mtoensing/simpletoc 

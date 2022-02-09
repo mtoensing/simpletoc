@@ -1,6 +1,6 @@
 {
   "name": "simpletoc",
-  "version": "5.0.3",
+  "version": "5.0.6",
   "author": "Marc Tönsing",
   "description": "",
   "main": "build/index.js",

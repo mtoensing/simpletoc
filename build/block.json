@@ -2,10 +2,10 @@
 	"$schema": "https://json.schemastore.org/block.json",
 	"apiVersion": 2,
 	"name": "simpletoc/toc",
-	"version": "5.0.2",
+	"version": "5.0.6",
 	"title": "SimpleTOC",
 	"category": "layout",
-	"keywords": [ "TOC", "Table of Contents", "SimpleTOC", "Inhaltsverzeichnis" ],
+	"keywords": [ "TOC", "Table of Contents", "SimpleTOC", "Inhaltsverzeichnis", "List" ],
 	"icon": "simpletocicon",
 	"description": "Adds a Table of Contents.",
 	"attributes": {
