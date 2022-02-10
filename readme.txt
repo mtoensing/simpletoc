@@ -12,7 +12,7 @@ Adds a custom Table of Contents Gutenberg block.
 
 == Description ==
 
-Add a Table of Contents block to your posts and pages. The TOC is a nested list of links to all heading found in the post or page. To use it simply asdd a block and search for "SimpleTOC" or just "TOC". 
+Add a Table of Contents block to your posts and pages. The TOC is a nested list of links to all heading found in the post or page. To use it simply add a block and search for "SimpleTOC" or just "TOC". 
 
 Hide the headline "Table of Contents" and set a maximum display depth in the blocks' sidebar configuration. Add the CSS class "simpletoc-hidden" to a heading block to remove that specific heading from the generated TOC.
 
