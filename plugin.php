@@ -4,7 +4,7 @@
  * Plugin Name:   SimpleTOC - Table of Contents Block
  * Plugin URI:    https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
  * Description:   Adds a basic "Table of Contents" Gutenberg block.
- * Version:       5.0.7
+ * Version:       5.0.8
  * Author:        Marc Tönsing
  * Author URI:    https://marc.tv
  * Text Domain:   simpletoc
@@ -53,6 +53,8 @@ function render_callback( $attributes )
   //add only if block is used in this post.
   add_filter('render_block', __NAMESPACE__ . '\\filter_block', 10, 2);
 
+  $is_backend = defined('REST_REQUEST') && true === REST_REQUEST && 'edit' === filter_input(INPUT_GET, 'context', FILTER_SANITIZE_STRING);
+
   $alignclass = '';
   if ( isset ($attributes['align']) ) {
     $align = $attributes['align'];
@@ -64,15 +66,25 @@ function render_callback( $attributes )
     $className = strip_tags(htmlspecialchars($attributes['className']));
   }
 
+  $pre_html = '';
+  $post_html = '';
+  if ( $className != '' ) {
+    $pre_html = '<div class="simpletoc ' . $className . '">';
+    $post_html = '</div>';
+  }
+  
   $post = get_post();
   $blocks = parse_blocks($post->post_content);
 
   if (empty($blocks)) {
     $html = '';
-    if ($attributes['no_title'] == false) {
-      $html = '<h2 class="simpletoc-title">' . __('Table of Contents', 'simpletoc') . '</h2>';
+    if( $is_backend == true ) {
+      if ($attributes['no_title'] == false) {
+        $html = '<h2 class="simpletoc-title ' . $alignclass . '">' . __('Table of Contents', 'simpletoc') . '</h2>';
+      }
+    
+      $html .= '<p class="components-notice is-warning ' . $alignclass . '">' . __('No blocks found.', 'simpletoc')  . ' ' . __('Save or update post first.', 'simpletoc') . '</p>';
     }
-    $html .= '<p class="components-notice is-warning ' . $alignclass . '">' . __('No blocks found.', 'simpletoc')  . ' ' . __('Save or update post first.', 'simpletoc') . '</p>';
     return $html;
   }
 
@@ -82,18 +94,20 @@ function render_callback( $attributes )
 
   if (empty($headings_clean)) {
     $html = '';
-    if ($attributes['no_title'] == false) {
-      $html = '<h2 class="simpletoc-title">' . __('Table of Contents', 'simpletoc') . '</h2>';
+    if( $is_backend == true ) {
+
+      if ($attributes['no_title'] == false) {
+        $html = '<h2 class="simpletoc-title ' . $alignclass . '">' . __('Table of Contents', 'simpletoc') . '</h2>';
+      }
+    
+      $html .= '<p class="components-notice is-warning ' . $alignclass . '">' . __('No headings found.', 'simpletoc') . ' ' . __('Save or update post first.', 'simpletoc') . '</p>';
     }
-    $html .= '<p class="components-notice is-warning ' . $alignclass . '">' . __('No headings found.', 'simpletoc') . ' ' . __('Save or update post first.', 'simpletoc') . '</p>';
     return $html;
   }
 
-  $output = generateToc($headings_clean, $attributes);
+  $toclist = generateToc($headings_clean, $attributes);
 
-  $pre_html = '<div class="simpletoc ' . $className . ' ' . $alignclass . '">';
-  $post_html = '</div>';
-  $output = $pre_html . $output . $post_html;
+  $output = $pre_html . $toclist . $post_html;
 
   return $output;
 }
@@ -226,6 +240,12 @@ function generateToc($headings, $attributes)
   $link_class = '';
   $styles = '';
 
+  $alignclass = '';
+  if ( isset ($attributes['align']) ) {
+    $align = $attributes['align'];
+    $alignclass = 'align' . $align;
+  }
+
   if ($attributes['remove_indent'] == true) {
     $styles = 'style="padding-left:0;list-style:none;"';
   }
@@ -303,7 +323,7 @@ function generateToc($headings, $attributes)
   if ($attributes['no_title'] == false) {
     $html = "<h2 class=\"simpletoc-title\">" . __("Table of Contents", "simpletoc") . "</h2>";
   }
-  $html .= "<" . $listtype . " class=\"simpletoc-list\" " . $styles .">\n" . $list . "</li></" . $listtype . ">";
+  $html .= "<" . $listtype . " class=\"simpletoc-list\" " . $styles ."  " . $alignclass .">\n" . $list . "</li></" . $listtype . ">";
 
   return $html;
 }

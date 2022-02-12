@@ -4,7 +4,7 @@ Tags: AMP, Gutenberg, block, TOC, Table of Contents
 Requires at least: 5.8
 Donate link: https://marc.tv/out/donate
 Tested up to: 5.9
-Stable tag: 5.0.6
+Stable tag: 5.0.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,15 +36,16 @@ Hide the headline "Table of Contents" and set a maximum display depth in the blo
 
 == Changelog ==
 
-= 5.0.7 =
+= 5.0.8 =
 
-* Fix: Requires at least WordPress 5.8 and not 5.9 anymore.
-* Feature: *Important*: New "simpletoc" and "simpletoc-list" CSS classes for custom styles. But this might break existing custom CSS styles that have not been applied with Gutenberg. 
+* Fix: Requires at least WordPress 5.8. and not 5.9.
+* Fix: Better compatibility with Twenty-Twenty-One.
+* Fix: Localization is back again.
+* Feature: Added "simpletoc-title" and "simpletoc-list" CSS classes. This might break existing custom CSS styles that have not been applied with Gutenberg. 
 * Feature: Toggle list indent.
 * Feature: Better "group" support. Put SimpleTOC in a group and style it with Gutenberg. See FAQ for details.
 * Feature: Native block support for wide and full width.
 * Feature: Added block.json and refactoring with coding standards for Gutenberg blocks.
-* Fix: Localization is back again.
 
 = 4.5 =
 * Feature: Add the CSS class "smooth-scroll" to the links. This enables smooth scrolling in themes like GeneratePress. 
