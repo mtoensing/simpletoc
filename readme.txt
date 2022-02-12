@@ -1,7 +1,7 @@
 === SimpleTOC - Table of Contents Block ===
 Contributors: MarcDK
 Tags: AMP, Gutenberg, block, TOC, Table of Contents
-Requires at least: 5.9
+Requires at least: 5.8
 Donate link: https://marc.tv/out/donate
 Tested up to: 5.9
 Stable tag: 5.0.6
@@ -12,33 +12,34 @@ Adds a custom Table of Contents Gutenberg block.
 
 == Description ==
 
-Add a Table of Contents block to your posts and pages. The TOC is a nested list of links to all heading found in the post or page. To use it simply add a block and search for "SimpleTOC" or just "TOC". 
+Add a Table of Contents block to your posts and pages. The TOC is a nested list of links to all heading found in the post or page. To use it, simply add a block and search for "SimpleTOC" or just "TOC". 
 
 Hide the headline "Table of Contents" and set a maximum display depth in the blocks' sidebar configuration. Add the CSS class "simpletoc-hidden" to a heading block to remove that specific heading from the generated TOC.
 
 = Features =
 
-* No javascript or css added.
+* No JavaScript or CSS added.
 * Minimal and valid HTML output.
 * Designed for Gutenberg.
-* Style SimpleTOC with Gutenbergs native group styling options.
+* Style SimpleTOC with Gutenberg's native group styling options.
 * Convert the styled group to a reusable block for future posts.
 * Inherits the style of your theme.
 * Support for column block layouts. 
 * Control the maximum depth of the headings.
-* Choose between an ordered and unordered html list.
+* Choose between an ordered and unordered HTML list.
 * SEO friendly: Disable the h2 heading of the TOC block and add your own.
 * Comes with English, French, Spanish, German, and Brazilian Portuguese translations.
-* Works with non-latin texts. Tested with Japanese and Arabic.
+* Works with non-Latin texts. Tested with Japanese and Arabic.
 * Finds headlines in groups and reusable blocks. And in groups within reusable blocks.
 * Compatible with AMP plugins.
 * Rank Math support.
 
 == Changelog ==
 
-= 5.0.6 =
+= 5.0.7 =
 
-* Feature: *Important*: New "simpletoc" and "simpletoc-list" css classes for custom styles. But this might break existing custom css styles that have not been applied with Gutenberg. 
+* Fix: Requires at least WordPress 5.8 and not 5.9 anymore.
+* Feature: *Important*: New "simpletoc" and "simpletoc-list" CSS classes for custom styles. But this might break existing custom CSS styles that have not been applied with Gutenberg. 
 * Feature: Toggle list indent.
 * Feature: Better "group" support. Put SimpleTOC in a group and style it with Gutenberg. See FAQ for details.
 * Feature: Native block support for wide and full width.
@@ -46,13 +47,13 @@ Hide the headline "Table of Contents" and set a maximum display depth in the blo
 * Fix: Localization is back again.
 
 = 4.5 =
-* Feature: Add the css class "smooth-scroll" to the links. This enables smooth scrolling in themes like GeneratePress. 
+* Feature: Add the CSS class "smooth-scroll" to the links. This enables smooth scrolling in themes like GeneratePress. 
 
 = 4.4.9 =
 * Feature: Support for headlines in reusable blocks. 
 
 = 4.4.8 =
-* Feature: Added option to toggle absolute urls. 
+* Feature: Added option to toggle absolute URLs. 
 
 = 4.4.7 =
 * Feature: Added option to replace ul tag with ol tag. This will add decimal numbers to each heading in the TOC.
