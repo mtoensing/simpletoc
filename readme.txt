@@ -14,7 +14,7 @@ Adds a custom Table of Contents Gutenberg block.
 
 Add a Table of Contents block to your posts and pages. The TOC is a nested list of links to all heading found in the post or page. To use it, simply add a block and search for "SimpleTOC" or just "TOC". 
 
-Hide the headline "Table of Contents" and set a maximum display depth in the blocks' sidebar configuration. Add the CSS class "simpletoc-hidden" to a heading block to remove that specific heading from the generated TOC.
+The maximum depth of the toc can be configured in in the blocks' sidebar among many other options. There can hide the headline "Table of Contents" and add your own by using a normal heading block.  
 
 = Features =
 
@@ -99,6 +99,10 @@ Select the block and select "group" in the context menu. Apply "background color
 = How do I add smooth scrolling? =
 
 You can optionally add the css class "smooth-scroll" to each link the TOC. Then you can install plugin that uses these classes.
+
+= How do I hide a single heading? = 
+
+If you really want to hide a single heading from the table of contents then add the CSS class "simpletoc-hidden" to a heading block. But first of all, think about the reason you want to hide a specific heading. Maybe you want to remove all headins of a specific depth level. Then there is an option for that in the blocks options in Gutenberg. If you think this heading should not be part of the toc maybe it is not needed in the post itself?
 
 == Screenshots ==
 1. SimpleTOC block in Gutenberg editor.
