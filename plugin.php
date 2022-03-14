@@ -53,13 +53,13 @@ function simpletoc_addIDstoContent( $content ) {
 
     foreach ( $blocks as &$block ) {
 
-      if(isset($block['blockName']) && $block['blockName'] === 'core/heading' ){
+      if(isset($block['blockName']) && $block['blockName'] === 'core/heading' && isset($block['innerHTML']) && isset($block['innerContent']) && isset($block['innerContent'][0]) ){
         $block['innerHTML'] = addAnchorAttribute($block['innerHTML']);
-        $block['innerContent'][0] = addAnchorAttribute($block['innerHTML']);
+        $block['innerContent'][0] = addAnchorAttribute($block['innerContent'][0]);
       }
       
     }
-    $content = serialize_blocks ($blocks);
+    $content = serialize_blocks($blocks);
   
   }
 
@@ -138,7 +138,6 @@ function render_callback( $attributes )
 
 
 function simpletoc_add_pagenumber($blocks, $headings){
-  $arr = array();
   $pages = 1;
 
   foreach ($blocks as $block => $innerBlock) {
@@ -201,7 +200,6 @@ function filter_headings_recursive($blocks)
 
 function simpletoc_sanitize_string($string)
 {
-
   // remove punctuation
   $zero_punctuation = preg_replace("/\p{P}/u", "", $string);
   // remove non-breaking spaces

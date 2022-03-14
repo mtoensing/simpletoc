@@ -24,6 +24,7 @@ The maximum depth of the toc can be configured in in the blocks' sidebar among m
 * Style SimpleTOC with Gutenberg's native group styling options.
 * Convert the styled group to a reusable block for future posts.
 * Inherits the style of your theme.
+* Support for paginated posts.
 * Support for column block layouts. 
 * Control the maximum depth of the headings.
 * Choose between an ordered and unordered HTML list.
@@ -32,7 +33,6 @@ The maximum depth of the toc can be configured in in the blocks' sidebar among m
 * Works with non-Latin texts. Tested with Japanese and Arabic.
 * Finds headlines in groups and reusable blocks. And in groups within reusable blocks.
 * Compatible with AMP plugins.
-* Support for paginated posts.
 * Rank Math support.
 
 == Changelog ==
