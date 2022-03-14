@@ -1,10 +1,10 @@
 === SimpleTOC - Table of Contents Block ===
 Contributors: MarcDK
 Tags: AMP, Gutenberg, block, TOC, Table of Contents
-Requires at least: 5.8
+Requires at least: 5.9
 Donate link: https://marc.tv/out/donate
 Tested up to: 5.9
-Stable tag: 5.0.8
+Stable tag: 5.0.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,9 +32,13 @@ The maximum depth of the toc can be configured in in the blocks' sidebar among m
 * Works with non-Latin texts. Tested with Japanese and Arabic.
 * Finds headlines in groups and reusable blocks. And in groups within reusable blocks.
 * Compatible with AMP plugins.
+* Support for paginated posts.
 * Rank Math support.
 
 == Changelog ==
+
+= 5.0.9 = 
+* Support for paginated posts.
 
 = 5.0.8 =
 
