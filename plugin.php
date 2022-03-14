@@ -47,7 +47,7 @@ add_filter( 'the_content', 'simpletoc_addIDstoContent', 1 );
  
 function simpletoc_addIDstoContent( $content ) {
  
-  if ( has_block( 'simpletoc/toc' ) ) {
+  if ( has_block( 'simpletoc/toc',$content ) ) {
 
     $blocks = parse_blocks( $content );
 
@@ -171,7 +171,7 @@ function filter_headings_recursive($blocks)
   foreach ($blocks as $block => $innerBlock) {
 
     if (is_array($innerBlock)) {
-    
+
       if (isset($innerBlock['attrs']['ref'])) {
         // search in reusable blocks
         $e_arr = parse_blocks(get_post($innerBlock['attrs']['ref'])->post_content);
@@ -337,7 +337,7 @@ function generateToc($headings, $attributes)
       }
     }
 
-    $list .= "<a " . $link_class . " href=\"" . $absolute_url . $page . "#" . $link . "\">" . $title . "</a>";
+    $list .= "<a " . $link_class . " href=\"" . $absolute_url . esc_html($page) . "#" . $link . "\">" . $title . "</a>";
 
     closelist:
     // close lists
