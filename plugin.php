@@ -43,6 +43,29 @@ add_filter('rank_math/researches/toc_plugins', function ($toc_plugins) {
   return $toc_plugins;
 });
 
+add_filter( 'the_content', 'simpletoc_addIDstoContent', 1 );
+ 
+function simpletoc_addIDstoContent( $content ) {
+ 
+  if ( has_block( 'simpletoc/toc' ) ) {
+
+    $blocks = parse_blocks( $content );
+
+    foreach ( $blocks as &$block ) {
+
+      if(isset($block['blockName']) && $block['blockName'] === 'core/heading' ){
+        $block['innerHTML'] = addAnchorAttribute($block['innerHTML']);
+        $block['innerContent'][0] = addAnchorAttribute($block['innerHTML']);
+      }
+      
+    }
+    $content = serialize_blocks ($blocks);
+  
+  }
+
+  return $content;
+}
+
 /**
  * Render block output 
  *
@@ -50,10 +73,8 @@ add_filter('rank_math/researches/toc_plugins', function ($toc_plugins) {
 
 function render_callback( $attributes )
 {
-  //add only if block is used in this post.
-  add_filter('render_block', __NAMESPACE__ . '\\filter_block', 10, 2);
 
-  $is_backend = defined('REST_REQUEST') && true === REST_REQUEST && 'edit' === filter_input(INPUT_GET, 'context', FILTER_SANITIZE_STRING);
+  $is_backend = defined('REST_REQUEST') && true === REST_REQUEST && 'edit' === filter_input(INPUT_GET, 'context');
 
   $alignclass = '';
   if ( isset ($attributes['align']) ) {
@@ -90,6 +111,9 @@ function render_callback( $attributes )
 
   $headings = array_reverse(filter_headings_recursive($blocks));
 
+  // enrich headings with pages as a data-attribute 
+  $headings = simpletoc_add_pagenumber($blocks, $headings);
+
   $headings_clean = array_map('trim', $headings);
 
   if (empty($headings_clean)) {
@@ -112,6 +136,30 @@ function render_callback( $attributes )
   return $output;
 }
 
+
+function simpletoc_add_pagenumber($blocks, $headings){
+  $arr = array();
+  $pages = 1;
+
+  foreach ($blocks as $block => $innerBlock) {
+    
+    // count nextpage blocks
+    if (isset($blocks[$block]['blockName']) && $blocks[$block]['blockName'] === 'core/nextpage' ){
+      $pages++;
+    }
+
+    if (isset($blocks[$block]['blockName']) && $blocks[$block]["blockName"] === 'core/heading') {
+      // make sure its a headline.
+      foreach ($headings as $heading => &$innerHeading){
+        if($innerHeading == $blocks[$block]["innerHTML"]){
+          $innerHeading = preg_replace("/(<h1|<h2|<h3|<h4|<h5|<h6)/i", '$1 data-page="' . $pages . '"', $blocks[$block]["innerHTML"]);
+        }
+      }
+    }
+  }
+  return $headings;
+}
+
 /**
  * Return all headings with a recursive walk through all blocks. 
  * This includes groups and reusable block with groups within reusable blocks. 
@@ -119,13 +167,12 @@ function render_callback( $attributes )
 
 function filter_headings_recursive($blocks)
 {
-
   $arr = array();
 
   foreach ($blocks as $block => $innerBlock) {
 
     if (is_array($innerBlock)) {
-
+    
       if (isset($innerBlock['attrs']['ref'])) {
         // search in reusable blocks
         $e_arr = parse_blocks(get_post($innerBlock['attrs']['ref'])->post_content);
@@ -165,7 +212,6 @@ function simpletoc_sanitize_string($string)
   $sanitized_string = sanitize_title_with_dashes($string_without_accents);
   // Encode for use in an url
   $urlencoded = urlencode($sanitized_string);
-
   return $urlencoded;
 }
 
@@ -202,7 +248,6 @@ function addAnchorAttribute($html)
 
   // Loop through all the found tags
   foreach ($tags as $tag) {
-
     // Set id attribute
     $heading_text = strip_tags($html);
     $anchor = simpletoc_sanitize_string($heading_text);
@@ -213,19 +258,6 @@ function addAnchorAttribute($html)
   $content = utf8_decode($dom->saveHTML($dom->documentElement));
 
   return $content;
-}
-
-function filter_block($block_content, $block)
-{
-  $className = '';
-
-  if ($block['blockName'] !== 'core/heading') {
-    return $block_content;
-  }
-
-  $block_content = addAnchorAttribute($block_content);
-
-  return $block_content;
 }
 
 function generateToc($headings, $attributes)
@@ -273,6 +305,17 @@ function generateToc($headings, $attributes)
   foreach ($headings as $line => $headline) {
 
     $title = strip_tags($headline);
+    $page = '';
+    $dom = new \DOMDocument();
+    @$dom->loadHTML($headline, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+    $xpath = new \DOMXPath($dom);
+    $nodes = $xpath->query('//*/@data-page');
+
+    if ( isset($nodes[0] ) && $nodes[0]->nodeValue > 1) {
+      $page = $nodes[0]->nodeValue . '/';
+      $absolute_url = get_permalink();
+    }
+
     $link = simpletoc_sanitize_string($title);
     $this_depth = (int) $headings[$line][2];
     if (isset($headings[$line + 1][2])) {
@@ -296,7 +339,7 @@ function generateToc($headings, $attributes)
       }
     }
 
-    $list .= "<a " . $link_class . " href=\"" . $absolute_url . "#" . $link . "\">" . $title . "</a>";
+    $list .= "<a " . $link_class . " href=\"" . $absolute_url . $page . "#" . $link . "\">" . $title . "</a>";
 
     closelist:
     // close lists
