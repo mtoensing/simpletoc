@@ -44,10 +44,12 @@ add_filter('rank_math/researches/toc_plugins', function ($toc_plugins) {
 });
 
 add_filter( 'the_content', 'simpletoc_addIDstoContent', 1 );
+
+
  
 function simpletoc_addIDstoContent( $content ) {
- 
-  if ( has_block( 'simpletoc/toc',$content ) ) {
+
+  if ( has_block( 'simpletoc/toc', get_the_ID() ) ) {
 
     $blocks = parse_blocks( $content );
 

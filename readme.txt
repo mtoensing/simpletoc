@@ -38,7 +38,8 @@ The maximum depth of the toc can be configured in in the blocks' sidebar among m
 == Changelog ==
 
 = 5.0.9 = 
-* Experimental: Support for paginated posts.
+* Works with WordPress 6.0
+* Support for paginated posts.
 
 = 5.0.8 =
 
