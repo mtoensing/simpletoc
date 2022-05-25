@@ -1,6 +1,6 @@
 === SimpleTOC - Table of Contents Block ===
 Contributors: MarcDK
-Tags: AMP, Gutenberg, block, TOC, Table of Contents, GeneratePress
+Tags: Gutenberg, block, TOC, Table of Contents, GeneratePress
 Requires at least: 5.9
 Donate link: https://marc.tv/out/donate
 Tested up to: 6.0
