@@ -1,6 +1,6 @@
 === SimpleTOC - Table of Contents Block ===
 Contributors: MarcDK
-Tags: AMP, Gutenberg, block, TOC, Table of Contents
+Tags: AMP, Gutenberg, block, TOC, Table of Contents, GeneratePress
 Requires at least: 5.9
 Donate link: https://marc.tv/out/donate
 Tested up to: 6.0
@@ -32,11 +32,12 @@ The maximum depth of the toc can be configured in in the blocks' sidebar among m
 * Works with non-Latin texts. Tested with Japanese and Arabic.
 * Finds headlines in groups. 
 * Compatible with AMP plugins.
-* Rank Math support.
+* GeneratePress and Rank Math support.
 
 == Changelog ==
 
 = 5.0.10 = 
+* Feature: Support for GeneratePress headings.
 * Fix: Headings in groups work again.
 
 = 5.0.9 = 

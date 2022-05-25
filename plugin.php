@@ -51,10 +51,7 @@ function simpletoc_addIDstoContent( $content ) {
 
   if ( has_block( 'simpletoc/toc', get_the_ID() ) ) {
 
-
-
     $blocks = parse_blocks( $content );
-
 
     $blocks = addIDstoBlocks_recursive( $blocks ); 
 
@@ -68,7 +65,7 @@ function simpletoc_addIDstoContent( $content ) {
 function addIDstoBlocks_recursive($blocks) {
 
   foreach ( $blocks as &$block ) {
-     if (isset($block['blockName']) && $block['blockName'] === 'core/heading' && isset($block['innerHTML']) && isset($block['innerContent']) && isset($block['innerContent'][0]) ){
+     if (isset($block['blockName']) && ( $block['blockName'] === 'core/heading' || $block['blockName'] === 'generateblocks/headline') && isset($block['innerHTML']) && isset($block['innerContent']) && isset($block['innerContent'][0]) ){
         $block['innerHTML'] = addAnchorAttribute($block['innerHTML']);
         $block['innerContent'][0] = addAnchorAttribute($block['innerContent'][0]);
       } else if( isset($block['attrs']['ref']) ){
@@ -200,7 +197,14 @@ function filter_headings_recursive($blocks)
       }
     } else {
 
-      if (isset($blocks['blockName']) && $blocks['blockName'] === 'core/heading' && $innerBlock !== 'core/heading') {
+      if (isset($blocks['blockName']) && ( $blocks['blockName'] === 'core/heading' ) && $innerBlock !== 'core/heading') {
+        // make sure its a headline.
+        if (preg_match("/(<h1|<h2|<h3|<h4|<h5|<h6)/i", $innerBlock)) {
+          $arr[] = $innerBlock;
+        }
+      }
+
+      if (isset($blocks['blockName']) && ( $blocks['blockName'] === 'generateblocks/headline' ) && $innerBlock !== 'core/heading') {
         // make sure its a headline.
         if (preg_match("/(<h1|<h2|<h3|<h4|<h5|<h6)/i", $innerBlock)) {
           $arr[] = $innerBlock;
@@ -210,6 +214,7 @@ function filter_headings_recursive($blocks)
   }
 
   return $arr;
+  
 }
 
 /**
