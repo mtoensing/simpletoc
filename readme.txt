@@ -4,7 +4,7 @@ Tags: AMP, Gutenberg, block, TOC, Table of Contents
 Requires at least: 5.9
 Donate link: https://marc.tv/out/donate
 Tested up to: 6.0
-Stable tag: 5.0.9
+Stable tag: 5.0.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -37,7 +37,7 @@ The maximum depth of the toc can be configured in in the blocks' sidebar among m
 == Changelog ==
 
 = 5.0.10 = 
-* Fix: Headlines in groups.
+* Fix: Headings in groups.
 
 = 5.0.9 = 
 * Works with WordPress 6.0

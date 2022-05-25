@@ -4,7 +4,7 @@
  * Plugin Name:   SimpleTOC - Table of Contents Block
  * Plugin URI:    https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
  * Description:   Adds a basic "Table of Contents" Gutenberg block.
- * Version:       5.0.9
+ * Version:       5.0.10
  * Author:        Marc Tönsing
  * Author URI:    https://marc.tv
  * Text Domain:   simpletoc
@@ -51,7 +51,10 @@ function simpletoc_addIDstoContent( $content ) {
 
   if ( has_block( 'simpletoc/toc', get_the_ID() ) ) {
 
+
+
     $blocks = parse_blocks( $content );
+
 
     $blocks = addIDstoBlocks_recursive( $blocks ); 
 
@@ -65,13 +68,13 @@ function simpletoc_addIDstoContent( $content ) {
 function addIDstoBlocks_recursive($blocks) {
 
   foreach ( $blocks as &$block ) {
-
      if (isset($block['blockName']) && $block['blockName'] === 'core/heading' && isset($block['innerHTML']) && isset($block['innerContent']) && isset($block['innerContent'][0]) ){
         $block['innerHTML'] = addAnchorAttribute($block['innerHTML']);
         $block['innerContent'][0] = addAnchorAttribute($block['innerContent'][0]);
       } else if( isset($block['attrs']['ref']) ){
-        // search in reusable blocks
-        // currently broken. If somebody can come up with a solution feel free to add it.
+        // search in reusable blocks (this is not finished because I ran out of ideas.)
+        // $reusable_block_id = $block['attrs']['ref'];
+        // $reusable_block_content = parse_blocks(get_post($reusable_block_id)->post_content);
       } else if ( ! empty( $block['innerBlocks'] ) ) {
         // search in groups
         $block['innerBlocks'] = addIDstoBlocks_recursive( $block['innerBlocks'] );
