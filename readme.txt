@@ -37,7 +37,7 @@ The maximum depth of the toc can be configured in in the blocks' sidebar among m
 == Changelog ==
 
 = 5.0.10 = 
-* Fix: Headings in groups.
+* Fix: Headings in groups work again.
 
 = 5.0.9 = 
 * Works with WordPress 6.0
