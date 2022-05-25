@@ -53,19 +53,32 @@ function simpletoc_addIDstoContent( $content ) {
 
     $blocks = parse_blocks( $content );
 
-    foreach ( $blocks as &$block ) {
+    $blocks = addIDstoBlocks_recursive( $blocks ); 
 
-      if(isset($block['blockName']) && $block['blockName'] === 'core/heading' && isset($block['innerHTML']) && isset($block['innerContent']) && isset($block['innerContent'][0]) ){
-        $block['innerHTML'] = addAnchorAttribute($block['innerHTML']);
-        $block['innerContent'][0] = addAnchorAttribute($block['innerContent'][0]);
-      }
-      
-    }
-    $content = serialize_blocks($blocks);
-  
+    $content = serialize_blocks( $blocks );
+   
   }
 
   return $content;
+}
+
+function addIDstoBlocks_recursive($blocks) {
+
+  foreach ( $blocks as &$block ) {
+
+     if (isset($block['blockName']) && $block['blockName'] === 'core/heading' && isset($block['innerHTML']) && isset($block['innerContent']) && isset($block['innerContent'][0]) ){
+        $block['innerHTML'] = addAnchorAttribute($block['innerHTML']);
+        $block['innerContent'][0] = addAnchorAttribute($block['innerContent'][0]);
+      } else if( isset($block['attrs']['ref']) ){
+        // search in reusable blocks
+        // currently broken. If somebody can come up with a solution feel free to add it.
+      } else if ( ! empty( $block['innerBlocks'] ) ) {
+        // search in groups
+        $block['innerBlocks'] = addIDstoBlocks_recursive( $block['innerBlocks'] );
+      }
+  }
+
+  return $blocks;
 }
 
 /**

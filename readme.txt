@@ -22,7 +22,6 @@ The maximum depth of the toc can be configured in in the blocks' sidebar among m
 * Minimal and valid HTML output.
 * Designed for Gutenberg.
 * Style SimpleTOC with Gutenberg's native group styling options.
-* Convert the styled group to a reusable block for future posts.
 * Inherits the style of your theme.
 * Support for paginated posts.
 * Support for column block layouts. 
@@ -31,11 +30,14 @@ The maximum depth of the toc can be configured in in the blocks' sidebar among m
 * SEO friendly: Disable the h2 heading of the TOC block and add your own.
 * Comes with English, French, Spanish, German, and Brazilian Portuguese translations.
 * Works with non-Latin texts. Tested with Japanese and Arabic.
-* Finds headlines in groups and reusable blocks. And in groups within reusable blocks.
+* Finds headlines in groups. 
 * Compatible with AMP plugins.
 * Rank Math support.
 
 == Changelog ==
+
+= 5.0.10 = 
+* Fix: Headlines in groups.
 
 = 5.0.9 = 
 * Works with WordPress 6.0
