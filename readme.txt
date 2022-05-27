@@ -4,7 +4,7 @@ Tags: Gutenberg, block, TOC, Table of Contents, AMP
 Requires at least: 5.9
 Donate link: https://marc.tv/out/donate
 Tested up to: 6.0
-Stable tag: 5.0.13
+Stable tag: 5.0.15
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,7 +24,7 @@ The maximum depth of the toc can be configured in in the blocks' sidebar among m
 * Designed for Gutenberg.
 * Style SimpleTOC with Gutenberg's native group styling options.
 * Inherits the style of your theme.
-* Comes with English, Chinese (Taiwan), French, Spanish, German, and Brazilian Portuguese translations.
+* Comes with English, Chinese (Taiwan), French, Spanish, German, Latvia and Brazilian Portuguese translations.
 
 = Customization = 
 
