@@ -24,7 +24,7 @@ The maximum depth of the toc can be configured in in the blocks' sidebar among m
 * Designed for Gutenberg.
 * Style SimpleTOC with Gutenberg's native group styling options.
 * Inherits the style of your theme.
-* Comes with English, French, Spanish, German, and Brazilian Portuguese translations.
+* Comes with English, Chinese (Taiwan), French, Spanish, German, and Brazilian Portuguese translations.
 
 = Customization = 
 
