@@ -1,6 +1,6 @@
 === SimpleTOC - Table of Contents Block ===
 Contributors: MarcDK
-Tags: Gutenberg, block, TOC, Table of Contents, GeneratePress
+Tags: Gutenberg, block, TOC, Table of Contents, AMP
 Requires at least: 5.9
 Donate link: https://marc.tv/out/donate
 Tested up to: 6.0
@@ -18,21 +18,27 @@ The maximum depth of the toc can be configured in in the blocks' sidebar among m
 
 = Features =
 
-* No JavaScript or CSS added.
+* Zero configuration: Add the SimpleTOC block to your post and that's it. 
 * Minimal and valid HTML output.
+* No JavaScript or CSS added.
 * Designed for Gutenberg.
 * Style SimpleTOC with Gutenberg's native group styling options.
 * Inherits the style of your theme.
-* Support for paginated posts.
-* Support for column block layouts. 
+* Comes with English, French, Spanish, German, and Brazilian Portuguese translations.
+
+= Customization = 
+
+* Add background and text color with Gutenberg groups.
+* Native block support for wide and full width.
 * Control the maximum depth of the headings.
 * Choose between an ordered and unordered HTML list.
-* SEO friendly: Disable the h2 heading of the TOC block and add your own.
-* Comes with English, French, Spanish, German, and Brazilian Portuguese translations.
-* Works with non-Latin texts. Tested with Japanese and Arabic.
-* Finds headlines in groups. 
-* Compatible with AMP plugins.
+* Toggle list indent.
+* Disable the h2 heading of the TOC block and add your own.
+
+= Compatibility
+
 * GeneratePress and Rank Math support.
+* Compatible with popular AMP plugins.
 
 == Changelog ==
 
