@@ -4,7 +4,7 @@ Tags: Gutenberg, block, TOC, Table of Contents, AMP
 Requires at least: 5.9
 Donate link: https://marc.tv/out/donate
 Tested up to: 6.0
-Stable tag: 5.0.11
+Stable tag: 5.0.12
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -35,10 +35,10 @@ The maximum depth of the toc can be configured in in the blocks' sidebar among m
 * Toggle list indent.
 * Disable the h2 heading of the TOC block and add your own.
 
-= Compatibility
+= Compatibility =
 
 * GeneratePress and Rank Math support.
-* Compatible with popular AMP plugins.
+* Works with all popular AMP plugins.
 
 == Changelog ==
 
