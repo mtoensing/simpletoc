@@ -269,6 +269,8 @@ function addAnchorAttribute($html)
 
   // Loop through all the found tags
   foreach ($tags as $tag) {
+    // if tag already has an attribute "id" defined, no need for creating a new one
+    if (!empty($tag->getAttribute('id'))) {continue;}
     // Set id attribute
     $heading_text = strip_tags($html);
     $anchor = simpletoc_sanitize_string($heading_text);
@@ -338,6 +340,10 @@ function generateToc($headings, $attributes)
     }
 
     $link = simpletoc_sanitize_string($title);
+	if (isset($nodes[0]) && !empty($nodes[0]->ownerElement->getAttribute('id'))) {
+		// if the node already has an attribute id, use that as achor
+		$link = $nodes[0]->ownerElement->getAttribute('id');
+	}
     $this_depth = (int) $headings[$line][2];
     if (isset($headings[$line + 1][2])) {
       $next_depth = (int) $headings[$line + 1][2];
