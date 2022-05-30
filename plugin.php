@@ -341,7 +341,7 @@ function generateToc($headings, $attributes)
 
     $link = simpletoc_sanitize_string($title);
 	if (isset($nodes[0]) && !empty($nodes[0]->ownerElement->getAttribute('id'))) {
-		// if the node already has an attribute id, use that as achor
+		// if the node already has an attribute id, use that as anchor
 		$link = $nodes[0]->ownerElement->getAttribute('id');
 	}
     $this_depth = (int) $headings[$line][2];
