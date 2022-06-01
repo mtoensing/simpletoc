@@ -4,7 +4,7 @@ Tags: Gutenberg, block, TOC, Table of Contents, AMP
 Requires at least: 5.9
 Donate link: https://marc.tv/out/donate
 Tested up to: 6.0
-Stable tag: 5.0.15
+Stable tag: 5.0.16
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -41,6 +41,9 @@ The maximum depth of the toc can be configured in in the blocks' sidebar among m
 * Works with all popular AMP plugins.
 
 == Changelog ==
+
+= 5.0.16 =
+* Fix: Anchor ids will be generated for all posts. This should brute-force the fix for https://wordpress.org/support/topic/scroll-stopped-working/ 
 
 = 5.0.11 = 
 * Feature: Support for GeneratePress headings.
