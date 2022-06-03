@@ -43,7 +43,7 @@ The maximum depth of the toc can be configured in in the blocks' sidebar among m
 == Changelog ==
 
 = 5.0.17 =
-* Feature: Support for Custom Anchor IDs in headings. Thank you Matthias Altmann!
+* Feature: Support for custom Anchor IDs in headings. Thank you Matthias Altmann!
 
 = 5.0.16 =
 * Fix: Anchor ids will be generated for all posts. This should brute-force the fix for https://wordpress.org/support/topic/scroll-stopped-working/ 
