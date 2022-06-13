@@ -106,9 +106,14 @@ function render_callback( $attributes )
   }
   
   $post = get_post();
-  $blocks = parse_blocks($post->post_content);
 
-  if (empty($blocks)) {
+  if ( is_null($post) || is_null($post->post_content) ) {
+    $blocks = '';
+  } else {
+    $blocks = parse_blocks($post->post_content);
+  }
+
+  if ( empty($blocks) ) {
     $html = '';
     if( $is_backend == true ) {
       if ($attributes['no_title'] == false) {
