@@ -42,18 +42,14 @@ The maximum depth of the toc can be configured in in the blocks' sidebar among m
 
 == Changelog ==
 
-= 5.0.18 =
-* Fix: Attempt to read property "post_content" on null in logs
+= 5.0.19 =
+* Fixes: Refactoring
 
 = 5.0.17 =
 * Feature: Support for custom Anchor IDs in headings. Thank you Matthias Altmann!
 
-= 5.0.16 =
-* Fix: Anchor ids will be generated for all posts. This should brute-force the fix for https://wordpress.org/support/topic/scroll-stopped-working/ 
-
 = 5.0.11 = 
 * Feature: Support for GeneratePress headings.
-* Fix: Headings in groups work again.
 
 = 5.0.9 = 
 * Works with WordPress 6.0
@@ -61,9 +57,6 @@ The maximum depth of the toc can be configured in in the blocks' sidebar among m
 
 = 5.0.8 =
 
-* Fix: Requires at least WordPress 5.8. and not 5.9.
-* Fix: Better compatibility with Twenty-Twenty-One.
-* Fix: Localization is back again.
 * Feature: Added "simpletoc-title" and "simpletoc-list" CSS classes. This might break existing custom CSS styles that have not been applied with Gutenberg. 
 * Feature: Toggle list indent.
 * Feature: Better "group" support. Put SimpleTOC in a group and style it with Gutenberg. See FAQ for details.
