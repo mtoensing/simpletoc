@@ -44,8 +44,6 @@ add_filter('rank_math/researches/toc_plugins', function ($toc_plugins) {
 });
 
 add_filter( 'the_content', 'simpletoc_addIDstoContent', 1 );
-
-
  
 function simpletoc_addIDstoContent( $content ) {
 
@@ -58,7 +56,7 @@ function simpletoc_addIDstoContent( $content ) {
   return $content;
 }
 
-function addIDstoBlocks_recursive($blocks) {
+function addIDstoBlocks_recursive( $blocks ) {
 
   foreach ( $blocks as &$block ) {
      if (isset($block['blockName']) && ( $block['blockName'] === 'core/heading' || $block['blockName'] === 'generateblocks/headline') && isset($block['innerHTML']) && isset($block['innerContent']) && isset($block['innerContent'][0]) ){
@@ -95,7 +93,7 @@ function render_callback( $attributes )
 
   $className = '';
   if ( isset( $attributes['className'] ) ) {
-    $className = strip_tags(htmlspecialchars($attributes['className']));
+    $className = strip_tags(htmlspecialchars($attributes['className'] ));
   }
 
   $pre_html = '';
@@ -106,7 +104,6 @@ function render_callback( $attributes )
   }
   
   $post = get_post();
-
   if ( is_null($post) || is_null($post->post_content) ) {
     $blocks = '';
   } else {
@@ -132,7 +129,7 @@ function render_callback( $attributes )
 
   $headings_clean = array_map('trim', $headings);
 
-  if (empty($headings_clean)) {
+  if ( empty( $headings_clean ) ) {
     $html = '';
     if( $is_backend == true ) {
 
@@ -153,7 +150,7 @@ function render_callback( $attributes )
 }
 
 
-function simpletoc_add_pagenumber($blocks, $headings){
+function simpletoc_add_pagenumber( $blocks, $headings ){
   $pages = 1;
 
   foreach ($blocks as $block => $innerBlock) {
@@ -180,7 +177,7 @@ function simpletoc_add_pagenumber($blocks, $headings){
  * This includes groups and reusable block with groups within reusable blocks. 
  */
 
-function filter_headings_recursive($blocks)
+function filter_headings_recursive( $blocks )
 {
   $arr = array();
 
@@ -222,7 +219,7 @@ function filter_headings_recursive($blocks)
  * Remove all problematic characters for toc links 
  */
 
-function simpletoc_sanitize_string($string)
+function simpletoc_sanitize_string( $string )
 {
   // remove punctuation
   $zero_punctuation = preg_replace("/\p{P}/u", "", $string);
@@ -237,7 +234,7 @@ function simpletoc_sanitize_string($string)
   return $urlencoded;
 }
 
-function simpletoc_plugin_meta($links, $file)
+function simpletoc_plugin_meta( $links, $file )
 {
 
   if (false !== strpos($file, 'simpletoc')) {
@@ -249,7 +246,7 @@ function simpletoc_plugin_meta($links, $file)
   return $links;
 }
 
-function addAnchorAttribute($html)
+function addAnchorAttribute( $html )
 {
 
   // remove non-breaking space entites from input HTML
@@ -284,7 +281,7 @@ function addAnchorAttribute($html)
   return $content;
 }
 
-function generateToc($headings, $attributes)
+function generateToc( $headings, $attributes )
 {
 
   $list = '';
