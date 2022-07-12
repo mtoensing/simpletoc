@@ -58,6 +58,19 @@ export default function Edit({ attributes, setAttributes }) {
             </PanelRow>
             <PanelRow>
               <ToggleControl
+                label={__("Center heading", "simpletoc")}
+                help={__(
+                  'Align the "Table of contents" block heading to center.',
+                  "simpletoc"
+                )}
+                checked={attributes.center_heading}
+                onChange={() =>
+                  setAttributes({ center_heading: !attributes.center_heading })
+                }
+              />
+            </PanelRow>
+            <PanelRow>
+              <ToggleControl
                 label={__("Remove heading", "simpletoc")}
                 help={__(
                   'Disable the "Table of contents" block heading and add your own heading block.',
@@ -67,6 +80,17 @@ export default function Edit({ attributes, setAttributes }) {
                 onChange={() =>
                   setAttributes({ no_title: !attributes.no_title })
                 }
+              />
+            </PanelRow>
+            <PanelRow>
+              <ToggleControl
+                label={__("Use Collapsible TOC", "simpletoc")}
+                help={__(
+                  "Add extra container to make the TOC collapsible. You can target 'simpletoc-container' class using CSS to to style the container: add margin, padding, border, etc",
+                  "simpletoc"
+                )}
+                checked={attributes.use_col}
+                onChange={() => setAttributes({ use_col: !attributes.use_col })}
               />
             </PanelRow>
             <PanelRow>

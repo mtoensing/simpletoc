@@ -83,6 +83,15 @@ function addIDstoBlocks_recursive( $blocks ) {
 function render_callback( $attributes )
 {
 
+  $headingsvg = '';
+  $headingsvg = '<svg width="18" height="18" viewBox="0 0 24 24" style="align-self:center;"><path fill="currentColor" d="M12,18.17L8.83,15L7.42,16.41L12,21L16.59,16.41L15.17,15M12,5.83L15.17,9L16.58,7.59L12,3L7.41,7.59L8.83,9L12,5.83Z"></path></svg>';
+    
+  $center_heading_no_col = '';
+  if ($attributes['center_heading'] == true) {
+    $center_heading_no_col = 'text-align:center;';
+    $center_heading_use_col = 'justify-content:center;';
+  }
+  
   $is_backend = defined('REST_REQUEST') && true === REST_REQUEST && 'edit' === filter_input(INPUT_GET, 'context');
 
   $alignclass = '';
@@ -113,8 +122,32 @@ function render_callback( $attributes )
   if ( empty($blocks) ) {
     $html = '';
     if( $is_backend == true ) {
-      if ($attributes['no_title'] == false) {
+        
+      if ($attributes['no_title'] == false ) {
         $html = '<h2 class="simpletoc-title ' . $alignclass . '">' . __('Table of Contents', 'simpletoc') . '</h2>';
+      }
+      if ($attributes['use_col'] == true) {
+          
+          $html = '<div style="display:flex;margin-bottom:0.5em">';
+          if ($attributes['no_title'] == false && $attributes['use_col'] == true ) {
+            $html .= '<h2 class="simpletoc-title ' . $alignclass . '" style="margin-bottom:0;margin-top:0;margin-right:.35em">' . __('Table of Contents', 'simpletoc') . '</h2>';
+          }
+          if ($attributes['use_col'] == true) {
+            $html .= " $headingsvg ";
+          }
+          $html .= '</div>';
+      }
+      
+      if ($attributes['use_col'] == true && $attributes['center_heading'] == true ) {
+          
+          $html = '<div style="display:flex;margin-bottom:0.5em; '.$center_heading_use_col.'">';
+          if ($attributes['no_title'] == false && $attributes['use_col'] == true ) {
+            $html .= '<h2 class="simpletoc-title ' . $alignclass . '" style="margin-bottom:0;margin-top:0;margin-right:.35em">' . __('Table of Contents', 'simpletoc') . '</h2>';
+          }
+          if ($attributes['use_col'] == true) {
+            $html .= " $headingsvg ";
+          }
+          $html .= '</div>';
       }
     
       $html .= '<p class="components-notice is-warning ' . $alignclass . '">' . __('No blocks found.', 'simpletoc')  . ' ' . __('Save or update post first.', 'simpletoc') . '</p>';
@@ -129,12 +162,38 @@ function render_callback( $attributes )
 
   $headings_clean = array_map('trim', $headings);
 
-  if ( empty( $headings_clean ) ) {
+  if (empty($headings_clean)) {
     $html = '';
     if( $is_backend == true ) {
 
-      if ($attributes['no_title'] == false) {
+      if ($attributes['no_title'] == false ) {
         $html = '<h2 class="simpletoc-title ' . $alignclass . '">' . __('Table of Contents', 'simpletoc') . '</h2>';
+      }
+      if ($attributes['no_title'] == false && $attributes['center_heading'] == true ) {
+        $html = '<h2 class="simpletoc-title ' . $alignclass . '" style="'.$center_heading_no_col.'">' . __('Table of Contents', 'simpletoc') . '</h2>';
+      }
+      if ($attributes['use_col'] == true) {
+          
+          $html = '<div style="display:flex;margin-bottom:0.5em">';
+          if ($attributes['no_title'] == false && $attributes['use_col'] == true ) {
+            $html .= '<h2 class="simpletoc-title ' . $alignclass . '" style="margin-bottom:0;margin-top:0;margin-right:.35em">' . __('Table of Contents', 'simpletoc') . '</h2>';
+          }
+          if ($attributes['use_col'] == true) {
+            $html .= " $headingsvg ";
+          }
+          $html .= '</div>';
+      }
+      
+      if ($attributes['use_col'] == true && $attributes['center_heading'] == true ) {
+          
+          $html = '<div style="display:flex;margin-bottom:0.5em; '.$center_heading_use_col.'">';
+          if ($attributes['no_title'] == false && $attributes['use_col'] == true ) {
+            $html .= '<h2 class="simpletoc-title ' . $alignclass . '" style="margin-bottom:0;margin-top:0;margin-right:.35em">' . __('Table of Contents', 'simpletoc') . '</h2>';
+          }
+          if ($attributes['use_col'] == true) {
+            $html .= " $headingsvg ";
+          }
+          $html .= '</div>';
       }
     
       $html .= '<p class="components-notice is-warning ' . $alignclass . '">' . __('No headings found.', 'simpletoc') . ' ' . __('Save or update post first.', 'simpletoc') . '</p>';
@@ -292,6 +351,13 @@ function generateToc( $headings, $attributes )
   $inital_depth = 6;
   $link_class = '';
   $styles = '';
+  
+  
+  $headingstyles = '';
+  $headingsvg = '';
+  $simpletocheading = '';
+  $idtoc = '';
+  $onclick = '';
 
   $alignclass = '';
   if ( isset ($attributes['align']) ) {
@@ -299,8 +365,32 @@ function generateToc( $headings, $attributes )
     $alignclass = 'align' . $align;
   }
 
+  $center_heading_no_col = '';
+  if ($attributes['center_heading'] == true) {
+    $center_heading_no_col = 'text-align:center;';
+    $center_heading_use_col = 'justify-content:center;';
+  }
+
   if ($attributes['remove_indent'] == true) {
-    $styles = 'style="padding-left:0;list-style:none;"';
+    $styles = 'padding-left:0;list-style:none;';
+  }
+  
+  if ($attributes['use_col'] == true) {
+      
+    $headingstyles = 'display:flex;padding-top:.35em;padding-bottom:.35em;cursor:pointer;';
+    
+    $headingsvg = '<svg width="18" height="18" viewBox="0 0 24 24" style="align-self:center"><path fill="currentColor" d="M12,18.17L8.83,15L7.42,16.41L12,21L16.59,16.41L15.17,15M12,5.83L15.17,9L16.58,7.59L12,3L7.41,7.59L8.83,9L12,5.83Z"></path></svg>';
+    
+    $idtoc = 'simpletoc';
+    
+    $onclick = "if (document.getElementById('$idtoc').style.display === 'block') { document.getElementById('$idtoc').style.display = 'none'; } else { document.getElementById('$idtoc').style.display = 'block'; }";
+    
+    $simpletocheading = '<div class="simpletoc-heading" style="'. $headingstyles .'" onclick=" '. $onclick .' " >';
+    
+    if ($attributes['center_heading'] == true ) {
+  $simpletocheading = '<div class="simpletoc-heading" style="'. $headingstyles .''. $center_heading_use_col .'" onclick=" '. $onclick .' " >';
+  }
+    
   }
   
   if ($attributes['add_smooth'] == true) {
@@ -338,10 +428,10 @@ function generateToc( $headings, $attributes )
     }
 
     $link = simpletoc_sanitize_string($title);
-	if (isset($nodes[0]) && !empty($nodes[0]->ownerElement->getAttribute('id'))) {
-		// if the node already has an attribute id, use that as anchor
-		$link = $nodes[0]->ownerElement->getAttribute('id');
-	}
+  if (isset($nodes[0]) && !empty($nodes[0]->ownerElement->getAttribute('id'))) {
+    // if the node already has an attribute id, use that as anchor
+    $link = $nodes[0]->ownerElement->getAttribute('id');
+  }
     $this_depth = (int) $headings[$line][2];
     if (isset($headings[$line + 1][2])) {
       $next_depth = (int) $headings[$line + 1][2];
@@ -388,10 +478,37 @@ function generateToc( $headings, $attributes )
     }
   }
 
-  if ($attributes['no_title'] == false) {
-    $html = "<h2 class=\"simpletoc-title\">" . __("Table of Contents", "simpletoc") . "</h2>";
+  if ($attributes['use_col'] == false) {
+
+      if ($attributes['no_title'] == false) {
+        $html = "<h2 class=\"simpletoc-title\">" . __("Table of Contents", "simpletoc") . "</h2>";
+      }
+      if ($attributes['no_title'] == false && $attributes['center_heading'] == true) {
+        $html = "<h2 class=\"simpletoc-title\" style=\"$center_heading_no_col\">" . __("Table of Contents", "simpletoc") . "</h2>";
+      }
+      $html .= "<" . $listtype . " class=\"simpletoc-list\" style=\"$styles\" " . $alignclass .">\n" . $list . "</li></" . $listtype . ">";
   }
-  $html .= "<" . $listtype . " class=\"simpletoc-list\" " . $styles ."  " . $alignclass .">\n" . $list . "</li></" . $listtype . ">";
+  
+  if ($attributes['use_col'] == true) {
+
+       $html .= "<div class=\"simpletoc-container\">\n";
+  
+        if ($attributes['no_title'] == false) {
+            $html .= " $simpletocheading ";
+          $html .= "  <h2 class=\"simpletoc-title\" style=\"margin-bottom:0;margin-right:.35em\">" . __("Table of Contents", "simpletoc") . "</h2>\n";
+          $html .= " $headingsvg ";
+          $html .= "</div>";
+        }
+        
+        if ($attributes['no_title'] == true) {
+            $html .= " $simpletocheading ";
+          $html .= " $headingsvg ";
+          $html .= "</div>";
+        }
+          
+        $html .= "<" . $listtype . " id=\"simpletoc\" class=\"simpletoc-list\" style=\"display:block;margin-top:.675em;" . $styles ."\" " . $alignclass .">" . $list . "</li></" . $listtype . ">";
+        $html .= "</div>";
+  }
 
   return $html;
 }

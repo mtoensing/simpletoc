@@ -13,7 +13,15 @@
 			"type": "boolean",
 			"default": false
 		},
+		"center_heading": {
+			"type": "boolean",
+			"default": false
+		},
 		"use_ol": {
+			"type": "boolean",
+			"default": false
+		},
+		"use_col": {
 			"type": "boolean",
 			"default": false
 		},
