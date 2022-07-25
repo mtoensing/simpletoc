@@ -22,7 +22,7 @@ export default function Edit({ attributes, setAttributes }) {
           <PanelBody>
           <PanelRow>
               <SelectControl
-                label={__("Maximum Level", "simpletoc")}
+                label={__("Maximum level", "simpletoc")}
                 help={__("Maximum depth of the headings.", "simpletoc")}
                 value={attributes.max_level}
                 options={[
