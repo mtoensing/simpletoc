@@ -16,6 +16,8 @@ Add a Table of Contents block to your posts and pages. The TOC is a nested list 
 
 The maximum depth of the toc can be configured in in the blocks' sidebar among many other options. There can hide the headline "Table of Contents" and add your own by using a normal heading block.  
 
+SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoensing/SimpleTOC). If you find a bug or have an idea for a feature please feel free to contribute and create a pull request.
+
 = Features =
 
 * Zero configuration: Add the SimpleTOC block to your post and that's it. 
@@ -135,4 +137,3 @@ Many thanks to Tom J Nowell https://tomjn.com and and Sally CJ who both helped m
 
 Thanks to Quintus Valerius Soranus for inventing the Table of Contents around 100 BC. 
 
-SimpleTOC is developed on GitHub: https://github.com/mtoensing/simpletoc 
