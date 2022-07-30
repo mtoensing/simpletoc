@@ -1,6 +1,6 @@
 {
   "name": "simpletoc",
-  "version": "5.0.20",
+  "version": "5.0.21",
   "author": "Marc Tönsing",
   "description": "Add a Table of Contents block to your posts and pages. The TOC is a nested list of links to all heading found in the post or page. To use it, simply add a block and search for SimpleTOC or just TOC.",
   "main": "build/index.js",

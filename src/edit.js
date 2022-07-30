@@ -11,9 +11,35 @@ import {
   PanelRow,
 } from "@wordpress/components";
 import { useBlockProps } from "@wordpress/block-editor";
+import { select, subscribe } from '@wordpress/data';
+import {useEffect, useState} from 'react';
+
 
 export default function Edit({ attributes, setAttributes }) {
   const blockProps = useBlockProps();
+
+  /* Update SimpleTOC if the post is saved successfully.          */
+  /* Source: https://github.com/WordPress/gutenberg/issues/17632  */
+
+  const { isSavingPost } = select( 'core/editor' );
+  const [isSavingProcess, setSavingProcess] = useState(false);
+
+  subscribe(() => {
+      if (isSavingPost()) {
+          setSavingProcess(true);
+      } else {
+          setSavingProcess(false);
+      }
+  });
+  const updatePost = function () {
+      setAttributes({ updated: Date.now() });
+  };
+
+  useEffect(() => {
+      if (isSavingProcess) {
+          updatePost();
+      }
+  }, [isSavingProcess]);
 
   return (
     <div {...blockProps}>

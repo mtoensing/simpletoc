@@ -4,7 +4,7 @@ Tags: Gutenberg, block, TOC, Table of Contents, AMP
 Requires at least: 5.9
 Donate link: https://marc.tv/out/donate
 Tested up to: 6.0
-Stable tag: 5.0.19
+Stable tag: 5.0.21
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -42,8 +42,8 @@ The maximum depth of the toc can be configured in in the blocks' sidebar among m
 
 == Changelog ==
 
-= 5.0.19 =
-* Fixes: Refactoring
+= 5.0.21 =
+* Feature: SimpleTOC updates itself after the post is saved.
 
 = 5.0.17 =
 * Feature: Support for custom Anchor IDs in headings. Thank you Matthias Altmann!
