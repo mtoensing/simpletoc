@@ -13,7 +13,7 @@
     "packages-update": "wp-scripts packages-update"
   },
   "devDependencies": {
-    "@wordpress/scripts": "^23.5.0",
+    "@wordpress/scripts": "^23.6.0",
     "ansi-regex": ">=6.0.1",
     "markdown-it": ">=12.3.2",
     "nanoid": ">=3.1.31",
@@ -22,7 +22,7 @@
     "postcss": ">=8.4.5"
   },
   "dependencies": {
-    "@wordpress/i18n": "^4.13.0",
-    "@wordpress/server-side-render": "^3.11.0"
+    "@wordpress/i18n": "^4.14.0",
+    "@wordpress/server-side-render": "^3.12.0"
   }
 }
