@@ -81,6 +81,42 @@ export default function Edit({ attributes, setAttributes }) {
                   setAttributes({ max_level: Number(level) })
                 }
               />
+              </PanelRow>
+              <PanelRow>
+              <SelectControl
+                label={__("Minimum level", "simpletoc")}
+                help={__("Minimum depth of the headings.", "simpletoc")}
+                value={attributes.min_level}
+                options={[
+                  {
+                    label:
+                      __("Including", "simpletoc") +
+                      " H6 (" +
+                      __("Show all", "simpletoc") +
+                      ")",
+                    value: "6",
+                  },
+                  {
+                    label: __("Including", "simpletoc") + " H5",
+                    value: "5",
+                  },
+                  {
+                    label: __("Including", "simpletoc") + " H4",
+                    value: "4",
+                  },
+                  {
+                    label: __("Including", "simpletoc") + " H3",
+                    value: "3",
+                  },
+                  {
+                    label: __("Including", "simpletoc") + " H2",
+                    value: "2",
+                  },
+                ]}
+                onChange={(level) =>
+                  setAttributes({ min_level: Number(level) })
+                }
+              />
             </PanelRow>
             <PanelRow>
               <ToggleControl
