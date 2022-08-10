@@ -56,7 +56,7 @@ export default function Edit({ attributes, setAttributes }) {
                     label:
                       __("Including", "simpletoc") +
                       " H6 (" +
-                      __("Show all", "simpletoc") +
+                      __("default", "simpletoc") +
                       ")",
                     value: "6",
                   },
@@ -89,11 +89,7 @@ export default function Edit({ attributes, setAttributes }) {
                 value={attributes.min_level}
                 options={[
                   {
-                    label:
-                      __("Including", "simpletoc") +
-                      " H6 (" +
-                      __("Show all", "simpletoc") +
-                      ")",
+                    label: __("Including", "simpletoc") + " H6",
                     value: "6",
                   },
                   {
@@ -109,7 +105,10 @@ export default function Edit({ attributes, setAttributes }) {
                     value: "3",
                   },
                   {
-                    label: __("Including", "simpletoc") + " H2",
+                    label: __("Including", "simpletoc") +
+                    " H2 (" +
+                    __("default", "simpletoc") +
+                    ")",
                     value: "2",
                   },
                 ]}

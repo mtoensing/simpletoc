@@ -72,7 +72,7 @@ function Edit(_ref) {
     help: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Maximum depth of the headings.", "simpletoc"),
     value: attributes.max_level,
     options: [{
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Including", "simpletoc") + " H6 (" + (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Show all", "simpletoc") + ")",
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Including", "simpletoc") + " H6 (" + (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("default", "simpletoc") + ")",
       value: "6"
     }, {
       label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Including", "simpletoc") + " H5",
@@ -95,7 +95,7 @@ function Edit(_ref) {
     help: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Minimum depth of the headings.", "simpletoc"),
     value: attributes.min_level,
     options: [{
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Including", "simpletoc") + " H6 (" + (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Show all", "simpletoc") + ")",
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Including", "simpletoc") + " H6",
       value: "6"
     }, {
       label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Including", "simpletoc") + " H5",
@@ -107,7 +107,7 @@ function Edit(_ref) {
       label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Including", "simpletoc") + " H3",
       value: "3"
     }, {
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Including", "simpletoc") + " H2",
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Including", "simpletoc") + " H2 (" + (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("default", "simpletoc") + ")",
       value: "2"
     }],
     onChange: level => setAttributes({
