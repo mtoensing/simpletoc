@@ -44,6 +44,10 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 
 == Changelog ==
 
+= 5.0.22 =
+* Feature: You can set the minium level of the TOC manually.
+* Feature: Automatic WordPress repository deployment with GitHub actions.
+
 = 5.0.21 =
 * Feature: SimpleTOC updates itself after the post is saved.
 

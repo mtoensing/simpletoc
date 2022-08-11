@@ -32,7 +32,12 @@
 		"max_level": {
 			"type": "integer",
 			"default": 6
+		},
+		"min_level": {
+			"type": "integer",
+			"default": 2
 		}
+
 	},
 	"supports": {
 		"align": [ "wide" , "full"]

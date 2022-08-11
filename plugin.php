@@ -4,7 +4,7 @@
  * Plugin Name:   SimpleTOC - Table of Contents Block
  * Plugin URI:    https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
  * Description:   Adds a basic "Table of Contents" Gutenberg block.
- * Version:       5.0.21
+ * Version:       5.0.22
  * Author:        Marc Tönsing
  * Author URI:    https://marc.tv
  * Text Domain:   simpletoc
@@ -143,6 +143,20 @@ function render_callback( $attributes )
   }
 
   $toclist = generateToc($headings_clean, $attributes);
+
+  if ( empty( $toclist ) ) {
+    $html = '';
+    if( $is_backend == true ) {
+
+      if ($attributes['no_title'] == false) {
+        $html = '<h2 class="simpletoc-title ' . $alignclass . '">' . __('Table of Contents', 'simpletoc') . '</h2>';
+      }
+    
+      $html .= '<p class="components-notice is-warning ' . $alignclass . '">' . __('No headings found.', 'simpletoc') . ' ' . __('Check minimal and maximum level block settings.', 'simpletoc') . '</p>';
+    }
+    return $html;
+
+  }
 
   $output = $pre_html . $toclist . $post_html;
 
@@ -323,6 +337,13 @@ function generateToc( $headings, $attributes )
     }
   }
 
+  /* If there is a custom min level, make sure it is the baseline. */
+  if ($attributes['min_level'] > $min_depth) {
+    $min_depth = $attributes['min_level'];
+  }
+
+  $itemcount = 0;
+
   foreach ($headings as $line => $headline) {
 
     $title = strip_tags($headline);
@@ -338,10 +359,11 @@ function generateToc( $headings, $attributes )
     }
 
     $link = simpletoc_sanitize_string($title);
-	if (isset($nodes[0]) && !empty($nodes[0]->ownerElement->getAttribute('id'))) {
-		// if the node already has an attribute id, use that as anchor
-		$link = $nodes[0]->ownerElement->getAttribute('id');
-	}
+    if (isset($nodes[0]) && !empty($nodes[0]->ownerElement->getAttribute('id'))) {
+      // if the node already has an attribute id, use that as anchor
+      $link = $nodes[0]->ownerElement->getAttribute('id');
+    }
+
     $this_depth = (int) $headings[$line][2];
     if (isset($headings[$line + 1][2])) {
       $next_depth = (int) $headings[$line + 1][2];
@@ -354,6 +376,13 @@ function generateToc( $headings, $attributes )
       goto closelist;
     }
 
+    // skip this heading because a min depth is set.
+    if( $this_depth < $attributes['min_level'] ){
+      continue;
+    }
+
+    $itemcount++;
+
     // start list 
     if ($this_depth == $min_depth) {
       $list .= "<li>\n";
@@ -363,7 +392,7 @@ function generateToc( $headings, $attributes )
         $list .= "\n\t\t<" . $listtype . "><li>\n";
       }
     }
-
+    
     $list .= "<a " . $link_class . " href=\"" . $absolute_url . esc_html($page) . "#" . $link . "\">" . $title . "</a>";
 
     closelist:
@@ -392,6 +421,10 @@ function generateToc( $headings, $attributes )
     $html = "<h2 class=\"simpletoc-title\">" . __("Table of Contents", "simpletoc") . "</h2>";
   }
   $html .= "<" . $listtype . " class=\"simpletoc-list\" " . $styles ."  " . $alignclass .">\n" . $list . "</li></" . $listtype . ">";
+
+  if($itemcount < 1) {
+    $html = '';
+  }
 
   return $html;
 }
