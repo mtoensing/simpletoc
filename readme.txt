@@ -4,7 +4,7 @@ Tags: Gutenberg, block, TOC, Table of Contents, AMP
 Requires at least: 5.9
 Donate link: https://marc.tv/out/donate
 Tested up to: 6.0
-Stable tag: 5.0.22
+Stable tag: 5.0.21
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -43,6 +43,10 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 * Works with popular AMP plugins.
 
 == Changelog ==
+
+= 5.0.22 =
+* Feature: You can set the minium level of the TOC manually.
+* Feature: Automatic WordPress repository deployment with GitHub actions.
 
 = 5.0.21 =
 * Feature: SimpleTOC updates itself after the post is saved.
