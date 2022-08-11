@@ -337,10 +337,16 @@ function generateToc( $headings, $attributes )
     }
   }
 
+  /* If there is a custom min level, make sure it is the baseline. */
+  if ($attributes['min_level'] > $min_depth) {
+    $min_depth = $attributes['min_level'];
+  }
+
+  $itemcount = 0;
+
   foreach ($headings as $line => $headline) {
 
     $title = strip_tags($headline);
-    $itemcount = 0;
     $page = '';
     $dom = new \DOMDocument();
     @$dom->loadHTML($headline, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
@@ -353,10 +359,11 @@ function generateToc( $headings, $attributes )
     }
 
     $link = simpletoc_sanitize_string($title);
-	if (isset($nodes[0]) && !empty($nodes[0]->ownerElement->getAttribute('id'))) {
-		// if the node already has an attribute id, use that as anchor
-		$link = $nodes[0]->ownerElement->getAttribute('id');
-	}
+    if (isset($nodes[0]) && !empty($nodes[0]->ownerElement->getAttribute('id'))) {
+      // if the node already has an attribute id, use that as anchor
+      $link = $nodes[0]->ownerElement->getAttribute('id');
+    }
+
     $this_depth = (int) $headings[$line][2];
     if (isset($headings[$line + 1][2])) {
       $next_depth = (int) $headings[$line + 1][2];
@@ -374,6 +381,8 @@ function generateToc( $headings, $attributes )
       continue;
     }
 
+    $itemcount++;
+
     // start list 
     if ($this_depth == $min_depth) {
       $list .= "<li>\n";
@@ -385,7 +394,6 @@ function generateToc( $headings, $attributes )
     }
     
     $list .= "<a " . $link_class . " href=\"" . $absolute_url . esc_html($page) . "#" . $link . "\">" . $title . "</a>";
-    $itemcount++;
 
     closelist:
     // close lists
