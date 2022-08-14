@@ -76,6 +76,10 @@ export default function Edit({ attributes, setAttributes }) {
                     label: __("Including", "simpletoc") + " H2",
                     value: "2",
                   },
+                  {
+                    label: __("Including", "simpletoc") + " H1",
+                    value: "1",
+                  },
                 ]}
                 onChange={(level) =>
                   setAttributes({ max_level: Number(level) })
@@ -105,11 +109,15 @@ export default function Edit({ attributes, setAttributes }) {
                     value: "3",
                   },
                   {
+                    label: __("Including", "simpletoc") + " H2",
+                    value: "2",
+                  },
+                  {
                     label: __("Including", "simpletoc") +
-                    " H2 (" +
+                    " H1 (" +
                     __("default", "simpletoc") +
                     ")",
-                    value: "2",
+                    value: "1",
                   },
                 ]}
                 onChange={(level) =>

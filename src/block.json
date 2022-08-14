@@ -2,7 +2,7 @@
 	"$schema": "https://json.schemastore.org/block.json",
 	"apiVersion": 2,
 	"name": "simpletoc/toc",
-	"version": "5.0.8",
+	"version": "5.0.23",
 	"title": "SimpleTOC",
 	"category": "layout",
 	"keywords": [ "TOC", "Table of Contents", "SimpleTOC", "Inhaltsverzeichnis", "Index" ],
@@ -35,7 +35,7 @@
 		},
 		"min_level": {
 			"type": "integer",
-			"default": 2
+			"default": 1
 		}
 
 	},
