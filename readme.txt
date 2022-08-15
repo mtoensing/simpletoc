@@ -8,7 +8,7 @@ Stable tag: 5.0.24
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Works out of the box. Adds a custom Table of Contents Gutenberg block. No CSS and JavaScript is loaded and does not slow down your website.
+SEO-friendly Table of Contents Gutenberg block. No CSS and JavaScript is loaded and does not slow down your website.
 
 == Description ==
 
