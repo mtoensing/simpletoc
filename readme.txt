@@ -4,11 +4,11 @@ Tags: Gutenberg, block, TOC, Table of Contents, AMP
 Requires at least: 5.9
 Donate link: https://marc.tv/out/donate
 Tested up to: 6.0
-Stable tag: 5.0.23
+Stable tag: 5.0.24
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Adds a custom Table of Contents Gutenberg block.
+Works out of the box. Adds a custom Table of Contents Gutenberg block. No CSS and JavaScript is loaded and does not slow down your website.
 
 == Description ==
 
@@ -44,9 +44,9 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 
 == Changelog ==
 
-= 5.0.23 =
+= 5.0.24 =
 
-* Fix: Allow H1 headings in the TOC.
+* Housekeeping: Updated documentation and dependencies.
 
 = 5.0.22 =
 * Feature: You can set the minium level of the TOC manually.

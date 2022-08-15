@@ -1,8 +1,8 @@
 {
   "name": "simpletoc",
-  "version": "5.0.23",
+  "version": "5.0.24",
   "author": "Marc Tönsing",
-  "description": "Add a Table of Contents block to your posts and pages. The TOC is a nested list of links to all heading found in the post or page. To use it, simply add a block and search for SimpleTOC or just TOC.",
+  "description": "Works out of the box. Adds a custom Table of Contents Gutenberg block. No CSS and JavaScript is loaded and does not slow down your website.",
   "main": "build/index.js",
   "license": "GPL-2.0-or-later",
   "scripts": {
@@ -13,7 +13,7 @@
     "packages-update": "wp-scripts packages-update"
   },
   "devDependencies": {
-    "@wordpress/scripts": "^23.6.0",
+    "@wordpress/scripts": "^23.7.1",
     "ansi-regex": ">=6.0.1",
     "markdown-it": ">=12.3.2",
     "nanoid": ">=3.1.31",
@@ -22,7 +22,7 @@
     "postcss": ">=8.4.5"
   },
   "dependencies": {
-    "@wordpress/i18n": "^4.14.0",
-    "@wordpress/server-side-render": "^3.12.0"
+    "@wordpress/i18n": "^4.15.0",
+    "@wordpress/server-side-render": "^3.13.0"
   }
 }
