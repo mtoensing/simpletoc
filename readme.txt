@@ -26,7 +26,7 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 * Designed for Gutenberg.
 * Style SimpleTOC with Gutenberg's native group styling options.
 * Inherits the style of your theme.
-* Comes with English, Chinese (Taiwan), French, Spanish, German, Latvia and Brazilian Portuguese translations.
+* Translated in [multiple languages](https://translate.wordpress.org/projects/wp-plugins/simpletoc/). Including German, Chinese (Taiwan), Dutch, Brazilian Portuguese, French, Spanish and Latvia.
 
 = Customization = 
 
@@ -138,9 +138,9 @@ If you really want to hide a single heading from the table of contents then add 
 
 == Credits ==
 
-This plugin is forked from https://github.com/pdewouters/gutentoc by pdewouters and uses code from https://github.com/shazahm1/Easy-Table-of-Contents by shazahm1
+This plugin is forked from [pdewouters](https://github.com/pdewouters/gutentoc) and uses code from [Easy-Table-of-Contents](https://github.com/shazahm1/Easy-Table-of-Contents)
 
-Many thanks to Tom J Nowell https://tomjn.com and and Sally CJ who both helped me a lot with my questions over at wordpress.stackexchange.com
+Many thanks to [Tom J Nowell](https://tomjn.com) and and Sally CJ who both helped me a lot with my questions over at wordpress.stackexchange.com
 
 Thanks to Quintus Valerius Soranus for inventing the Table of Contents around 100 BC. 
 
