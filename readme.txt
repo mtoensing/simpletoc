@@ -44,8 +44,7 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 
 == Changelog ==
 
-= 5.0.24 =
-
+= 5.0.25 =
 * Housekeeping: Updated documentation and dependencies.
 
 = 5.0.22 =
