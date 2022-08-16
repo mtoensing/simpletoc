@@ -8,7 +8,7 @@ Stable tag: 5.0.24
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-SEO-friendly Table of Contents Gutenberg block. No CSS and no JavaScript means faster loading.
+SEO-friendly Table of Contents Gutenberg block. No JavaScript and no CSS means faster loading.
 
 == Description ==
 

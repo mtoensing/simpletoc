@@ -2,7 +2,7 @@
   "name": "simpletoc",
   "version": "5.0.25",
   "author": "Marc Tönsing",
-  "description": "SEO-friendly Table of Contents Gutenberg block. No CSS and JavaScript is loaded and does not slow down your website.",
+  "description": "SEO-friendly Table of Contents Gutenberg block. No JavaScript and no CSS means faster loading.",
   "main": "build/index.js",
   "license": "GPL-2.0-or-later",
   "scripts": {
