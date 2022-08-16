@@ -47,55 +47,21 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 = 5.0.25 =
 * Housekeeping: Updated documentation and dependencies.
 
-= 5.0.22 =
-* Feature: You can set the minium level of the TOC manually.
-* Feature: Automatic WordPress repository deployment with GitHub actions.
-
 = 5.0.21 =
 * Feature: SimpleTOC updates itself after the post is saved.
 
 = 5.0.17 =
 * Feature: Support for custom Anchor IDs in headings. Thank you Matthias Altmann!
 
-= 5.0.11 = 
-* Feature: Support for GeneratePress headings.
-
 = 5.0.9 = 
 * Works with WordPress 6.0
 * Support for paginated posts.
 
-= 5.0.8 =
-
-* Feature: Added "simpletoc-title" and "simpletoc-list" CSS classes. This might break existing custom CSS styles that have not been applied with Gutenberg. 
-* Feature: Toggle list indent.
-* Feature: Better "group" support. Put SimpleTOC in a group and style it with Gutenberg. See FAQ for details.
-* Feature: Native block support for wide and full width.
-* Feature: Added block.json and refactoring with coding standards for Gutenberg blocks.
-
-= 4.5 =
-* Feature: Add the CSS class "smooth-scroll" to the links. This enables smooth scrolling in themes like GeneratePress. 
-
-= 4.4.9 =
-* Feature: Support for headlines in reusable blocks. 
-
-= 4.4.8 =
-* Feature: Added option to toggle absolute URLs. 
-
-= 4.4.7 =
-* Feature: Added option to replace ul tag with ol tag. This will add decimal numbers to each heading in the TOC.
-
 = 4.3 =
-* Feature: Support for non-latin headlines. SimpleTOC now uses a character block list rather than an allow list.
 * Feature: Add the CSS class "simpletoc-hidden" to the heading block to remove it from the Table of Contents.
-
-= 4.1.1 =
-* Feature: Experimental support for Arabic Text.
 
 = 3.9 =
 * Added Brazilian Portuguese translations to the translations. Thanks Ralden Souza!
-
-= 3.5 =
-* Added support for Rank Math plugin.
 
 == Installation ==
 
@@ -104,10 +70,6 @@ SimpleTOC can be found and installed via the Plugin menu within WordPress admini
 In Gutenberg, add a block and search for "SimpleTOC" or just "TOC". Please save your content before you use the block.
 
 == Frequently Asked Questions ==
-
-= Why did you do this? =
-
-Because I needed a simple plugin to do this job and decided to do it on his own. I believe that a Table of Contents does not need Javascript and additional css. Furthermore the plugin should work out-of-the-box without any configuration. 
 
 = How do I change the TOC heading ‘Table of contents’ to some other words? =
 
