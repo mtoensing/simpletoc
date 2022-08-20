@@ -9,6 +9,7 @@ import {
   Panel,
   PanelBody,
   PanelRow,
+  Dashicon
 } from "@wordpress/components";
 import { useBlockProps } from "@wordpress/block-editor";
 import { select, subscribe } from '@wordpress/data';
@@ -23,6 +24,12 @@ export default function Edit({ attributes, setAttributes }) {
 
   const { isSavingPost } = select( 'core/editor' );
   const [isSavingProcess, setSavingProcess] = useState(false);
+  const advpanelicon = 'settings'; 
+  const updatePost = function () {
+    if( attributes.autorefresh === true ) {
+      setAttributes({ updated: Date.now() });
+    }
+  };
 
   subscribe(() => {
       if (isSavingPost()) {
@@ -31,9 +38,6 @@ export default function Edit({ attributes, setAttributes }) {
           setSavingProcess(false);
       }
   });
-  const updatePost = function () {
-      setAttributes({ updated: Date.now() });
-  };
 
   useEffect(() => {
       if (isSavingProcess) {
@@ -160,37 +164,57 @@ export default function Edit({ attributes, setAttributes }) {
                 onChange={() => setAttributes({ remove_indent: !attributes.remove_indent })}
               />
             </PanelRow>
-            <PanelRow>
-              <ToggleControl
-                label={__("Use absolute urls", "simpletoc")}
-                help={__(
-                  "Adds the permalink url to the fragment.",
-                  "simpletoc"
-                )}
-                checked={attributes.use_absolute_urls}
-                onChange={() =>
-                  setAttributes({
-                    use_absolute_urls: !attributes.use_absolute_urls,
-                  })
-                }
-              />
-            </PanelRow>
-            <PanelRow>
-              <ToggleControl
-                label={__("Smooth scrolling support", "simpletoc")}
-                help={__(
-                  'Add the css class "smooth-scroll" to the links. This enables smooth scrolling in some themes like GeneratePress.',
-                  "simpletoc"
-                )}
-                checked={attributes.add_smooth}
-                onChange={() =>
-                  setAttributes({
-                    add_smooth: !attributes.add_smooth,
-                  })
-                }
-              />
-            </PanelRow>
+            
           </PanelBody>
+        </Panel>
+        <Panel>
+        <PanelBody title={ __("Advanced Features", "simpletoc") } icon={ advpanelicon } initialOpen={ false }>
+          <PanelRow>
+            <ToggleControl
+              label={__("Smooth scrolling support", "simpletoc")}
+              help={__(
+                'Add the css class "smooth-scroll" to the links. This enables smooth scrolling in some themes like GeneratePress.',
+                "simpletoc"
+              )}
+              checked={attributes.add_smooth}
+              onChange={() =>
+                setAttributes({
+                  add_smooth: !attributes.add_smooth,
+                })
+              }
+            />
+          </PanelRow>
+          <PanelRow>
+            <ToggleControl
+              label={__("Use absolute urls", "simpletoc")}
+              help={__(
+                "Adds the permalink url to the fragment.",
+                "simpletoc"
+              )}
+              checked={attributes.use_absolute_urls}
+              onChange={() =>
+                setAttributes({
+                  use_absolute_urls: !attributes.use_absolute_urls,
+                })
+              }
+            />
+          </PanelRow>
+          <PanelRow>
+            <ToggleControl
+              label={__("Automatically refresh TOC", "simpletoc")}
+              help={__(
+                'Disable this to remove redudant changed content warning in editor.',
+                "simpletoc"
+              )}
+              checked={attributes.autorefresh}
+              onChange={() =>
+                setAttributes({
+                  autorefresh: !attributes.autorefresh,
+                })
+              }
+            />
+          </PanelRow>
+        </PanelBody>
         </Panel>
       </InspectorControls>
       <BlockControls>
