@@ -9,7 +9,7 @@ import {
   Panel,
   PanelBody,
   PanelRow,
-  Dashicon
+  ExternalLink
 } from "@wordpress/components";
 import { useBlockProps } from "@wordpress/block-editor";
 import { select, subscribe } from '@wordpress/data';
@@ -169,6 +169,12 @@ export default function Edit({ attributes, setAttributes }) {
         </Panel>
         <Panel>
         <PanelBody title={ __("Advanced Features", "simpletoc") } icon={ advpanelicon } initialOpen={ false }>
+          <PanelRow>
+            <div style={{marginBottom: '1em',border: '1px solid rgba(0, 0, 0, 0.05)', padding: '0.5em', backgroundColor: '#f7f7f7'}}>
+              <p><strong>{ __('Think about making a donation if you use any of these features.', "simpletoc") }</strong></p>
+              <ExternalLink href="https://marc.tv/out/donate">{ __('Donate here!', "simpletoc") }</ExternalLink>
+            </div>
+          </PanelRow>
           <PanelRow>
             <ToggleControl
               label={__("Smooth scrolling support", "simpletoc")}
