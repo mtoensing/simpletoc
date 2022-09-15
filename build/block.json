@@ -19,6 +19,10 @@
       "type": "boolean",
       "default": false
     },
+    "title_text": {
+      "type": "text",
+      "default": "Table of Contents"
+    },
     "use_ol": {
       "type": "boolean",
       "default": false
