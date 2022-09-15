@@ -87,7 +87,7 @@ function render_callback( $attributes )
 
   $title_text = esc_html( trim( $attributes['title_text'] ) );
   if ( ! $title_text ) {
-	  $title_text = __('Table of Contents', 'simpletoc');
+    $title_text = __('Table of Contents', 'simpletoc');
   }
 
   $alignclass = '';
