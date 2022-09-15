@@ -85,7 +85,10 @@ function render_callback( $attributes )
 
   $is_backend = defined('REST_REQUEST') && true === REST_REQUEST && 'edit' === filter_input(INPUT_GET, 'context');
 
-  $title_text = esc_html( $attributes['title_text'] );
+  $title_text = esc_html( trim( $attributes['title_text'] ) );
+  if ( ! $title_text ) {
+	  $title_text = __('Table of Contents', 'simpletoc');
+  }
 
   $alignclass = '';
   if ( isset ($attributes['align']) ) {
