@@ -6,6 +6,7 @@ import {
   ToolbarGroup,
   ToolbarButton,
   ToggleControl,
+  TextControl,
   Panel,
   PanelBody,
   PanelRow,
@@ -142,6 +143,19 @@ export default function Edit({ attributes, setAttributes }) {
                 }
               />
             </PanelRow>
+              { ! attributes.no_title && <PanelRow>
+              <TextControl
+                label={__("Heading Text", "simpletoc")}
+                help={__(
+                  'Set the heading text of the block. The default value is "Table of contents".',
+                  "simpletoc"
+                )}
+                value={attributes.title_text}
+                onChange={(value) =>
+                  setAttributes({ title_text: value || __("Table of Contents", "simpletoc") })
+                }
+              />
+            </PanelRow> }
             <PanelRow>
               <ToggleControl
                 label={__("Use an ordered list", "simpletoc")}

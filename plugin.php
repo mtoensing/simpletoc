@@ -85,6 +85,8 @@ function render_callback( $attributes )
 
   $is_backend = defined('REST_REQUEST') && true === REST_REQUEST && 'edit' === filter_input(INPUT_GET, 'context');
 
+  $title_text = esc_html( $attributes['title_text'] );
+
   $alignclass = '';
   if ( isset ($attributes['align']) ) {
     $align = $attributes['align'];
@@ -114,7 +116,7 @@ function render_callback( $attributes )
     $html = '';
     if( $is_backend == true ) {
       if ($attributes['no_title'] == false) {
-        $html = '<h2 class="simpletoc-title ' . $alignclass . '">' . __('Table of Contents', 'simpletoc') . '</h2>';
+        $html = '<h2 class="simpletoc-title ' . $alignclass . '">' . $title_text . '</h2>';
       }
     
       $html .= '<p class="components-notice is-warning ' . $alignclass . '">' . __('No blocks found.', 'simpletoc')  . ' ' . __('Save or update post first.', 'simpletoc') . '</p>';
@@ -134,7 +136,7 @@ function render_callback( $attributes )
     if( $is_backend == true ) {
 
       if ($attributes['no_title'] == false) {
-        $html = '<h2 class="simpletoc-title ' . $alignclass . '">' . __('Table of Contents', 'simpletoc') . '</h2>';
+        $html = '<h2 class="simpletoc-title ' . $alignclass . '">' . $title_text . '</h2>';
       }
     
       $html .= '<p class="components-notice is-warning ' . $alignclass . '">' . __('No headings found.', 'simpletoc') . ' ' . __('Save or update post first.', 'simpletoc') . '</p>';
@@ -149,7 +151,7 @@ function render_callback( $attributes )
     if( $is_backend == true ) {
 
       if ($attributes['no_title'] == false) {
-        $html = '<h2 class="simpletoc-title ' . $alignclass . '">' . __('Table of Contents', 'simpletoc') . '</h2>';
+        $html = '<h2 class="simpletoc-title ' . $alignclass . '">' . $title_text . '</h2>';
       }
     
       $html .= '<p class="components-notice is-warning ' . $alignclass . '">' . __('No headings found.', 'simpletoc') . ' ' . __('Check minimal and maximum level block settings.', 'simpletoc') . '</p>';
@@ -418,7 +420,7 @@ function generateToc( $headings, $attributes )
   }
 
   if ($attributes['no_title'] == false) {
-    $html = "<h2 class=\"simpletoc-title\">" . __("Table of Contents", "simpletoc") . "</h2>";
+    $html = "<h2 class=\"simpletoc-title\">" . $title_text . "</h2>";
   }
   $html .= "<" . $listtype . " class=\"simpletoc-list\" " . $styles ."  " . $alignclass .">\n" . $list . "</li></" . $listtype . ">";
 
