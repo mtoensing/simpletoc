@@ -312,6 +312,11 @@ function generateToc( $headings, $attributes )
   $link_class = '';
   $styles = '';
 
+  $title_text = esc_html( trim( $attributes['title_text'] ) );
+  if ( ! $title_text ) {
+    $title_text = __('Table of Contents', 'simpletoc');
+  }
+
   $alignclass = '';
   if ( isset ($attributes['align']) ) {
     $align = $attributes['align'];
