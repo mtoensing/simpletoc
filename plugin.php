@@ -25,7 +25,12 @@ function register_simpletoc_block()
   add_filter('plugin_row_meta', __NAMESPACE__ . '\\simpletoc_plugin_meta', 10, 2);
 
   register_block_type( __DIR__ . '/build' , [
-    'render_callback' => __NAMESPACE__ . '\\render_callback'
+    'render_callback' => __NAMESPACE__ . '\\render_callback',
+    'attributes' => [
+      'title_text' => [
+        'default' => __( 'Table of Contents', 'simpletoc' ),
+      ],
+    ]
   ]);
 
 }
