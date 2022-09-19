@@ -33,6 +33,77 @@ function register_simpletoc_block()
 add_action( 'init', 'register_simpletoc_block' );
 
 /**
+ * Inject potentially missing translations into the block-editor i18n
+ * collection.
+ *
+ * This keeps the plugin backwards compatible, in case the user did not
+ * update translations on their website (yet).
+ *
+ * @param string|false|null $translations JSON-encoded translation data. Default null.
+ * @param string|false      $file         Path to the translation file to load. False if there isn't one.
+ * @param string            $handle       Name of the script to register a translation domain to.
+ * @param string            $domain       The text domain.
+ *
+ * @return string|false|null JSON string
+ */
+add_filter( 'load_script_translations', function($translations, $file, $handle, $domain) {
+  if ( 'simpletoc' === $domain && $translations ) {
+    // List of translations that we inject into the block-editor JS.
+    $dynamic_translations = [
+      'Table of Contents' => __( 'Table of Contents', 'simpletoc' ),
+    ];
+
+    $changed = false;
+    $obj = json_decode( $translations, true );
+
+    // Confirm that the translation JSON is valid.
+    if ( isset( $obj['locale_data'] ) && isset( $obj['locale_data']['messages'] ) ) {
+      $messages = $obj['locale_data']['messages'];
+
+      // Inject dynamic translations, when needed.
+      foreach ( $dynamic_translations as $key => $locale ) {
+        if (
+          empty( $messages[ $key ] )
+          || ! is_array( $messages[$key] )
+          || ! array_key_exists( 0, $messages[ $key ] )
+          || $locale !== $messages[ $key ][0]
+        ) {
+          $messages[ $key ] = [ $locale ];
+          $changed = true;
+        }
+      }
+
+	  // Only modify the translations string when locales did change.
+      if ( $changed ) {
+        $obj['locale_data']['messages'] = $messages;
+        $translations = wp_json_encode( $obj );
+      }
+    }
+  }
+
+  return $translations;
+}, 10, 4 );
+
+/**
+ * Sets the default value of translatable attributes.
+ * 
+ * Values inside block.json are static strings that are not translated. This
+ * filter inserts relevant translations i
+ *
+ * @param array $settings Array of determined settings for registering a block type.
+ * @param array $metadata Metadata provided for registering a block type.
+ *
+ * @return array Modified settings array.
+ */
+add_filter( 'block_type_metadata_settings', function( $settings, $metadata ) {
+  if ( 'simpletoc/toc' === $metadata['name'] ) {
+    $settings['attributes']['title_text']['default'] = __( 'Table of Contents', 'simpletoc' );
+  }
+
+  return $settings;
+}, 10, 2);
+
+/**
  * Filter to add plugins to the TOC list for Rank Math plugin
  *
  * @param array TOC plugins.
