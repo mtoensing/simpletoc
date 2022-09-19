@@ -10,7 +10,7 @@
  * Text Domain:   simpletoc
  * License: GPL   v2 or later
  * License URI:   http://www.gnu.org/licenses/gpl-2.0.html
- * 
+ *
  */
 
 /**
@@ -24,13 +24,8 @@ function register_simpletoc_block()
 
   add_filter('plugin_row_meta', __NAMESPACE__ . '\\simpletoc_plugin_meta', 10, 2);
 
-  register_block_type( __DIR__ . '/build' , [
-    'render_callback' => __NAMESPACE__ . '\\render_callback',
-    'attributes' => [
-      'title_text' => [
-        'default' => __( 'Table of Contents', 'simpletoc' ),
-      ],
-    ]
+  register_block_type( __DIR__ . '/build', [
+    'render_callback' => __NAMESPACE__ . '\\render_callback'
   ]);
 
 }
@@ -49,15 +44,15 @@ add_filter('rank_math/researches/toc_plugins', function ($toc_plugins) {
 });
 
 add_filter( 'the_content', 'simpletoc_addIDstoContent', 1 );
- 
+
 function simpletoc_addIDstoContent( $content ) {
 
   $blocks = parse_blocks( $content );
 
-  $blocks = addIDstoBlocks_recursive( $blocks ); 
+  $blocks = addIDstoBlocks_recursive( $blocks );
 
   $content = serialize_blocks( $blocks );
-   
+
   return $content;
 }
 
@@ -81,7 +76,7 @@ function addIDstoBlocks_recursive( $blocks ) {
 }
 
 /**
- * Render block output 
+ * Render block output
  *
  */
 
@@ -112,7 +107,7 @@ function render_callback( $attributes )
     $pre_html = '<div class="simpletoc ' . $className . '">';
     $post_html = '</div>';
   }
-  
+
   $post = get_post();
   if ( is_null($post) || is_null($post->post_content) ) {
     $blocks = '';
@@ -126,7 +121,7 @@ function render_callback( $attributes )
       if ($attributes['no_title'] == false) {
         $html = '<h2 class="simpletoc-title ' . $alignclass . '">' . $title_text . '</h2>';
       }
-    
+
       $html .= '<p class="components-notice is-warning ' . $alignclass . '">' . __('No blocks found.', 'simpletoc')  . ' ' . __('Save or update post first.', 'simpletoc') . '</p>';
     }
     return $html;
@@ -134,7 +129,7 @@ function render_callback( $attributes )
 
   $headings = array_reverse(filter_headings_recursive($blocks));
 
-  // enrich headings with pages as a data-attribute 
+  // enrich headings with pages as a data-attribute
   $headings = simpletoc_add_pagenumber($blocks, $headings);
 
   $headings_clean = array_map('trim', $headings);
@@ -146,7 +141,7 @@ function render_callback( $attributes )
       if ($attributes['no_title'] == false) {
         $html = '<h2 class="simpletoc-title ' . $alignclass . '">' . $title_text . '</h2>';
       }
-    
+
       $html .= '<p class="components-notice is-warning ' . $alignclass . '">' . __('No headings found.', 'simpletoc') . ' ' . __('Save or update post first.', 'simpletoc') . '</p>';
     }
     return $html;
@@ -161,7 +156,7 @@ function render_callback( $attributes )
       if ($attributes['no_title'] == false) {
         $html = '<h2 class="simpletoc-title ' . $alignclass . '">' . $title_text . '</h2>';
       }
-    
+
       $html .= '<p class="components-notice is-warning ' . $alignclass . '">' . __('No headings found.', 'simpletoc') . ' ' . __('Check minimal and maximum level block settings.', 'simpletoc') . '</p>';
     }
     return $html;
@@ -178,7 +173,7 @@ function simpletoc_add_pagenumber( $blocks, $headings ){
   $pages = 1;
 
   foreach ($blocks as $block => $innerBlock) {
-    
+
     // count nextpage blocks
     if (isset($blocks[$block]['blockName']) && $blocks[$block]['blockName'] === 'core/nextpage' ){
       $pages++;
@@ -197,8 +192,8 @@ function simpletoc_add_pagenumber( $blocks, $headings ){
 }
 
 /**
- * Return all headings with a recursive walk through all blocks. 
- * This includes groups and reusable block with groups within reusable blocks. 
+ * Return all headings with a recursive walk through all blocks.
+ * This includes groups and reusable block with groups within reusable blocks.
  */
 
 function filter_headings_recursive( $blocks )
@@ -236,11 +231,11 @@ function filter_headings_recursive( $blocks )
   }
 
   return $arr;
-  
+
 }
 
 /**
- * Remove all problematic characters for toc links 
+ * Remove all problematic characters for toc links
  */
 
 function simpletoc_sanitize_string( $string )
@@ -276,7 +271,7 @@ function addAnchorAttribute( $html )
   // remove non-breaking space entites from input HTML
   $html_wo_nbs = str_replace("&nbsp;", " ", $html);
 
-  // Thank you Nick Diego 
+  // Thank you Nick Diego
   if (!$html_wo_nbs) {
     return $html;
   }
@@ -331,7 +326,7 @@ function generateToc( $headings, $attributes )
   if ($attributes['remove_indent'] == true) {
     $styles = 'style="padding-left:0;list-style:none;"';
   }
-  
+
   if ($attributes['add_smooth'] == true) {
     $link_class = 'class="smooth-scroll"';
   }
@@ -398,7 +393,7 @@ function generateToc( $headings, $attributes )
 
     $itemcount++;
 
-    // start list 
+    // start list
     if ($this_depth == $min_depth) {
       $list .= "<li>\n";
     } else {
@@ -407,14 +402,14 @@ function generateToc( $headings, $attributes )
         $list .= "\n\t\t<" . $listtype . "><li>\n";
       }
     }
-    
+
     $list .= "<a " . $link_class . " href=\"" . $absolute_url . esc_html($page) . "#" . $link . "\">" . $title . "</a>";
 
     closelist:
     // close lists
     // check if this is not the last heading
     if ($line != count($headings) - 1) {
-      // do we need to close the door behind us? 
+      // do we need to close the door behind us?
       if ($min_depth > $next_depth) {
         // If yes, how many times?
         for ($min_depth; $min_depth > $next_depth; $min_depth--) {
