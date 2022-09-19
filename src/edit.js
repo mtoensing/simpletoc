@@ -147,8 +147,14 @@ export default function Edit({ attributes, setAttributes }) {
               <TextControl
                 label={__("Heading Text", "simpletoc")}
                 help={__(
-                  'Set the heading text of the block. The default value is "Table of contents".',
+                  "Set the heading text of the block.",
                   "simpletoc"
+                ) + " " +
+                __("Default value", 
+                "simpletoc"
+                ) + ": " +
+                __("Table of Contents", 
+                "simpletoc"
                 )}
                 value={attributes.title_text}
                 onChange={(value) =>
