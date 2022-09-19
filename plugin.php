@@ -10,7 +10,7 @@
  * Text Domain:   simpletoc
  * License: GPL   v2 or later
  * License URI:   http://www.gnu.org/licenses/gpl-2.0.html
- * 
+ *
  */
 
 /**
@@ -24,13 +24,84 @@ function register_simpletoc_block()
 
   add_filter('plugin_row_meta', __NAMESPACE__ . '\\simpletoc_plugin_meta', 10, 2);
 
-  register_block_type( __DIR__ . '/build' , [
+  register_block_type( __DIR__ . '/build', [
     'render_callback' => __NAMESPACE__ . '\\render_callback'
   ]);
 
 }
 
 add_action( 'init', 'register_simpletoc_block' );
+
+/**
+ * Inject potentially missing translations into the block-editor i18n
+ * collection.
+ *
+ * This keeps the plugin backwards compatible, in case the user did not
+ * update translations on their website (yet).
+ *
+ * @param string|false|null $translations JSON-encoded translation data. Default null.
+ * @param string|false      $file         Path to the translation file to load. False if there isn't one.
+ * @param string            $handle       Name of the script to register a translation domain to.
+ * @param string            $domain       The text domain.
+ *
+ * @return string|false|null JSON string
+ */
+add_filter( 'load_script_translations', function($translations, $file, $handle, $domain) {
+  if ( 'simpletoc' === $domain && $translations ) {
+    // List of translations that we inject into the block-editor JS.
+    $dynamic_translations = [
+      'Table of Contents' => __( 'Table of Contents', 'simpletoc' ),
+    ];
+
+    $changed = false;
+    $obj = json_decode( $translations, true );
+
+    // Confirm that the translation JSON is valid.
+    if ( isset( $obj['locale_data'] ) && isset( $obj['locale_data']['messages'] ) ) {
+      $messages = $obj['locale_data']['messages'];
+
+      // Inject dynamic translations, when needed.
+      foreach ( $dynamic_translations as $key => $locale ) {
+        if (
+          empty( $messages[ $key ] )
+          || ! is_array( $messages[$key] )
+          || ! array_key_exists( 0, $messages[ $key ] )
+          || $locale !== $messages[ $key ][0]
+        ) {
+          $messages[ $key ] = [ $locale ];
+          $changed = true;
+        }
+      }
+
+	  // Only modify the translations string when locales did change.
+      if ( $changed ) {
+        $obj['locale_data']['messages'] = $messages;
+        $translations = wp_json_encode( $obj );
+      }
+    }
+  }
+
+  return $translations;
+}, 10, 4 );
+
+/**
+ * Sets the default value of translatable attributes.
+ * 
+ * Values inside block.json are static strings that are not translated. This
+ * filter inserts relevant translations i
+ *
+ * @param array $settings Array of determined settings for registering a block type.
+ * @param array $metadata Metadata provided for registering a block type.
+ *
+ * @return array Modified settings array.
+ */
+add_filter( 'block_type_metadata_settings', function( $settings, $metadata ) {
+  if ( 'simpletoc/toc' === $metadata['name'] ) {
+    $settings['attributes']['title_text']['default'] = __( 'Table of Contents', 'simpletoc' );
+  }
+
+  return $settings;
+}, 10, 2);
 
 /**
  * Filter to add plugins to the TOC list for Rank Math plugin
@@ -44,15 +115,15 @@ add_filter('rank_math/researches/toc_plugins', function ($toc_plugins) {
 });
 
 add_filter( 'the_content', 'simpletoc_addIDstoContent', 1 );
- 
+
 function simpletoc_addIDstoContent( $content ) {
 
   $blocks = parse_blocks( $content );
 
-  $blocks = addIDstoBlocks_recursive( $blocks ); 
+  $blocks = addIDstoBlocks_recursive( $blocks );
 
   $content = serialize_blocks( $blocks );
-   
+
   return $content;
 }
 
@@ -76,7 +147,7 @@ function addIDstoBlocks_recursive( $blocks ) {
 }
 
 /**
- * Render block output 
+ * Render block output
  *
  */
 
@@ -84,6 +155,11 @@ function render_callback( $attributes )
 {
 
   $is_backend = defined('REST_REQUEST') && true === REST_REQUEST && 'edit' === filter_input(INPUT_GET, 'context');
+
+  $title_text = esc_html( trim( $attributes['title_text'] ) );
+  if ( ! $title_text ) {
+    $title_text = __('Table of Contents', 'simpletoc');
+  }
 
   $alignclass = '';
   if ( isset ($attributes['align']) ) {
@@ -102,7 +178,7 @@ function render_callback( $attributes )
     $pre_html = '<div class="simpletoc ' . $className . '">';
     $post_html = '</div>';
   }
-  
+
   $post = get_post();
   if ( is_null($post) || is_null($post->post_content) ) {
     $blocks = '';
@@ -114,9 +190,9 @@ function render_callback( $attributes )
     $html = '';
     if( $is_backend == true ) {
       if ($attributes['no_title'] == false) {
-        $html = '<h2 class="simpletoc-title ' . $alignclass . '">' . __('Table of Contents', 'simpletoc') . '</h2>';
+        $html = '<h2 class="simpletoc-title ' . $alignclass . '">' . $title_text . '</h2>';
       }
-    
+
       $html .= '<p class="components-notice is-warning ' . $alignclass . '">' . __('No blocks found.', 'simpletoc')  . ' ' . __('Save or update post first.', 'simpletoc') . '</p>';
     }
     return $html;
@@ -124,7 +200,7 @@ function render_callback( $attributes )
 
   $headings = array_reverse(filter_headings_recursive($blocks));
 
-  // enrich headings with pages as a data-attribute 
+  // enrich headings with pages as a data-attribute
   $headings = simpletoc_add_pagenumber($blocks, $headings);
 
   $headings_clean = array_map('trim', $headings);
@@ -134,9 +210,9 @@ function render_callback( $attributes )
     if( $is_backend == true ) {
 
       if ($attributes['no_title'] == false) {
-        $html = '<h2 class="simpletoc-title ' . $alignclass . '">' . __('Table of Contents', 'simpletoc') . '</h2>';
+        $html = '<h2 class="simpletoc-title ' . $alignclass . '">' . $title_text . '</h2>';
       }
-    
+
       $html .= '<p class="components-notice is-warning ' . $alignclass . '">' . __('No headings found.', 'simpletoc') . ' ' . __('Save or update post first.', 'simpletoc') . '</p>';
     }
     return $html;
@@ -149,9 +225,9 @@ function render_callback( $attributes )
     if( $is_backend == true ) {
 
       if ($attributes['no_title'] == false) {
-        $html = '<h2 class="simpletoc-title ' . $alignclass . '">' . __('Table of Contents', 'simpletoc') . '</h2>';
+        $html = '<h2 class="simpletoc-title ' . $alignclass . '">' . $title_text . '</h2>';
       }
-    
+
       $html .= '<p class="components-notice is-warning ' . $alignclass . '">' . __('No headings found.', 'simpletoc') . ' ' . __('Check minimal and maximum level block settings.', 'simpletoc') . '</p>';
     }
     return $html;
@@ -168,7 +244,7 @@ function simpletoc_add_pagenumber( $blocks, $headings ){
   $pages = 1;
 
   foreach ($blocks as $block => $innerBlock) {
-    
+
     // count nextpage blocks
     if (isset($blocks[$block]['blockName']) && $blocks[$block]['blockName'] === 'core/nextpage' ){
       $pages++;
@@ -187,8 +263,8 @@ function simpletoc_add_pagenumber( $blocks, $headings ){
 }
 
 /**
- * Return all headings with a recursive walk through all blocks. 
- * This includes groups and reusable block with groups within reusable blocks. 
+ * Return all headings with a recursive walk through all blocks.
+ * This includes groups and reusable block with groups within reusable blocks.
  */
 
 function filter_headings_recursive( $blocks )
@@ -226,11 +302,11 @@ function filter_headings_recursive( $blocks )
   }
 
   return $arr;
-  
+
 }
 
 /**
- * Remove all problematic characters for toc links 
+ * Remove all problematic characters for toc links
  */
 
 function simpletoc_sanitize_string( $string )
@@ -266,7 +342,7 @@ function addAnchorAttribute( $html )
   // remove non-breaking space entites from input HTML
   $html_wo_nbs = str_replace("&nbsp;", " ", $html);
 
-  // Thank you Nick Diego 
+  // Thank you Nick Diego
   if (!$html_wo_nbs) {
     return $html;
   }
@@ -307,6 +383,11 @@ function generateToc( $headings, $attributes )
   $link_class = '';
   $styles = '';
 
+  $title_text = esc_html( trim( $attributes['title_text'] ) );
+  if ( ! $title_text ) {
+    $title_text = __('Table of Contents', 'simpletoc');
+  }
+
   $alignclass = '';
   if ( isset ($attributes['align']) ) {
     $align = $attributes['align'];
@@ -316,7 +397,7 @@ function generateToc( $headings, $attributes )
   if ($attributes['remove_indent'] == true) {
     $styles = 'style="padding-left:0;list-style:none;"';
   }
-  
+
   if ($attributes['add_smooth'] == true) {
     $link_class = 'class="smooth-scroll"';
   }
@@ -383,7 +464,7 @@ function generateToc( $headings, $attributes )
 
     $itemcount++;
 
-    // start list 
+    // start list
     if ($this_depth == $min_depth) {
       $list .= "<li>\n";
     } else {
@@ -392,14 +473,14 @@ function generateToc( $headings, $attributes )
         $list .= "\n\t\t<" . $listtype . "><li>\n";
       }
     }
-    
+
     $list .= "<a " . $link_class . " href=\"" . $absolute_url . esc_html($page) . "#" . $link . "\">" . $title . "</a>";
 
     closelist:
     // close lists
     // check if this is not the last heading
     if ($line != count($headings) - 1) {
-      // do we need to close the door behind us? 
+      // do we need to close the door behind us?
       if ($min_depth > $next_depth) {
         // If yes, how many times?
         for ($min_depth; $min_depth > $next_depth; $min_depth--) {
@@ -418,7 +499,7 @@ function generateToc( $headings, $attributes )
   }
 
   if ($attributes['no_title'] == false) {
-    $html = "<h2 class=\"simpletoc-title\">" . __("Table of Contents", "simpletoc") . "</h2>";
+    $html = "<h2 class=\"simpletoc-title\">" . $title_text . "</h2>";
   }
   $html .= "<" . $listtype . " class=\"simpletoc-list\" " . $styles ."  " . $alignclass .">\n" . $list . "</li></" . $listtype . ">";
 

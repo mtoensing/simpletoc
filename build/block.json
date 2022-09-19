@@ -19,6 +19,9 @@
       "type": "boolean",
       "default": false
     },
+    "title_text": {
+      "type": "string"
+    },
     "use_ol": {
       "type": "boolean",
       "default": false
