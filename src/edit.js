@@ -28,7 +28,7 @@ export default function Edit({ attributes, setAttributes }) {
   const advpanelicon = 'settings'; 
   const updatePost = function () {
     if( attributes.autorefresh === true ) {
-      setAttributes({ updated: Date.now() });
+      setAttributes({ updated: new Date().getTime() });
     }
   };
 
@@ -248,7 +248,7 @@ export default function Edit({ attributes, setAttributes }) {
           <ToolbarButton
             className="components-icon-button components-toolbar__control"
             label={__("Update table of contents", "simpletoc")}
-            onClick={() => setAttributes({ updated: Date.now() })}
+            onClick={() => setAttributes({ updated: new Date().getTime() })}
             icon="update"
           />
         </ToolbarGroup>
