@@ -49,6 +49,9 @@
     "autorefresh": {
       "type": "boolean",
       "default": true
+    },
+    "updated": {
+      "type": "integer"
     }
   },
   "supports": {

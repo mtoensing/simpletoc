@@ -19,13 +19,13 @@ import {useEffect, useState} from 'react';
 
 export default function Edit({ attributes, setAttributes }) {
   const blockProps = useBlockProps();
-
   /* Update SimpleTOC if the post is saved successfully.          */
   /* Source: https://github.com/WordPress/gutenberg/issues/17632  */
 
   const { isSavingPost } = select( 'core/editor' );
   const [isSavingProcess, setSavingProcess] = useState(false);
   const advpanelicon = 'settings'; 
+
   const updatePost = function () {
     if( attributes.autorefresh === true ) {
       setAttributes({ updated: new Date().getTime() });
