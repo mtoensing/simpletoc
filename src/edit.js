@@ -248,7 +248,7 @@ export default function Edit({ attributes, setAttributes }) {
           <ToolbarButton
             className="components-icon-button components-toolbar__control"
             label={__("Update table of contents", "simpletoc")}
-            onClick={() => setAttributes({ updated: new Date().getTime() })}
+            onClick={() => updatePost()} 
             icon="update"
           />
         </ToolbarGroup>
