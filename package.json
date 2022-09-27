@@ -1,33 +1,33 @@
 {
-  "name": "simpletoc",
-  "version": "5.0.28",
-  "author": "Marc Tönsing",
-  "description": "SEO-friendly Table of Contents Gutenberg block. No JavaScript and no CSS means faster loading.",
-  "main": "build/index.js",
-  "license": "GPL-2.0-or-later",
-  "scripts": {
-    "start": "wp-scripts start",
-    "build": "wp-scripts build",
-    "format": "wp-scripts format",
-    "format:src": "wp-scripts format ./src",
-    "packages-update": "wp-scripts packages-update",
-    "lint-js": "wp-scripts lint-js",
-    "lint-js:fix": "wp-scripts lint-js --fix",
-    "lint-css": "wp-scripts lint-style",
-    "lint-css:fix": "wp-scripts lint-style --fix"
-  },
-  "devDependencies": {
-    "@wordpress/scripts": "^24.1.0",
-    "ansi-regex": ">=6.0.1",
-    "markdown-it": ">=12.3.2",
-    "nanoid": ">=3.1.31",
-    "node-fetch": ">=3.2.10",
-    "nth-check": ">=2.0.1",
-    "postcss": ">=8.4.5"
-  },
-  "dependencies": {
-    "@wordpress/i18n": "^4.17.0",
-    "@wordpress/server-side-render": "^3.15.0",
-    "react": "^17.0.2"
-  }
+	"name": "simpletoc",
+	"version": "5.0.28",
+	"author": "Marc Tönsing",
+	"description": "SEO-friendly Table of Contents Gutenberg block. No JavaScript and no CSS means faster loading.",
+	"main": "build/index.js",
+	"license": "GPL-2.0-or-later",
+	"scripts": {
+		"start": "wp-scripts start",
+		"build": "wp-scripts build",
+		"format": "wp-scripts format",
+		"format:src": "wp-scripts format ./src",
+		"packages-update": "wp-scripts packages-update",
+		"lint-js": "wp-scripts lint-js",
+		"lint-js:fix": "wp-scripts lint-js --fix",
+		"lint-css": "wp-scripts lint-style",
+		"lint-css:fix": "wp-scripts lint-style --fix"
+	},
+	"devDependencies": {
+		"@wordpress/scripts": "^24.1.0",
+		"ansi-regex": ">=6.0.1",
+		"markdown-it": ">=12.3.2",
+		"nanoid": ">=3.1.31",
+		"node-fetch": ">=3.2.10",
+		"nth-check": ">=2.0.1",
+		"postcss": ">=8.4.5"
+	},
+	"dependencies": {
+		"@wordpress/i18n": "^4.17.0",
+		"@wordpress/server-side-render": "^3.15.0",
+		"react": "^17.0.2"
+	}
 }

@@ -5,7 +5,13 @@
 	"version": "5.0.28",
 	"title": "SimpleTOC",
 	"category": "layout",
-	"keywords": [ "TOC", "Table of Contents", "SimpleTOC", "Inhaltsverzeichnis", "Index" ],
+	"keywords": [
+		"TOC",
+		"Table of Contents",
+		"SimpleTOC",
+		"Inhaltsverzeichnis",
+		"Index"
+	],
 	"icon": "simpletocicon",
 	"description": "Adds a Table of Contents.",
 	"attributes": {
@@ -47,10 +53,9 @@
 		"updated": {
 			"type": "integer"
 		}
-
 	},
 	"supports": {
-		"align": [ "wide" , "full"]
+		"align": [ "wide", "full" ]
 	},
 	"textdomain": "simpletoc",
 	"editorScript": "file:index.js",
