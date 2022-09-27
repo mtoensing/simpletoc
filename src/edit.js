@@ -30,6 +30,8 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	const updatePost = function () {
 		if ( attributes.autorefresh === true ) {
+			/* refresh block with changed attribute */
+			/* There is no better way at the moment https://github.com/WordPress/gutenberg/issues/44469 */
 			setAttributes( { updated: new Date().getTime() } );
 		}
 	};
