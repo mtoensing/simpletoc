@@ -10,7 +10,11 @@
     "build": "wp-scripts build",
     "format": "wp-scripts format",
     "format:src": "wp-scripts format ./src",
-    "packages-update": "wp-scripts packages-update"
+    "packages-update": "wp-scripts packages-update",
+    "lint-js": "wp-scripts lint-js",
+    "lint-js:fix": "wp-scripts lint-js --fix",
+    "lint-css": "wp-scripts lint-style",
+    "lint-css:fix": "wp-scripts lint-style --fix"
   },
   "devDependencies": {
     "@wordpress/scripts": "^24.1.0",
@@ -23,6 +27,7 @@
   },
   "dependencies": {
     "@wordpress/i18n": "^4.17.0",
-    "@wordpress/server-side-render": "^3.15.0"
+    "@wordpress/server-side-render": "^3.15.0",
+    "react": "^17.0.2"
   }
 }
