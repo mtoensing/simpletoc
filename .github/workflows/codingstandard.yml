@@ -13,7 +13,7 @@ on:
     workflow_dispatch:
 jobs:
     tag:
-        name: New tag
+        name: Lint and build
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@master
