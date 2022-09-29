@@ -25,7 +25,7 @@ function register_simpletoc_block()
   add_filter('plugin_row_meta', __NAMESPACE__ . '\\simpletoc_plugin_meta', 10, 2);
 
   register_block_type( __DIR__ . '/build', [
-    'render_callback' => __NAMESPACE__ . '\\render_callback'
+    'render_callback' => __NAMESPACE__ . '\\render_callback_simpletoc'
   ]);
 
 }
@@ -151,7 +151,7 @@ function addIDstoBlocks_recursive( $blocks ) {
  *
  */
 
-function render_callback( $attributes )
+function render_callback_simpletoc( $attributes )
 {
 
   $is_backend = defined('REST_REQUEST') && true === REST_REQUEST && 'edit' === filter_input(INPUT_GET, 'context');
