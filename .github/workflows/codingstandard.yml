@@ -1,13 +1,16 @@
 name: Coding Standards
 on:
-  pull_request_target:
-    branches:
-      - master
-  push:
-    branches:
-      - master
-    paths-ignore:
-      - '**.md'
+    pull_request_target:
+        branches:
+            - master
+    push:
+        branches:
+            - master
+        paths-ignore:
+            - '**.md'
+
+    # Allows you to run this workflow manually from the Actions tab
+    workflow_dispatch:
 jobs:
     tag:
         name: New tag
