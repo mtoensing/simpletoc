@@ -12,6 +12,9 @@
 		"Inhaltsverzeichnis",
 		"Index"
 	],
+	"supports": {
+		"align": [ "wide", "full" ]
+	},
 	"icon": "simpletocicon",
 	"description": "Adds a Table of Contents.",
 	"attributes": {
@@ -53,9 +56,6 @@
 		"updated": {
 			"type": "integer"
 		}
-	},
-	"supports": {
-		"align": [ "wide", "full" ]
 	},
 	"textdomain": "simpletoc",
 	"editorScript": "file:index.js",
