@@ -1,0 +1,23 @@
+name: WPCS check
+
+on:
+    pull_request_target:
+        branches:
+            - master
+    push:
+        branches:
+            - master
+        paths-ignore:
+            - '**.md'
+
+    # Allows you to run this workflow manually from the Actions tab
+    workflow_dispatch:
+
+jobs:
+    phpcs:
+        name: WPCS
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: WPCS check
+              uses: 10up/wpcs-action@stable
