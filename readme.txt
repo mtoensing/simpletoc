@@ -100,7 +100,7 @@ I don’t see an easy solution at the moment. SimpleTOC is only a block that can
 
 == Screenshots ==
 1. SimpleTOC block in Gutenberg editor.
-2. SimpleTOC display of the function for the user in the post.
+2. SimpleTOC in the post.
 3. Simple but powerful. Customize each TOC as you like.
 4. Control the maximum depth of the headings.
 5. Style SimpleTOC with Gutenbergs native group styling options.
