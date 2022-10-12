@@ -269,11 +269,18 @@ function simpletoc_add_pagenumber( $blocks, $headings ){
  * @return array[]
  */
 function filter_headings_recursive( array $blocks ): array {
-	$arr = [];
+	$arr            = [];
+	// allow developers to ignore specific blocks
+	$ignored_blocks = apply_filters( 'simpletoc_ignored_blocks', [] );
 
 	foreach ( $blocks as $innerBlock ) {
 
 		if ( is_array( $innerBlock ) ) {
+
+			// if block is ignored, skip
+			if ( isset( $innerBlock['blockName'] ) && in_array( $innerBlock['blockName'], $ignored_blocks ) ) {
+				continue;
+			}
 
 			if ( isset( $innerBlock['attrs']['ref'] ) ) {
 				// search in reusable blocks
