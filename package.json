@@ -16,9 +16,11 @@
 		"lint-js": "wp-scripts lint-js",
 		"lint-js:fix": "wp-scripts lint-js --fix",
 		"lint-css": "wp-scripts lint-style",
-		"lint-css:fix": "wp-scripts lint-style --fix"
+		"lint-css:fix": "wp-scripts lint-style --fix",
+		"wp-env": "wp-env"
 	},
 	"devDependencies": {
+		"@wordpress/env": "^5.4.0",
 		"@wordpress/scripts": "^24.3.0",
 		"ansi-regex": ">=6.0.1",
 		"markdown-it": ">=12.3.2",
