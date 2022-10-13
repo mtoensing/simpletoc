@@ -316,7 +316,7 @@ export default function Edit( { attributes, setAttributes } ) {
 									'simpletoc'
 								) }
 								help={ __(
-									'Disable this to remove redudant changed content warning in editor.',
+									'Disable this to remove redundant changed content warning in editor.',
 									'simpletoc'
 								) }
 								checked={ attributes.autorefresh }
