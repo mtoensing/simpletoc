@@ -86,7 +86,7 @@ add_filter( 'load_script_translations', function($translations, $file, $handle, 
 
 /**
  * Sets the default value of translatable attributes.
- * 
+ *
  * Values inside block.json are static strings that are not translated. This
  * filter inserts relevant translations i
  *
@@ -265,44 +265,50 @@ function simpletoc_add_pagenumber( $blocks, $headings ){
 /**
  * Return all headings with a recursive walk through all blocks.
  * This includes groups and reusable block with groups within reusable blocks.
+ * @var array[] $blocks
+ * @return array[]
  */
+function filter_headings_recursive( array $blocks ): array {
+	$arr            = [];
+	// allow developers to ignore specific blocks
+	$ignored_blocks = apply_filters( 'simpletoc_excluded_blocks', [] );
 
-function filter_headings_recursive( $blocks )
-{
-  $arr = array();
+	foreach ( $blocks as $innerBlock ) {
 
-  foreach ($blocks as $block => $innerBlock) {
+		if ( is_array( $innerBlock ) ) {
 
-    if (is_array($innerBlock)) {
+			// if block is ignored, skip
+			if ( isset( $innerBlock['blockName'] ) && in_array( $innerBlock['blockName'], $ignored_blocks ) ) {
+				continue;
+			}
 
-      if (isset($innerBlock['attrs']['ref'])) {
-        // search in reusable blocks
-        $e_arr = parse_blocks(get_post($innerBlock['attrs']['ref'])->post_content);
-        $arr = array_merge(filter_headings_recursive($e_arr), $arr);
-      } else {
-        // search in groups
-        $arr = array_merge(filter_headings_recursive($innerBlock), $arr);
-      }
-    } else {
+			if ( isset( $innerBlock['attrs']['ref'] ) ) {
+				// search in reusable blocks
+				$e_arr = parse_blocks( get_post( $innerBlock['attrs']['ref'] )->post_content );
+				$arr   = array_merge( filter_headings_recursive( $e_arr ), $arr );
+			} else {
+				// search in groups
+				$arr = array_merge( filter_headings_recursive( $innerBlock ), $arr );
+			}
+		} else {
 
-      if (isset($blocks['blockName']) && ( $blocks['blockName'] === 'core/heading' ) && $innerBlock !== 'core/heading') {
-        // make sure its a headline.
-        if (preg_match("/(<h1|<h2|<h3|<h4|<h5|<h6)/i", $innerBlock)) {
-          $arr[] = $innerBlock;
-        }
-      }
+			if ( isset( $blocks['blockName'] ) && ( $blocks['blockName'] === 'core/heading' ) && $innerBlock !== 'core/heading' ) {
+				// make sure it's a headline.
+				if ( preg_match( "/(<h1|<h2|<h3|<h4|<h5|<h6)/i", $innerBlock ) ) {
+					$arr[] = $innerBlock;
+				}
+			}
 
-      if (isset($blocks['blockName']) && ( $blocks['blockName'] === 'generateblocks/headline' ) && $innerBlock !== 'core/heading') {
-        // make sure its a headline.
-        if (preg_match("/(<h1|<h2|<h3|<h4|<h5|<h6)/i", $innerBlock)) {
-          $arr[] = $innerBlock;
-        }
-      }
-    }
-  }
+			if ( isset( $blocks['blockName'] ) && ( $blocks['blockName'] === 'generateblocks/headline' ) && $innerBlock !== 'core/heading' ) {
+				// make sure it's a headline.
+				if ( preg_match( "/(<h1|<h2|<h3|<h4|<h5|<h6)/i", $innerBlock ) ) {
+					$arr[] = $innerBlock;
+				}
+			}
+		}
+	}
 
-  return $arr;
-
+	return $arr;
 }
 
 /**
