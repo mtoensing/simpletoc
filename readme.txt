@@ -106,11 +106,11 @@ I don’t see an easy solution at the moment. SimpleTOC is only a block that can
 
 Use the 'simpletoc_excluded_blocks' filter. For example, this code will exclude heading blocks that are inside a column block:
 
-    ‘add_filter( 'simpletoc_excluded_blocks', function ( array $blocks ) {
+    add_filter( 'simpletoc_excluded_blocks', function ( array $blocks ) {
         $blocks[] = 'core/column';
 
         return $blocks;
-    } );‘
+    } );
 
 == Screenshots ==
 1. SimpleTOC block in Gutenberg editor.
