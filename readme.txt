@@ -104,7 +104,7 @@ I don’t see an easy solution at the moment. SimpleTOC is only a block that can
 
 = How to allow developers to exclude specific blocks? = 
 
-Use the 'simpletoc_excluded_blocks' filter. For example, this code will exclude header blocks that are inside a column block:
+Use the 'simpletoc_excluded_blocks' filter. For example, this code will exclude heading blocks that are inside a column block:
 
     ‘add_filter( 'simpletoc_excluded_blocks', function ( array $blocks ) {
         $blocks[] = 'core/column';
