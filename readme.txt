@@ -45,6 +45,9 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 
 == Changelog ==
 
+= 5.0.31 =
+* Feature: Filter for developers to exclude specific blocks. See faq for details.
+
 = 5.0.30 =
 * Refactoring: Simplified code
 
