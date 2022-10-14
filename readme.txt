@@ -4,7 +4,7 @@ Tags: Gutenberg, block, TOC, Table of Contents, AMP
 Requires at least: 5.9
 Donate link: https://marc.tv/out/donate
 Tested up to: 6.0
-Stable tag: 5.0.30
+Stable tag: 5.0.31
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -97,6 +97,16 @@ If you really want to hide a single heading from the table of contents then add 
 = How do I add SimpleTOC to all articles automatically?  =
 
 I don’t see an easy solution at the moment. SimpleTOC is only a block that can be placed in your post. If there would be a plugin that adds blocks to every post then this would be the solution. I think this should be another separate plug-in to keep the code of SimpleTOC clean and … well, simple. Maybe someone knows of a plug-in that adds blocks automatically to all posts with some parameters and settings? What about site editing in WordPress? I think the core team is working on something like that. I will keep this post open. If I have gained more knowledge how to solve this I will add this feature. 
+
+= How to allow developers to exclude specific blocks? = 
+
+Use the 'simpletoc_excluded_blocks' filter. For example, this code will exclude header blocks that are inside a column block:
+
+    ‘add_filter( 'simpletoc_excluded_blocks', function ( array $blocks ) {
+        $blocks[] = 'core/column';
+
+        return $blocks;
+    } );‘
 
 == Screenshots ==
 1. SimpleTOC block in Gutenberg editor.
