@@ -174,8 +174,13 @@ function render_callback_simpletoc( $attributes )
 
   $pre_html = '';
   $post_html = '';
-  if ( $className != '' ) {
-    $pre_html = '<div class="simpletoc ' . $className . '">';
+
+  // By default, the wrapper is not enabled because it causes problems on some themes
+  $wrapper_enabled = apply_filters( 'simpletoc_wrapper_enabled', false );
+
+  if ( $className !== ''|| $wrapper_enabled ) {
+    $wrapper_attrs = get_block_wrapper_attributes( [ 'class' => 'simpletoc' ] );
+    $pre_html = "<div $wrapper_attrs>";
     $post_html = '</div>';
   }
 
