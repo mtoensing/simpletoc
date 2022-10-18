@@ -90,19 +90,11 @@ In Gutenberg, add a block and search for "SimpleTOC" or just "TOC". Please save 
 
 Select the block and select "group" in the context menu. Apply "background color", "link color" and "text color" to this group. SimpleTOC will inherit these styles. You would like to use this styled SimpleTOC group next time you write a post? Convert it to a reusable block.
 
-= How do I add smooth scrolling? =
+= How to exclude a single heading from the TOC? = 
 
-You can optionally add the css class "smooth-scroll" to each link the TOC. Then you can install plugin that uses these classes.
+If you really want to hide a single heading from the table of contents, then add the CSS class "simpletoc-hidden" to a heading block. But first, think about the reason you would like to hide a specific heading. Maybe you would like to remove all headings of a specific depth level. Then there is an option for that in the blocks options in Gutenberg. If you think this heading should not be part of the toc perhaps it is not needed in the post itself?
 
-= How do I hide a single heading? = 
-
-If you really want to hide a single heading from the table of contents then add the CSS class "simpletoc-hidden" to a heading block. But first of all, think about the reason you want to hide a specific heading. Maybe you want to remove all headins of a specific depth level. Then there is an option for that in the blocks options in Gutenberg. If you think this heading should not be part of the toc maybe it is not needed in the post itself?
-
-= How do I add SimpleTOC to all articles automatically?  =
-
-I don’t see an easy solution at the moment. SimpleTOC is only a block that can be placed in your post. If there would be a plugin that adds blocks to every post then this would be the solution. I think this should be another separate plug-in to keep the code of SimpleTOC clean and … well, simple. Maybe someone knows of a plug-in that adds blocks automatically to all posts with some parameters and settings? What about site editing in WordPress? I think the core team is working on something like that. I will keep this post open. If I have gained more knowledge how to solve this I will add this feature. 
-
-= How to allow developers to exclude specific blocks? = 
+= How to allow developers to exclude specific headings programmatically? = 
 
 Use the 'simpletoc_excluded_blocks' filter. For example, this code will exclude heading blocks that are inside a column block:
 
@@ -111,6 +103,10 @@ Use the 'simpletoc_excluded_blocks' filter. For example, this code will exclude 
 
         return $blocks;
     } );
+
+= How do I add SimpleTOC to all articles automatically?  =
+
+I don’t see an easy solution at the moment. SimpleTOC is only a block that can be placed in your post. If there was a plugin that adds blocks to every post, then this would be the solution. I think this should be another separate plug-in to keep the code of SimpleTOC clean and … well, simple. Maybe someone knows of a plug-in that adds blocks automatically to all posts with some parameters and settings? What about site editing on WordPress? I think the core team is working on something like that. I will keep this post open. If I have gained more knowledge how to solve this, I will add this feature. 
 
 == Screenshots ==
 1. SimpleTOC block in Gutenberg editor.
