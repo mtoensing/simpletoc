@@ -5,7 +5,12 @@ import {
 	useBlockProps,
 } from '@wordpress/block-editor';
 import ServerSideRender from '@wordpress/server-side-render';
-import { formatListBullets, formatListNumbered } from '@wordpress/icons';
+import {
+	formatListBullets,
+	formatOutdent,
+	formatIndent,
+	formatListNumbered,
+} from '@wordpress/icons';
 import {
 	SelectControl,
 	ToolbarButton,
@@ -54,6 +59,24 @@ export default function Edit( { attributes, setAttributes } ) {
 				isActive={ attributes.use_ol === true }
 				onClick={ () => {
 					setAttributes( { use_ol: true } );
+				} }
+			/>
+			<ToolbarButton
+				icon={ formatOutdent }
+				title={ __( 'Indent' ) }
+				describedBy={ __( 'Indent list' ) }
+				isActive={ attributes.remove_indent === true }
+				onClick={ () => {
+					setAttributes( { remove_indent: true } );
+				} }
+			/>
+			<ToolbarButton
+				icon={ formatIndent }
+				title={ __( 'Outdent' ) }
+				describedBy={ __( 'Outdent list' ) }
+				isActive={ attributes.remove_indent === false }
+				onClick={ () => {
+					setAttributes( { remove_indent: false } );
 				} }
 			/>
 		</BlockControls>
@@ -202,21 +225,6 @@ export default function Edit( { attributes, setAttributes } ) {
 							onChange={ ( level ) =>
 								setAttributes( {
 									max_level: Number( level ),
-								} )
-							}
-						/>
-					</PanelRow>
-					<PanelRow>
-						<ToggleControl
-							label={ __( 'Remove list indent', 'simpletoc' ) }
-							help={ __(
-								'No bullet points or numbers at the first level.',
-								'simpletoc'
-							) }
-							checked={ attributes.remove_indent }
-							onChange={ () =>
-								setAttributes( {
-									remove_indent: ! attributes.remove_indent,
 								} )
 							}
 						/>
