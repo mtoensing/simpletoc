@@ -6,6 +6,13 @@ import {
 } from '@wordpress/block-editor';
 import ServerSideRender from '@wordpress/server-side-render';
 import {
+	formatListBullets,
+	formatListNumbered,
+	formatListNumberedRTL,
+	formatOutdent,
+	formatOutdentRTL,
+} from '@wordpress/icons';
+import {
 	SelectControl,
 	ToolbarGroup,
 	ToolbarButton,
@@ -36,6 +43,30 @@ export default function Edit( { attributes, setAttributes } ) {
 		}
 	};
 
+	const controls = (
+		<BlockControls group="block">
+			<ToolbarButton
+				icon={ formatListBullets }
+				title={ __( 'Unordered' ) }
+				describedBy={ __( 'Convert to unordered list' ) }
+				isActive={  attributes.use_ol === false }
+				onClick={ () => {
+					setAttributes( { use_ol: false } );
+				} }
+			/>
+			<ToolbarButton
+				icon={ formatListNumbered }
+				title={ __( 'Ordered' ) }
+				describedBy={ __( 'Convert to ordered list' ) }
+				isActive={  attributes.use_ol === true }
+				onClick={ () => {
+					setAttributes( { use_ol	: true } );
+				} }
+			/>
+		</BlockControls>
+	);
+
+
 	subscribe( () => {
 		if ( isSavingPost() ) {
 			setSavingProcess( true );
@@ -52,6 +83,7 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	return (
 		<div { ...blockProps }>
+			{ controls }	
 			<InspectorControls>
 				<Panel>
 					<PanelBody>
