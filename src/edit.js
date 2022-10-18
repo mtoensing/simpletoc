@@ -45,8 +45,8 @@ export default function Edit( { attributes, setAttributes } ) {
 		<BlockControls group="block">
 			<ToolbarButton
 				icon={ formatListBullets }
-				title={ __( 'Unordered' ) }
-				describedBy={ __( 'Convert to unordered list' ) }
+				title={  __( 'Convert to unordered list', 'simpletoc' ) }
+				describedBy={ __( 'Convert to unordered list', 'simpletoc' ) }
 				isActive={ attributes.use_ol === false }
 				onClick={ () => {
 					setAttributes( { use_ol: false } );
@@ -54,8 +54,8 @@ export default function Edit( { attributes, setAttributes } ) {
 			/>
 			<ToolbarButton
 				icon={ formatListNumbered }
-				title={ __( 'Ordered' ) }
-				describedBy={ __( 'Convert to ordered list' ) }
+				title={ __( 'Convert to ordered list', 'simpletoc' ) }
+				describedBy={ __( 'Convert to ordered list', 'simpletoc' ) }
 				isActive={ attributes.use_ol === true }
 				onClick={ () => {
 					setAttributes( { use_ol: true } );
@@ -63,8 +63,8 @@ export default function Edit( { attributes, setAttributes } ) {
 			/>
 			<ToolbarButton
 				icon={ formatOutdent }
-				title={ __( 'Indent' ) }
-				describedBy={ __( 'Indent list' ) }
+				title={ __( 'Indent list', 'simpletoc' ) }
+				describedBy={ __( 'Indent list', 'simpletoc' ) }
 				isActive={ attributes.remove_indent === true }
 				onClick={ () => {
 					setAttributes( { remove_indent: true } );
@@ -72,8 +72,8 @@ export default function Edit( { attributes, setAttributes } ) {
 			/>
 			<ToolbarButton
 				icon={ formatIndent }
-				title={ __( 'Outdent' ) }
-				describedBy={ __( 'Outdent list' ) }
+				title={ __( 'Outdent list', 'simpletoc' ) }
+				describedBy={ __( 'Outdent list', 'simpletoc' ) }
 				isActive={ attributes.remove_indent === false }
 				onClick={ () => {
 					setAttributes( { remove_indent: false } );
@@ -117,10 +117,6 @@ export default function Edit( { attributes, setAttributes } ) {
 					<PanelRow>
 						<ToggleControl
 							label={ __( 'Remove heading', 'simpletoc' ) }
-							help={ __(
-								'Disable the "Table of contents" block heading.',
-								'simpletoc'
-							) }
 							checked={ attributes.no_title }
 							onChange={ () =>
 								setAttributes( {
