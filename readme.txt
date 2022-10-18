@@ -49,34 +49,11 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 * Feature: Filter for developers to exclude specific blocks. See faq for details. Thanks rafaucau!
 * Feature: Easier development with @wordpress/env to start a dev environment. Thanks rafaucau!
 
-= 5.0.30 =
-* Refactoring: Simplified code
-
 = 5.0.28 =
 * Feature: Change the TOC headline in the block options. Thank you Philipp Stracker!
 
-= 5.0.27 =
-* Warning: Some features have been moved to "Advances Features" at the bottom of the settings.
-* Feature: Toggle the automatic refresh of the TOC block in Gutenberg.  
-
-= 5.0.25 =
-* Housekeeping: Updated documentation and dependencies.
-
-= 5.0.21 =
-* Feature: SimpleTOC updates itself after the post is saved.
-
 = 5.0.17 =
 * Feature: Support for custom Anchor IDs in headings. Thank you Matthias Altmann!
-
-= 5.0.9 = 
-* Works with WordPress 6.0
-* Support for paginated posts.
-
-= 4.3 =
-* Feature: Add the CSS class "simpletoc-hidden" to the heading block to remove it from the Table of Contents.
-
-= 3.9 =
-* Added Brazilian Portuguese translations to the translations. Thanks Ralden Souza!
 
 == Installation ==
 
