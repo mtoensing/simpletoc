@@ -74,9 +74,19 @@ Select the block and select "group" in the context menu. Apply "background color
 
 If you really want to hide a single heading from the table of contents, then add the CSS class "simpletoc-hidden" to a heading block. But first, think about the reason you would like to hide a specific heading. Maybe you would like to remove all headings of a specific depth level. Then there is an option for that in the blocks options in Gutenberg. If you think this heading should not be part of the toc perhaps it is not needed in the post itself?
 
+= How to add a div tag wrapper to the TOC? =
+
+If you add a custom class to the SimpleTOC block in "Advanced" and then "Additional CSS Class(es)" a div with that class will be wrapped around the HTML output. You can force this with a filter, too.
+
+Example: 
+
+    add_filter( 'simpletoc_wrapper_enabled', '__return_true' );
+
 = How to allow developers to exclude specific headings programmatically? = 
 
-Use the 'simpletoc_excluded_blocks' filter. For example, this code will exclude heading blocks that are inside a column block:
+Use the 'simpletoc_excluded_blocks' filter. For example, this code will exclude heading blocks that are inside a column block.
+
+Example: 
 
     add_filter( 'simpletoc_excluded_blocks', function ( array $blocks ) {
         $blocks[] = 'core/column';
