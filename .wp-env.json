@@ -1,6 +1,4 @@
 {
-  "phpVersion": "7.0",
-  "plugins": [
-    "."
-  ]
+	"phpVersion": "7.0",
+	"plugins": [ "." ]
 }
