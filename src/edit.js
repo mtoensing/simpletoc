@@ -45,7 +45,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		<BlockControls group="block">
 			<ToolbarButton
 				icon={ formatListBullets }
-				title={  __( 'Convert to unordered list', 'simpletoc' ) }
+				title={ __( 'Convert to unordered list', 'simpletoc' ) }
 				describedBy={ __( 'Convert to unordered list', 'simpletoc' ) }
 				isActive={ attributes.use_ol === false }
 				onClick={ () => {
