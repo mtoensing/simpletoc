@@ -463,8 +463,18 @@ function generateToc( $headings, $attributes )
       $next_depth = '';
     }
 
+	// Get class attributes and check for `simpletoc-hidden` to exclude the headline.
+	preg_match( '/class="([^"]+)"/', $headline, $matches );
+	$exclude_headline = false;
+	if ( isset( $matches[1] ) ) {
+		$headline_classes = explode( ' ', $matches[1] );
+		if ( in_array( 'simpletoc-hidden', $headline_classes, true ) ) {
+			$exclude_headline = true;
+		}
+	}
+
     // skip this heading because a max depth is set.
-    if ($this_depth > $attributes['max_level'] or strpos($headline, 'class="simpletoc-hidden') > 0) {
+    if ($this_depth > $attributes['max_level'] or $exclude_headline) {
       goto closelist;
     }
 
