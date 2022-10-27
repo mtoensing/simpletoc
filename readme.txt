@@ -108,8 +108,9 @@ I don’t see an easy solution at the moment. SimpleTOC is only a block that can
 2. SimpleTOC in the post.
 3. Simple but powerful. Customize each TOC as you like.
 4. Control the maximum depth of the headings.
-5. Style SimpleTOC with Gutenbergs native group styling options.
+5. SimpleTOC styled with Gutenbergs native group styles.
 6. SimpleTOC Advanced Features
+7. Gutenberg Heading block: Set a custom anchor  
 
 == Credits ==
 
