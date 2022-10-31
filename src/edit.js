@@ -258,7 +258,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					<PanelRow>
 						<ToggleControl
 							label={ __(
-								'Hide SimpleTOC in an accordion menu',
+								'Hide in accordion menu',
 								'simpletoc'
 							) }
 							help={ __(
@@ -310,7 +310,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					<PanelRow>
 						<ToggleControl
 							label={ __(
-								'Automatically refresh TOC',
+								'Automatic refresh',
 								'simpletoc'
 							) }
 							help={ __(

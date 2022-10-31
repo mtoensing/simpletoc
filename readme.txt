@@ -25,7 +25,7 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 
 * Zero configuration: Add the SimpleTOC block to your post and that's it. 
 * Minimal and valid HTML output.
-* No JavaScript or CSS added.
+* No JavaScript or CSS added. Except you enable the accordion menu.
 * Designed for Gutenberg.
 * Style SimpleTOC with Gutenberg's native group styling options.
 * Inherits the style of your theme.
@@ -48,7 +48,7 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 == Changelog ==
 
 = 5.0.37 =
-* Feature: Hide you SimpleTOC in an accordion menu.  
+* Feature: Hide SimpleTOC in an accordion menu. This will add minimal inline JavaScript and css styles.
 
 = 5.0.36 =
 * Feature: [Spin up](https://demo.tastewp.com/simpletoc) a new WordPress instance with the SimpleTOC plugin already installed.
