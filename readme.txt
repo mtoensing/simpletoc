@@ -4,7 +4,7 @@ Tags: Gutenberg, block, TOC, Table of Contents, AMP
 Requires at least: 5.9
 Donate link: https://marc.tv/out/donate
 Tested up to: 6.0
-Stable tag: 6.0.37
+Stable tag: 6.0.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -47,7 +47,7 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 
 == Changelog ==
 
-= 5.0.37 =
+= 6.0.1 =
 * Feature: Hide SimpleTOC in an accordion menu. This will add minimal inline JavaScript and css styles.
 * Feature: Option to change SimpleTOC block heading level.
 
