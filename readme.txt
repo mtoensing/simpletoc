@@ -4,7 +4,7 @@ Tags: Gutenberg, block, TOC, Table of Contents, AMP
 Requires at least: 5.9
 Donate link: https://marc.tv/out/donate
 Tested up to: 6.0
-Stable tag: 5.0.36
+Stable tag: 6.0.37
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -47,6 +47,9 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 
 == Changelog ==
 
+= 5.0.37 =
+* Feature: Hide you SimpleTOC in an accordion menu.  
+
 = 5.0.36 =
 * Feature: [Spin up](https://demo.tastewp.com/simpletoc) a new WordPress instance with the SimpleTOC plugin already installed.
 * Fix: Better handling for `simpletoc-hidden` class to hide headings. Thank you blronaldhuereca!
@@ -81,6 +84,10 @@ Select the block and select "group" in the context menu. Apply "background color
 = How to exclude a single heading from the TOC? = 
 
 If you really want to hide a single heading from the table of contents, then add the CSS class "simpletoc-hidden" to a heading block. But first, think about the reason you would like to hide a specific heading. Maybe you would like to remove all headings of a specific depth level. Then there is an option for that in the blocks options in Gutenberg. If you think this heading should not be part of the toc perhaps it is not needed in the post itself?
+
+= I would like to save my SimpleTOC settings as a default. Is that possible?
+
+You can convert your configured SimpleTOC block to a reusable block in Gutenberg. It will keep its setting. This way, you can use your desired settings for every new post by adding the reusable block.
 
 = How to add a div tag wrapper to the TOC? =
 

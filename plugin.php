@@ -4,7 +4,7 @@
  * Plugin Name:   SimpleTOC - Table of Contents Block
  * Plugin URI:    https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
  * Description:   SEO-friendly Table of Contents Gutenberg block. No JavaScript and no CSS means faster loading.
- * Version:       5.0.36
+ * Version:       5.0.37
  * Author:        Marc Tönsing
  * Author URI:    https://marc.tv
  * Text Domain:   simpletoc
@@ -194,7 +194,7 @@ function render_callback_simpletoc( $attributes )
   if ( empty($blocks) ) {
     $html = '';
     if( $is_backend == true ) {
-      if ($attributes['no_title'] == false) {
+      if ($attributes['no_title'] === false ) {
         $html = '<h2 class="simpletoc-title ' . $alignclass . '">' . $title_text . '</h2>';
       }
 
@@ -215,7 +215,7 @@ function render_callback_simpletoc( $attributes )
     if( $is_backend == true ) {
 
       if ($attributes['no_title'] == false) {
-        $html = '<button type="button" class="collapsible">Open Collapsible</button><h2 class="simpletoc-title ' . $alignclass . '">' . $title_text . '</h2>';
+        $html = '<h2 class="simpletoc-title ' . $alignclass . '">' . $title_text . '</h2>';
       }
 
       $html .= '<p class="components-notice is-warning ' . $alignclass . '">' . __('No headings found.', 'simpletoc') . ' ' . __('Save or update post first.', 'simpletoc') . '</p>';
@@ -525,8 +525,7 @@ function generateToc( $headings, $attributes )
   if ( $attributes['accordion'] === true ) {
     $accordion_start = '
     <style>
-    /* Style the button that is used to open and close the collapsible content */
-    .collapsible {
+    .simpletoc-collapsible {
       background-color: #eee;
       color: #444;
       cursor: pointer;
@@ -538,20 +537,18 @@ function generateToc( $headings, $attributes )
       font-size: 15px;
     }
 
-    /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-    .active, .collapsible:hover {
+    .active, .simpletoc-collapsible:hover {
       background-color: #ccc;
     }
 
-    /* Style the collapsible content. Note: hidden by default */
-    .content {
+    .simpletoc-content {
       padding: 0 18px;
       display: none;
       overflow: hidden;
       background-color: #f1f1f1;
     }
 
-    .collapsible:after {
+    .simpletoc-collapsible:after {
       content: "\02795";
       font-size: 13px;
       color: white;
@@ -563,12 +560,12 @@ function generateToc( $headings, $attributes )
       content: "\2796"; /* Unicode character for "minus" sign (-) */
     }
     </style>
-    <button type="button" class="collapsible">' . $title_text . '</button>
-    <div class="content">';
+    <button type="button" class="simpletoc-collapsible">' . $title_text . '</button>
+    <div class="simpletoc-content">';
     
     $accordion_end = '</div>    
     <script>
-    var coll = document.getElementsByClassName("collapsible");
+    var coll = document.getElementsByClassName("simpletoc-collapsible");
     var i;
 
     for (i = 0; i < coll.length; i++) {
@@ -582,13 +579,12 @@ function generateToc( $headings, $attributes )
         }
       });
     }
-    
-    </script>'; // class content div 
+    </script>'; // class simpletoc-content closing div 
   }
 
   $html .= $accordion_start;
 
-  if ($attributes['no_title'] == false) {
+  if ($attributes['no_title'] === false && $attributes['accordion'] === false) {
     $html .=  "<h2 class=\"simpletoc-title\">" . $title_text . "</h2>";
   }
   $html .= "<" . $listtype . " class=\"simpletoc-list\" " . $styles ."  " . $alignclass .">\n" . $list . "</li></" . $listtype . ">";

@@ -234,24 +234,6 @@ export default function Edit( { attributes, setAttributes } ) {
 					initialOpen={ false }
 				>
 					<PanelRow>
-						<ToggleControl
-							label={ __(
-								'Hide SimpleTOC in a menu',
-								'simpletoc'
-							) }
-							help={ __(
-								'SimpleTOC will be wrapped in an accordion menu.',
-								'simpletoc'
-							) }
-							checked={ attributes.accordion }
-							onChange={ () =>
-								setAttributes( {
-									accordion: ! attributes.accordion,
-								} )
-							}
-						/>
-					</PanelRow>
-					<PanelRow>
 						<div
 							style={ {
 								marginBottom: '1em',
@@ -272,6 +254,24 @@ export default function Edit( { attributes, setAttributes } ) {
 								{ __( 'Donate here!', 'simpletoc' ) }
 							</ExternalLink>
 						</div>
+					</PanelRow>
+					<PanelRow>
+						<ToggleControl
+							label={ __(
+								'Hide SimpleTOC in an accordion menu',
+								'simpletoc'
+							) }
+							help={ __(
+								'This will add minimal inline JavaScript and css styles.',
+								'simpletoc'
+							) }
+							checked={ attributes.accordion }
+							onChange={ () =>
+								setAttributes( {
+									accordion: ! attributes.accordion,
+								} )
+							}
+						/>
 					</PanelRow>
 					<PanelRow>
 						<ToggleControl
