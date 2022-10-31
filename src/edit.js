@@ -236,11 +236,11 @@ export default function Edit( { attributes, setAttributes } ) {
 					<PanelRow>
 						<ToggleControl
 							label={ __(
-								'Render menu',
+								'Hide SimpleTOC in a menu',
 								'simpletoc'
 							) }
 							help={ __(
-								'Render menu help',
+								'SimpleTOC will be wrapped in an accordion menu.',
 								'simpletoc'
 							) }
 							checked={ attributes.accordion }
