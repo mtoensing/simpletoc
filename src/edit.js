@@ -44,14 +44,15 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	const controls = (
 		<BlockControls group="block">
-			{ ! (attributes.no_title || attributes.accordion ) &&  ( <HeadingLevelDropdown
-				selectedLevel={ attributes.title_level }
-				onChange={ ( level ) =>
-					setAttributes( {
-						title_level: Number( level ),
-					} )
-				}
-			/>
+			{ ! ( attributes.no_title || attributes.accordion ) && (
+				<HeadingLevelDropdown
+					selectedLevel={ attributes.title_level }
+					onChange={ ( level ) =>
+						setAttributes( {
+							title_level: Number( level ),
+						} )
+					}
+				/>
 			) }
 			<ToolbarButton
 				icon={ formatListBullets }
