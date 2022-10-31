@@ -49,6 +49,7 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 
 = 5.0.37 =
 * Feature: Hide SimpleTOC in an accordion menu. This will add minimal inline JavaScript and css styles.
+* Feature: Option to change SimpleTOC block heading.
 
 = 5.0.36 =
 * Feature: [Spin up](https://demo.tastewp.com/simpletoc) a new WordPress instance with the SimpleTOC plugin already installed.
