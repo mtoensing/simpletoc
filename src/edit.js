@@ -44,7 +44,7 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	const controls = (
 		<BlockControls group="block">
-			<HeadingLevelDropdown
+			{ ! (attributes.no_title || attributes.accordion ) &&  ( <HeadingLevelDropdown
 				selectedLevel={ attributes.title_level }
 				onChange={ ( level ) =>
 					setAttributes( {
@@ -52,6 +52,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					} )
 				}
 			/>
+			) }
 			<ToolbarButton
 				icon={ formatListBullets }
 				title={ __( 'Convert to unordered list', 'simpletoc' ) }
