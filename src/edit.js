@@ -21,6 +21,7 @@ import {
 	PanelRow,
 	ExternalLink,
 } from '@wordpress/components';
+import HeadingLevelDropdown from './heading-level-dropdown';
 import { select, subscribe } from '@wordpress/data';
 import { useEffect, useState } from 'react';
 
@@ -43,6 +44,14 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	const controls = (
 		<BlockControls group="block">
+			<HeadingLevelDropdown
+				selectedLevel={ attributes.title_level }
+				onChange={ ( level ) =>
+					setAttributes( {
+						title_level: Number( level ),
+					} )
+				}
+			/>
 			<ToolbarButton
 				icon={ formatListBullets }
 				title={ __( 'Convert to unordered list', 'simpletoc' ) }

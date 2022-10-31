@@ -174,6 +174,7 @@ function render_callback_simpletoc( $attributes )
 
   $pre_html = '';
   $post_html = '';
+  $title_level = $attributes['title_level'];
 
   // By default, the wrapper is not enabled because it causes problems on some themes
   $wrapper_enabled = apply_filters( 'simpletoc_wrapper_enabled', false );
@@ -195,7 +196,7 @@ function render_callback_simpletoc( $attributes )
     $html = '';
     if( $is_backend == true ) {
       if ($attributes['no_title'] === false ) {
-        $html = '<h2 class="simpletoc-title ' . $alignclass . '">' . $title_text . '</h2>';
+        $html = '<h' . $title_level .' class="simpletoc-title ' . $alignclass . '">' . $title_text . '</h' . $title_level . '>';
       }
 
       $html .= '<p class="components-notice is-warning ' . $alignclass . '">' . __('No blocks found.', 'simpletoc')  . ' ' . __('Save or update post first.', 'simpletoc') . '</p>';
@@ -215,7 +216,7 @@ function render_callback_simpletoc( $attributes )
     if( $is_backend == true ) {
 
       if ($attributes['no_title'] == false) {
-        $html = '<h2 class="simpletoc-title ' . $alignclass . '">' . $title_text . '</h2>';
+        $html = '<h' . $title_level .' class="simpletoc-title ' . $alignclass . '">' . $title_text . '</h' . $title_level . '>';
       }
 
       $html .= '<p class="components-notice is-warning ' . $alignclass . '">' . __('No headings found.', 'simpletoc') . ' ' . __('Save or update post first.', 'simpletoc') . '</p>';
@@ -230,7 +231,7 @@ function render_callback_simpletoc( $attributes )
     if( $is_backend == true ) {
 
       if ($attributes['no_title'] == false) {
-        $html = '<h2 class="simpletoc-title ' . $alignclass . '">' . $title_text . '</h2>';
+        $html = '<h' . $title_level .' class="simpletoc-title ' . $alignclass . '">' . $title_text . '</h' . $title_level . '>';
       }
 
       $html .= '<p class="components-notice is-warning ' . $alignclass . '">' . __('No headings found.', 'simpletoc') . ' ' . __('Check minimal and maximum level block settings.', 'simpletoc') . '</p>';
@@ -447,6 +448,7 @@ function generateToc( $headings, $attributes )
     $accordion_start = '';
     $accordion_end = '';
     $html = '';
+    $title_level = $attributes['title_level'];
 
     if ( isset($nodes[0] ) && $nodes[0]->nodeValue > 1) {
       $page = $nodes[0]->nodeValue . '/';
@@ -585,7 +587,7 @@ function generateToc( $headings, $attributes )
   $html .= $accordion_start;
 
   if ($attributes['no_title'] === false && $attributes['accordion'] === false) {
-    $html .=  "<h2 class=\"simpletoc-title\">" . $title_text . "</h2>";
+    $html = '<h' . $title_level .' class="simpletoc-title ' . $alignclass . '">' . $title_text . '</h' . $title_level . '>';
   }
   $html .= "<" . $listtype . " class=\"simpletoc-list\" " . $styles ."  " . $alignclass .">\n" . $list . "</li></" . $listtype . ">";
 
