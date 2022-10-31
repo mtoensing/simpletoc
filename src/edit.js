@@ -309,10 +309,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					</PanelRow>
 					<PanelRow>
 						<ToggleControl
-							label={ __(
-								'Automatic refresh',
-								'simpletoc'
-							) }
+							label={ __( 'Automatic refresh', 'simpletoc' ) }
 							help={ __(
 								'Disable this to remove redundant changed content warning in editor.',
 								'simpletoc'
