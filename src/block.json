@@ -49,6 +49,14 @@
 		},
 		"updated": {
 			"type": "integer"
+		},
+		"accordion": {
+			"type": "boolean",
+			"default": false
+		},
+		"collapsed": {
+			"type": "boolean",
+			"default": true
 		}
 	},
 	"textdomain": "simpletoc",

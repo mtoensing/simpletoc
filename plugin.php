@@ -178,7 +178,7 @@ function render_callback_simpletoc( $attributes )
   // By default, the wrapper is not enabled because it causes problems on some themes
   $wrapper_enabled = apply_filters( 'simpletoc_wrapper_enabled', false );
 
-  if ( $className !== ''|| $wrapper_enabled ) {
+  if ( $className !== ''|| $wrapper_enabled || $attributes['accordion']  ) {
     $wrapper_attrs = get_block_wrapper_attributes( [ 'class' => 'simpletoc' ] );
     $pre_html = "<div $wrapper_attrs>";
     $post_html = '</div>';
@@ -215,7 +215,7 @@ function render_callback_simpletoc( $attributes )
     if( $is_backend == true ) {
 
       if ($attributes['no_title'] == false) {
-        $html = '<h2 class="simpletoc-title ' . $alignclass . '">' . $title_text . '</h2>';
+        $html = '<button type="button" class="collapsible">Open Collapsible</button><h2 class="simpletoc-title ' . $alignclass . '">' . $title_text . '</h2>';
       }
 
       $html .= '<p class="components-notice is-warning ' . $alignclass . '">' . __('No headings found.', 'simpletoc') . ' ' . __('Save or update post first.', 'simpletoc') . '</p>';
@@ -444,6 +444,9 @@ function generateToc( $headings, $attributes )
     @$dom->loadHTML($headline, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
     $xpath = new \DOMXPath($dom);
     $nodes = $xpath->query('//*/@data-page');
+    $accordion_start = '';
+    $accordion_end = '';
+    $html = '';
 
     if ( isset($nodes[0] ) && $nodes[0]->nodeValue > 1) {
       $page = $nodes[0]->nodeValue . '/';
@@ -519,8 +522,74 @@ function generateToc( $headings, $attributes )
     }
   }
 
+  if ( $attributes['accordion'] === true ) {
+    $accordion_start = '
+    <style>
+    /* Style the button that is used to open and close the collapsible content */
+    .collapsible {
+      background-color: #eee;
+      color: #444;
+      cursor: pointer;
+      padding: 18px;
+      width: 100%;
+      border: none;
+      text-align: left;
+      outline: none;
+      font-size: 15px;
+    }
+
+    /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+    .active, .collapsible:hover {
+      background-color: #ccc;
+    }
+
+    /* Style the collapsible content. Note: hidden by default */
+    .content {
+      padding: 0 18px;
+      display: none;
+      overflow: hidden;
+      background-color: #f1f1f1;
+    }
+
+    .collapsible:after {
+      content: "\02795";
+      font-size: 13px;
+      color: white;
+      float: right;
+      margin-left: 5px;
+    }
+    
+    .active:after {
+      content: "\2796"; /* Unicode character for "minus" sign (-) */
+    }
+    </style>
+    <button type="button" class="collapsible">' . $title_text . '</button>
+    <div class="content">';
+    
+    $accordion_end = '</div>    
+    <script>
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+      coll[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var content = this.nextElementSibling;
+        if (content.style.display === "block") {
+          content.style.display = "none";
+        } else {
+          content.style.display = "block";
+        }
+      });
+    }
+    
+    </script>'; // class content div 
+  }
+
+  $html .= $accordion_start;
+
   if ($attributes['no_title'] == false) {
-    $html = "<h2 class=\"simpletoc-title\">" . $title_text . "</h2>";
+    $html .=  "<h2 class=\"simpletoc-title\">" . $title_text . "</h2>";
   }
   $html .= "<" . $listtype . " class=\"simpletoc-list\" " . $styles ."  " . $alignclass .">\n" . $list . "</li></" . $listtype . ">";
 
@@ -528,5 +597,6 @@ function generateToc( $headings, $attributes )
     $html = '';
   }
 
+  $html .= $accordion_end;
   return $html;
 }

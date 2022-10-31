@@ -234,6 +234,24 @@ export default function Edit( { attributes, setAttributes } ) {
 					initialOpen={ false }
 				>
 					<PanelRow>
+						<ToggleControl
+							label={ __(
+								'Render menu',
+								'simpletoc'
+							) }
+							help={ __(
+								'Render menu help',
+								'simpletoc'
+							) }
+							checked={ attributes.accordion }
+							onChange={ () =>
+								setAttributes( {
+									accordion: ! attributes.accordion,
+								} )
+							}
+						/>
+					</PanelRow>
+					<PanelRow>
 						<div
 							style={ {
 								marginBottom: '1em',
