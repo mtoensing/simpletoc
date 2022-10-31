@@ -85,9 +85,9 @@ Select the block and select "group" in the context menu. Apply "background color
 
 If you really want to hide a single heading from the table of contents, then add the CSS class "simpletoc-hidden" to a heading block. But first, think about the reason you would like to hide a specific heading. Maybe you would like to remove all headings of a specific depth level. Then there is an option for that in the blocks options in Gutenberg. If you think this heading should not be part of the toc perhaps it is not needed in the post itself?
 
-= I would like to save my SimpleTOC settings as a default. Is that possible?
+= I would like to save my SimpleTOC settings as default. Is that possible?
 
-You can convert your configured SimpleTOC block to a reusable block in Gutenberg. It will keep its setting. This way, you can use your desired settings for every new post by adding the reusable block.
+You can convert your configured SimpleTOC block into a reusable block in Gutenberg. It will keep its settings. This way, you can use your desired settings for each new post by adding the reusable block.
 
 = How to add a div tag wrapper to the TOC? =
 
