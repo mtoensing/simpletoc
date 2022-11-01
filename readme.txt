@@ -4,7 +4,7 @@ Tags: Gutenberg, block, TOC, Table of Contents, AMP
 Requires at least: 5.9
 Donate link: https://marc.tv/out/donate
 Tested up to: 6.0
-Stable tag: 5.0.39
+Stable tag: 5.0.40
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -51,6 +51,7 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 * Feature: Hide SimpleTOC in an accordion menu. Adds minimal JavaScript and css styles if enabled.
 * Feature: Option to change SimpleTOC block heading level.
 * Fix: Accordion menu can now be added multiple times.
+* Fix: Accordion styling in Gutenberg editor.
 
 = 5.0.36 =
 * Feature: [Spin up](https://demo.tastewp.com/simpletoc) a new WordPress instance with the SimpleTOC plugin already installed.
@@ -113,7 +114,7 @@ Example:
 
 = How do I add SimpleTOC to all articles automatically?  =
 
-I don’t see an easy solution at the moment. SimpleTOC is only a block that can be placed in your post. If there was a plugin that adds blocks to every post, then this would be the solution. I think this should be another separate plug-in to keep the code of SimpleTOC clean and … well, simple. Maybe someone knows of a plug-in that adds blocks automatically to all posts with some parameters and settings? 
+I don’t see an easy solution at the moment. SimpleTOC is only a block that can be placed in your post. If there was a plugin that adds blocks to every post, then this would be the solution. I think this should be another separate plug-in to keep the code of SimpleTOC clean and … well, simple. 
 
 == Screenshots ==
 1. SimpleTOC block in Gutenberg editor.

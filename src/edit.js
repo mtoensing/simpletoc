@@ -24,6 +24,8 @@ import {
 import HeadingLevelDropdown from './heading-level-dropdown';
 import { select, subscribe } from '@wordpress/data';
 import { useEffect, useState } from 'react';
+import './editor.scss';
+import './accordion.css';
 
 export default function Edit( { attributes, setAttributes } ) {
 	const blockProps = useBlockProps();
@@ -273,7 +275,7 @@ export default function Edit( { attributes, setAttributes } ) {
 								'simpletoc'
 							) }
 							help={ __(
-								'This will add minimal JavaScript and css styles.',
+								'Adds minimal JavaScript and css styles.',
 								'simpletoc'
 							) }
 							checked={ attributes.accordion }
