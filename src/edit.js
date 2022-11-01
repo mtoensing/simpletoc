@@ -273,7 +273,7 @@ export default function Edit( { attributes, setAttributes } ) {
 								'simpletoc'
 							) }
 							help={ __(
-								'This will add minimal inline JavaScript and css styles.',
+								'This will add minimal JavaScript and css styles.',
 								'simpletoc'
 							) }
 							checked={ attributes.accordion }

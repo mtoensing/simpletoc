@@ -4,7 +4,7 @@
  * Plugin Name:   SimpleTOC - Table of Contents Block
  * Plugin URI:    https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
  * Description:   SEO-friendly Table of Contents Gutenberg block. No JavaScript and no CSS means faster loading.
- * Version:       5.0.38
+ * Version:       5.0.39
  * Author:        Marc Tönsing
  * Author URI:    https://marc.tv
  * Text Domain:   simpletoc
@@ -28,6 +28,24 @@ function register_simpletoc_block()
     'render_callback' => __NAMESPACE__ . '\\render_callback_simpletoc'
   ]);
 
+}
+
+function simpletoc_accordion_enqueue() {
+  wp_enqueue_script(
+		'simpletoc-accordion',
+		plugin_dir_url( __FILE__ ) . '/src/accordion.js',
+    array(),
+		'1.0.0',
+		true
+	);
+
+  wp_enqueue_style(
+    'simpletoc-accordion',
+     plugin_dir_url( __FILE__ ) . '/src/accordion.css', 
+     array(), 
+     '1.0.0', 
+     false
+  );
 }
 
 add_action( 'init', 'register_simpletoc_block' );
@@ -525,63 +543,11 @@ function generateToc( $headings, $attributes )
   }
 
   if ( $attributes['accordion'] === true ) {
-    $accordion_start = '
-    <style>
-    .simpletoc-collapsible {
-      background-color: #eee;
-      color: #444;
-      cursor: pointer;
-      padding: 18px;
-      width: 100%;
-      border: none;
-      text-align: left;
-      outline: none;
-      font-size: 15px;
-    }
-
-    .active, .simpletoc-collapsible:hover {
-      background-color: #ccc;
-    }
-
-    .simpletoc-content {
-      padding: 0 18px;
-      display: none;
-      overflow: hidden;
-      background-color: #f1f1f1;
-    }
-
-    .simpletoc-collapsible:after {
-      content: "\02795";
-      font-size: 13px;
-      color: white;
-      float: right;
-      margin-left: 5px;
-    }
-    
-    .active:after {
-      content: "\2796"; /* Unicode character for "minus" sign (-) */
-    }
-    </style>
-    <button type="button" class="simpletoc-collapsible">' . $title_text . '</button>
+    $accordion_start = '<button type="button" class="simpletoc-collapsible">' . $title_text . '</button>
     <div class="simpletoc-content">';
     
-    $accordion_end = '</div>    
-    <script>
-    var coll = document.getElementsByClassName("simpletoc-collapsible");
-    var i;
-
-    for (i = 0; i < coll.length; i++) {
-      coll[i].addEventListener("click", function() {
-        this.classList.toggle("active");
-        var content = this.nextElementSibling;
-        if (content.style.display === "block") {
-          content.style.display = "none";
-        } else {
-          content.style.display = "block";
-        }
-      });
-    }
-    </script>'; // class simpletoc-content closing div 
+    $accordion_end = '</div>'; // class simpletoc-content closing div 
+    add_action( 'wp_enqueue_scripts', 'simpletoc_accordion_enqueue' );
   }
 
   $html .= $accordion_start;
@@ -598,3 +564,5 @@ function generateToc( $headings, $attributes )
   $html .= $accordion_end;
   return $html;
 }
+
+

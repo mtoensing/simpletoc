@@ -1,0 +1,34 @@
+.simpletoc-collapsible {
+	background-color: #eee;
+	color: #444;
+	cursor: pointer;
+	padding: 18px;
+	width: 100%;
+	border: none;
+	text-align: left;
+	outline: none;
+	font-size: inherit;
+}
+
+.simpletoc .active,
+.simpletoc-collapsible:hover {
+	background-color: #ccc;
+}
+
+.simpletoc .active::after {
+	content: "\2796"; /* Unicode character for "minus" sign (-) */
+}
+
+.simpletoc-content {
+	padding: 0 18px;
+	display: none;
+	overflow: hidden;
+	background-color: #f1f1f1;
+}
+
+.simpletoc-collapsible::after {
+	content: "\02795"; /* Unicode character for "plus" sign (+) */
+	color: #fff;
+	float: right;
+	margin-left: 5px;
+}
