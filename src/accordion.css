@@ -15,6 +15,13 @@
 	background-color: #ccc;
 }
 
+.simpletoc-collapsible::after {
+	content: "\02795"; /* Unicode character for "plus" sign (+) */
+	color: #fff;
+	float: right;
+	margin-left: 5px;
+}
+
 .simpletoc .active::after {
 	content: "\2796"; /* Unicode character for "minus" sign (-) */
 }
@@ -26,9 +33,4 @@
 	background-color: #f1f1f1;
 }
 
-.simpletoc-collapsible::after {
-	content: "\02795"; /* Unicode character for "plus" sign (+) */
-	color: #fff;
-	float: right;
-	margin-left: 5px;
-}
+
