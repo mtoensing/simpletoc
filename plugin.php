@@ -31,6 +31,7 @@ function register_simpletoc_block()
 }
 
 function simpletoc_accordion_enqueue() {
+  
   wp_enqueue_script(
 		'simpletoc-accordion',
 		plugin_dir_url( __FILE__ ) . '/src/accordion.js',
@@ -546,7 +547,9 @@ function generateToc( $headings, $attributes )
     $accordion_start = '<button type="button" class="simpletoc-collapsible">' . $title_text . '</button>
     <div class="simpletoc-content">';
     
-    $accordion_end = '</div>'; // class simpletoc-content closing div 
+    /* class simpletoc-content closing div  */
+    $accordion_end = '</div>'; 
+
     add_action( 'wp_enqueue_scripts', 'simpletoc_accordion_enqueue' );
   }
 

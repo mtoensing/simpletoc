@@ -7,7 +7,7 @@
 	border: none;
 	text-align: left;
 	outline: none;
-	font-size: inherit;
+	font-size: 18px;
 }
 
 .simpletoc .active,
@@ -20,6 +20,7 @@
 	color: #fff;
 	float: right;
 	margin-left: 5px;
+	font-size: 13px;
 }
 
 .simpletoc .active::after {
@@ -32,3 +33,6 @@
 	overflow: hidden;
 	background-color: #f1f1f1;
 }
+
+
+
