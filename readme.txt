@@ -4,7 +4,7 @@ Tags: Gutenberg, block, TOC, Table of Contents, AMP
 Requires at least: 5.9
 Donate link: https://marc.tv/out/donate
 Tested up to: 6.0
-Stable tag: 5.0.40
+Stable tag: 5.0.41
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -47,11 +47,12 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 
 == Changelog ==
 
-= 5.0.39 =
+= 5.0.41 =
 * Feature: Hide SimpleTOC in an accordion menu. Adds minimal JavaScript and css styles if enabled.
 * Feature: Option to change SimpleTOC block heading level.
 * Fix: Accordion menu can now be added multiple times.
 * Fix: Accordion styling in Gutenberg editor.
+* Fix: Minor accordion styling fixes.
 
 = 5.0.36 =
 * Feature: [Spin up](https://demo.tastewp.com/simpletoc) a new WordPress instance with the SimpleTOC plugin already installed.
