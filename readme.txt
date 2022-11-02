@@ -3,7 +3,7 @@ Contributors: MarcDK
 Tags: Gutenberg, block, TOC, Table of Contents, AMP
 Requires at least: 5.9
 Donate link: https://marc.tv/out/donate
-Tested up to: 6.0
+Tested up to: 6.1
 Stable tag: 5.0.42
 Requires PHP: 7.0
 License: GPLv2 or later
