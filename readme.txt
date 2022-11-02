@@ -125,6 +125,7 @@ I don’t see an easy solution at the moment. SimpleTOC is only a block that can
 5. SimpleTOC styled with Gutenbergs native group styles.
 6. SimpleTOC Advanced Features
 7. Gutenberg Heading block: Set a custom anchor  
+8. SimpleTOC hidden in the accordion menu.
 
 == Credits ==
 
