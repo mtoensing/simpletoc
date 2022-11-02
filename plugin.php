@@ -30,24 +30,7 @@ function register_simpletoc_block()
 
 }
 
-function simpletoc_accordion_enqueue() {
-  
-  wp_enqueue_script(
-		'simpletoc-accordion',
-		plugin_dir_url( __FILE__ ) . '/src/accordion.js',
-    array(),
-		'5.0.41',
-		true
-	);
 
-  wp_enqueue_style(
-    'simpletoc-accordion',
-     plugin_dir_url( __FILE__ ) . '/src/accordion.css', 
-     array(), 
-     '5.0.41', 
-     false
-  );
-}
 
 add_action( 'init', 'register_simpletoc_block' );
 
@@ -544,13 +527,15 @@ function generateToc( $headings, $attributes )
   }
 
   if ( $attributes['accordion'] === true ) {
-    $accordion_start = '<button type="button" class="simpletoc-collapsible">' . $title_text . '</button>
+
+    $handle_js = file_get_contents(plugin_dir_url( __FILE__ ) . '/src/accordion.js', "r");
+    $handle_css = file_get_contents(plugin_dir_url( __FILE__ ) . '/src/accordion.css', "r");
+
+    $accordion_start = '<style>' . $handle_css .'</style><button type="button" class="simpletoc-collapsible">' . $title_text . '</button>
     <div class="simpletoc-content">';
     
     /* class simpletoc-content closing div  */
-    $accordion_end = '</div>'; 
-
-    add_action( 'wp_enqueue_scripts', 'simpletoc_accordion_enqueue' );
+    $accordion_end = '</div><script>' . $handle_js .'</script>'; 
   }
 
   $html .= $accordion_start;
