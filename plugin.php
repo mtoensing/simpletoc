@@ -4,7 +4,7 @@
  * Plugin Name:   SimpleTOC - Table of Contents Block
  * Plugin URI:    https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
  * Description:   SEO-friendly Table of Contents Gutenberg block. No JavaScript and no CSS means faster loading.
- * Version:       5.0.42
+ * Version:       5.0.43
  * Author:        Marc Tönsing
  * Author URI:    https://marc.tv
  * Text Domain:   simpletoc
@@ -29,8 +29,6 @@ function register_simpletoc_block()
   ]);
 
 }
-
-
 
 add_action( 'init', 'register_simpletoc_block' );
 
@@ -155,7 +153,7 @@ function addIDstoBlocks_recursive( $blocks ) {
 
 function render_callback_simpletoc( $attributes )
 {
-
+ 
   $is_backend = defined('REST_REQUEST') && true === REST_REQUEST && 'edit' === filter_input(INPUT_GET, 'context');
 
   $title_text = esc_html( trim( $attributes['title_text'] ) );
@@ -528,14 +526,26 @@ function generateToc( $headings, $attributes )
 
   if ( $attributes['accordion'] === true ) {
 
-    $handle_js = file_get_contents(plugin_dir_url( __FILE__ ) . '/src/accordion.js', "r");
-    $handle_css = file_get_contents(plugin_dir_url( __FILE__ ) . '/src/accordion.css', "r");
+    wp_enqueue_script(
+      'simpletoc-accordion',
+      plugin_dir_url( __FILE__ ) . 'src/accordion.js',
+      array(),
+      '5.0.43',
+      true
+    );
+  
+    wp_enqueue_style(
+      'simpletoc-accordion',
+       plugin_dir_url( __FILE__ ) . 'src/accordion.css', 
+       '5.0.43', 
+       true
+    );
 
-    $accordion_start = '<style>' . $handle_css .'</style><button type="button" class="simpletoc-collapsible">' . $title_text . '</button>
+    $accordion_start = '<button type="button" class="simpletoc-collapsible">' . $title_text . '</button>
     <div class="simpletoc-content">';
     
     /* class simpletoc-content closing div  */
-    $accordion_end = '</div><script>' . $handle_js .'</script>'; 
+    $accordion_end = '</div>'; 
   }
 
   $html .= $accordion_start;
