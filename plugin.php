@@ -526,7 +526,7 @@ function generateToc( $headings, $attributes )
 
   if ( $attributes['accordion'] === true ) {
 
-    wp_enqueue_script(
+    wp_enqueue_script (
       'simpletoc-accordion',
       plugin_dir_url( __FILE__ ) . 'src/accordion.js',
       array(),
@@ -534,11 +534,11 @@ function generateToc( $headings, $attributes )
       true
     );
   
-    wp_enqueue_style(
+    wp_enqueue_style (
       'simpletoc-accordion',
        plugin_dir_url( __FILE__ ) . 'src/accordion.css', 
-       '5.0.43', 
-       true
+       array(),
+       '5.0.43'
     );
 
     $accordion_start = '<button type="button" class="simpletoc-collapsible">' . $title_text . '</button>
