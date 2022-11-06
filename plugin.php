@@ -4,7 +4,7 @@
  * Plugin Name:   SimpleTOC - Table of Contents Block
  * Plugin URI:    https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
  * Description:   SEO-friendly Table of Contents Gutenberg block. No JavaScript and no CSS means faster loading.
- * Version:       5.0.43
+ * Version:       5.0.45
  * Author:        Marc Tönsing
  * Author URI:    https://marc.tv
  * Text Domain:   simpletoc
@@ -530,7 +530,7 @@ function generateToc( $headings, $attributes )
       'simpletoc-accordion',
       plugin_dir_url( __FILE__ ) . 'src/accordion.js',
       array(),
-      '5.0.43',
+      '5.0.45',
       true
     );
   
@@ -538,7 +538,7 @@ function generateToc( $headings, $attributes )
       'simpletoc-accordion',
        plugin_dir_url( __FILE__ ) . 'src/accordion.css', 
        array(),
-       '5.0.43'
+       '5.0.45'
     );
 
     $accordion_start = '<button type="button" class="simpletoc-collapsible">' . $title_text . '</button>
@@ -551,7 +551,11 @@ function generateToc( $headings, $attributes )
   $html .= $accordion_start;
 
   if ($attributes['no_title'] === false && $attributes['accordion'] === false) {
-    $html = '<h' . $title_level .' class="simpletoc-title ' . $alignclass . '">' . $title_text . '</h' . $title_level . '>';
+    if( $title_level > 0 ) {
+      $html = '<h' . $title_level .' class="simpletoc-title ' . $alignclass . '">' . $title_text . '</h' . $title_level . '>';
+    } else {
+      $html = '<p class="simpletoc-title ' . $alignclass . '"><strong>' . $title_text . '</strong></p>';
+    }
   }
   $html .= "<" . $listtype . " class=\"simpletoc-list\" " . $styles ."  " . $alignclass .">\n" . $list . "</li></" . $listtype . ">";
 
