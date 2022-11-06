@@ -29,7 +29,6 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 * Designed for Gutenberg.
 * Style SimpleTOC with Gutenberg's native group styling options.
 * Inherits the style of your theme.
-* Customize list style: ordered, bullets or nothing at all.
 * Translated in [multiple languages](https://translate.wordpress.org/projects/wp-plugins/simpletoc/). Including German, Japanese, Chinese (Taiwan), Dutch, Brazilian Portuguese, French, Spanish and Latvia.
 
 = Customization = 
@@ -37,8 +36,8 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 * Add background and text color with Gutenberg groups.
 * Native block support for wide and full width.
 * Control the maximum depth of the headings.
-* Choose between an ordered and unordered HTML list.
-* Toggle list indent.
+* Choose between an ordered, bullet HTML list. Or indent the list.
+* Select a heading level or turn it into a paragraph.
 * Disable the h2 heading of the TOC block and add your own.
 
 = Compatibility =
