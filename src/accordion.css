@@ -23,7 +23,7 @@
 	content: "\02795"; /* Unicode character for "plus" sign (+) */
 	float: right;
 	margin-left: 5px;
-	font-size: 13px;
+	font-size: 16px;
 }
 
 .simpletoc .active::after {
