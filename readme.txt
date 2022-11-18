@@ -119,6 +119,16 @@ Example:
         return $blocks;
     } );
 
+
+= How do I change the color of the accordion menu? =
+
+The heavy plus character I used can not be colored with css without hacks. But you can change the icon to something else and change the color of the new icon. 
+
+    .simpletoc-collapsible::after {
+        content: "✖";
+        color: #e94c89;
+    } 
+
 = How do I add SimpleTOC to all articles automatically?  =
 
 I don’t see an easy solution at the moment. SimpleTOC is only a block that can be placed in your post. If there was a plugin that adds blocks to every post, then this would be the solution. I think this should be another separate plug-in to keep the code of SimpleTOC clean and … well, simple. 
