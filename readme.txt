@@ -93,7 +93,7 @@ Select the block and select "group" in the context menu. Apply "background color
 
 = How to exclude a single heading from the TOC? = 
 
-If you really want to hide a single heading from the table of contents, then add the CSS class "simpletoc-hidden" to a heading block. But first, think about the reason you would like to hide a specific heading. Maybe you would like to remove all headings of a specific depth level. Then there is an option for that in the blocks options in Gutenberg. If you think this heading should not be part of the toc perhaps it is not needed in the post itself?
+If you really want to hide a single heading from the table of contents, then add the CSS class "simpletoc-hidden" to a heading block. You can find this field in the same place as the HTML anchor field: In the Block > Advanced sidebar. But first, think about the reason you would like to hide a specific heading. Maybe you would like to remove all headings of a specific depth level. Then there is an option for that in the blocks options in Gutenberg. If you think this heading should not be part of the toc perhaps it is not needed in the post itself?
 
 = I would like to save my SimpleTOC settings as default. Is that possible?
 
