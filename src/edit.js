@@ -4,6 +4,7 @@ import {
 	BlockControls,
 	useBlockProps,
 } from '@wordpress/block-editor';
+import { store as editorStore } from '@wordpress/editor';
 import ServerSideRender from '@wordpress/server-side-render';
 import {
 	formatListBullets,
@@ -20,29 +21,28 @@ import {
 	PanelBody,
 	PanelRow,
 	ExternalLink,
+	Spinner,
 } from '@wordpress/components';
 import HeadingLevelDropdown from './heading-level-dropdown';
-import { select, subscribe } from '@wordpress/data';
-import { useEffect, useState } from 'react';
+import { useSelect } from '@wordpress/data';
 import './editor.scss';
 import './accordion.css';
 
 export default function Edit( { attributes, setAttributes } ) {
 	const blockProps = useBlockProps();
-	/* Update SimpleTOC if the post is saved successfully.          */
-	/* Source: https://github.com/WordPress/gutenberg/issues/17632  */
 
-	const { isSavingPost } = select( 'core/editor' );
-	const [ isSavingProcess, setSavingProcess ] = useState( false );
-	const advpanelicon = 'settings';
-
-	const updatePost = function () {
-		if ( attributes.autorefresh === true ) {
-			/* refresh block with changed attribute */
-			/* There is no better way at the moment https://github.com/WordPress/gutenberg/issues/44469 */
-			setAttributes( { updated: new Date().getTime() } );
+	const { isSaving, isSavingNonPostEntityChanges } = useSelect(
+		( select ) => {
+			const { isSavingPost, isSavingNonPostEntityChanges } =
+				select( editorStore );
+			return {
+				isSaving: isSavingPost(),
+				isSavingNonPostEntityChanges: isSavingNonPostEntityChanges(),
+			};
 		}
-	};
+	);
+
+	const advpanelicon = 'settings';
 
 	const controls = (
 		<BlockControls group="block">
@@ -320,45 +320,23 @@ export default function Edit( { attributes, setAttributes } ) {
 							}
 						/>
 					</PanelRow>
-					<PanelRow>
-						<ToggleControl
-							label={ __( 'Automatic refresh', 'simpletoc' ) }
-							help={ __(
-								'Disable this to remove redundant changed content warning in editor.',
-								'simpletoc'
-							) }
-							checked={ attributes.autorefresh }
-							onChange={ () =>
-								setAttributes( {
-									autorefresh: ! attributes.autorefresh,
-								} )
-							}
-						/>
-					</PanelRow>
 				</PanelBody>
 			</Panel>
 		</InspectorControls>
 	);
 
-	subscribe( () => {
-		if ( isSavingPost() ) {
-			setSavingProcess( true );
-		} else {
-			setSavingProcess( false );
-		}
-	} );
-
-	useEffect( () => {
-		if ( isSavingProcess ) {
-			updatePost();
-		}
-	}, [ isSavingProcess ] );
-
 	return (
 		<div { ...blockProps }>
 			{ controls }
 			{ controlssidebar }
-			<ServerSideRender block="simpletoc/toc" attributes={ attributes } />
+			{ isSaving || isSavingNonPostEntityChanges ? (
+				<Spinner />
+			) : (
+				<ServerSideRender
+					block="simpletoc/toc"
+					attributes={ attributes }
+				/>
+			) }
 		</div>
 	);
 }
