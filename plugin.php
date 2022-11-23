@@ -530,7 +530,7 @@ function generateToc( $headings, $attributes )
       'simpletoc-accordion',
       plugin_dir_url( __FILE__ ) . 'src/accordion.js',
       array(),
-      '5.0.45',
+      '5.0.46',
       true
     );
   
@@ -538,7 +538,7 @@ function generateToc( $headings, $attributes )
       'simpletoc-accordion',
        plugin_dir_url( __FILE__ ) . 'src/accordion.css', 
        array(),
-       '5.0.45'
+       '5.0.46'
     );
 
     $accordion_start = '<button type="button" class="simpletoc-collapsible">' . $title_text . '</button>

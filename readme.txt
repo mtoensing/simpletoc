@@ -49,6 +49,7 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 
 = 5.0.46 =
 * Fix: SimpleTOC will not nag the user about changed content in the editor anymore. Therefore I removed the corresponding option from the settings.
+* Fix: Minor changes to accordion css.
 
 = 5.0.45 =
 * Feature: Option to render SimpleTOC heading as paragraph.
