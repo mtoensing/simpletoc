@@ -31,13 +31,14 @@ import './accordion.css';
 export default function Edit( { attributes, setAttributes } ) {
 	const blockProps = useBlockProps();
 
-	const { isSaving, isSavingNonPostEntityChanges } = useSelect(
+	const { returnisSaving, returnisSavingNonPostEntityChanges } = useSelect(
 		( select ) => {
 			const { isSavingPost, isSavingNonPostEntityChanges } =
 				select( editorStore );
 			return {
-				isSaving: isSavingPost(),
-				isSavingNonPostEntityChanges: isSavingNonPostEntityChanges(),
+				returnisSaving: isSavingPost(),
+				returnisSavingNonPostEntityChanges:
+					isSavingNonPostEntityChanges(),
 			};
 		}
 	);
@@ -329,7 +330,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		<div { ...blockProps }>
 			{ controls }
 			{ controlssidebar }
-			{ isSaving || isSavingNonPostEntityChanges ? (
+			{ returnisSaving || returnisSavingNonPostEntityChanges ? (
 				<Spinner />
 			) : (
 				<ServerSideRender
