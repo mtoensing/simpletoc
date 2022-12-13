@@ -14,9 +14,18 @@
  */
 
 /**
- * Initalise frontend and backend and register block
- **/
+ * Prevents direct execution of the plugin file.
+ * If a WordPress function does not exist, it means that the file has not been run by WordPress.
+ */
+if ( ! function_exists( 'add_filter' ) ) {
+  header( 'Status: 403 Forbidden' );
+  header( 'HTTP/1.1 403 Forbidden' );
+  exit;
+}
 
+/**
+ * Initialise frontend and backend and register block
+ **/
 function register_simpletoc_block()
 {
 
@@ -155,7 +164,7 @@ function addIDstoBlocks_recursive( $blocks ) {
 
 function render_callback_simpletoc( $attributes )
 {
- 
+
   $is_backend = defined('REST_REQUEST') && true === REST_REQUEST && 'edit' === filter_input(INPUT_GET, 'context');
 
   $title_text = esc_html( trim( $attributes['title_text'] ) );
@@ -535,19 +544,19 @@ function generateToc( $headings, $attributes )
       '5.0.50',
       true
     );
-  
+
     wp_enqueue_style (
       'simpletoc-accordion',
-       plugin_dir_url( __FILE__ ) . 'src/accordion.css', 
+       plugin_dir_url( __FILE__ ) . 'src/accordion.css',
        array(),
        '5.0.50'
     );
 
     $accordion_start = '<button type="button" class="simpletoc-collapsible">' . $title_text . '</button>
     <div class="simpletoc-content">';
-    
+
     /* class simpletoc-content closing div  */
-    $accordion_end = '</div>'; 
+    $accordion_end = '</div>';
   }
 
   $html .= $accordion_start;
