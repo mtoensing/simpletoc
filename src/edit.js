@@ -294,7 +294,7 @@ export default function Edit( { attributes, setAttributes } ) {
 								'simpletoc'
 							) }
 							help={ __(
-								'Add the css class "smooth-scroll" to the links. This enables smooth scrolling in some themes like GeneratePress.',
+								'Adds the following CSS to the HTML element: "scroll-behavior: smooth;"',
 								'simpletoc'
 							) }
 							checked={ attributes.add_smooth }
