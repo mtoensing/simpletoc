@@ -325,7 +325,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						<ToggleControl
 							label={ __( 'Wrapper div', 'simpletoc' ) }
 							help={ __(
-								'Additionally adds role "Navigation" and ARIA attributes.',
+								'Additionally adds the role "navigation" and ARIA attributes.',
 								'simpletoc'
 							) }
 							checked={ attributes.wrapper }
