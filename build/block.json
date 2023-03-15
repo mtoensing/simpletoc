@@ -61,6 +61,10 @@
     "accordion": {
       "type": "boolean",
       "default": false
+    },
+    "wrapper": {
+      "type": "boolean",
+      "default": false
     }
   },
   "textdomain": "simpletoc",

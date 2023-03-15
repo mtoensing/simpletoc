@@ -321,6 +321,21 @@ export default function Edit( { attributes, setAttributes } ) {
 							}
 						/>
 					</PanelRow>
+					<PanelRow>
+						<ToggleControl
+							label={ __( 'Wrapper div', 'simpletoc' ) }
+							help={ __(
+								'Additionally adds role "Navigation" and ARIA attributes.',
+								'simpletoc'
+							) }
+							checked={ attributes.wrapper }
+							onChange={ () =>
+								setAttributes( {
+									wrapper: ! attributes.wrapper,
+								} )
+							}
+						/>
+					</PanelRow>
 				</PanelBody>
 			</Panel>
 		</InspectorControls>
