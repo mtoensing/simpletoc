@@ -13,6 +13,9 @@
  *
  */
 
+
+ require_once plugin_dir_path(__FILE__) . 'simpletoc-admin-settings.php';
+
 /**
  * Prevents direct execution of the plugin file.
  * If a WordPress function does not exist, it means that the file has not been run by WordPress.
@@ -190,7 +193,15 @@ function render_callback_simpletoc( $attributes )
   // By default, the wrapper is not enabled because it causes problems on some themes
   $wrapper_enabled = apply_filters( 'simpletoc_wrapper_enabled', false );
 
-  if ( $className !== ''|| $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper']  ) {
+  // Check if filter was set externally 
+  if (isset($wrapper_enabled)){ 
+    // Check if the wrapper is enabled in the settings
+    if (get_option('simpletoc_wrapper_enabled') == 1) {
+      $wrapper_enabled = true;
+    }
+  }
+
+  if ( $className !== '' || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper']  ) {
     $wrapper_attrs = get_block_wrapper_attributes( [ 'class' => 'simpletoc' ] );
     $pre_html = '<div role="navigation" aria-label="'. __('Table of Contents', 'simpletoc') . '" ' . $wrapper_attrs . '>';
     $post_html = '</div>';
