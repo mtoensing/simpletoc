@@ -584,7 +584,7 @@ function generateToc( $headings, $attributes )
   $html .= $accordion_start;
 
 
-  if ($attributes['no_title'] === false && $attributes['accordion'] === false) {
+  if ($attributes['no_title'] === false && $accordion_enabled === false && $attributes['accordion'] === false) {
     if( $title_level > 0 ) {
       $html = '<h' . $title_level .' class="simpletoc-title ' . $alignclass . '">' . $title_text . '</h' . $title_level . '>';
     } else {
