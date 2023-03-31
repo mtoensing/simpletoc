@@ -201,6 +201,10 @@ function render_callback_simpletoc( $attributes )
     }
   }
 
+  if (get_option('simpletoc_accordion_enabled') == 1) {
+    $wrapper_enabled = true;
+  }
+
   if ( $className !== '' || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper']  ) {
     $wrapper_attrs = get_block_wrapper_attributes( [ 'class' => 'simpletoc' ] );
     $pre_html = '<div role="navigation" aria-label="'. __('Table of Contents', 'simpletoc') . '" ' . $wrapper_attrs . '>';
@@ -547,7 +551,13 @@ function generateToc( $headings, $attributes )
     }
   }
 
-  if ( $attributes['accordion'] === true ) {
+  $accordion_enabled = false;
+
+  if (get_option('simpletoc_accordion_enabled') == 1) {
+    $accordion_enabled = true;
+  }
+
+  if ( $attributes['accordion'] === true || $accordion_enabled === true ) {
 
     wp_enqueue_script (
       'simpletoc-accordion',
@@ -572,6 +582,7 @@ function generateToc( $headings, $attributes )
   }
 
   $html .= $accordion_start;
+
 
   if ($attributes['no_title'] === false && $attributes['accordion'] === false) {
     if( $title_level > 0 ) {

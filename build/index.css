@@ -1,2 +1,55 @@
-.wp-block-simpletoc-toc .components-notice{font-size:13px;margin:1em}.wp-block-simpletoc-toc .components-notice span{padding-left:5px}
-.simpletoc{margin-bottom:1em}.simpletoc-collapsible{background-color:#eee;border:none;color:#444;cursor:pointer;font-size:18px;outline:none;padding:18px;text-align:left;width:100%}.simpletoc .active,.simpletoc-collapsible:hover{background-color:#ddd}.simpletoc-collapsible:after{content:"\02795";float:right;font-size:13px;margin-left:5px}.simpletoc .active:after{content:"\2796"}.simpletoc-content{background-color:#f1f1f1;display:none;overflow:hidden;padding:14px 18px 0}
+/*!****************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/editor.scss ***!
+  \****************************************************************************************************************************************************************************************************************************************/
+.wp-block-simpletoc-toc .components-notice {
+  margin: 1em;
+  font-size: 13px;
+}
+
+.wp-block-simpletoc-toc .components-notice span {
+  padding-left: 5px;
+}
+/*!***********************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!./src/accordion.css ***!
+  \***********************************************************************************************************************************************************************/
+.simpletoc {
+	margin-bottom: 1em;
+}
+
+.simpletoc-collapsible {
+	background-color: #eee;
+	color: #444;
+	cursor: pointer;
+	padding: 18px;
+	width: 100%;
+	border: none;
+	text-align: left;
+	outline: none;
+	font-size: 18px;
+}
+
+.simpletoc .active,
+.simpletoc-collapsible:hover {
+	background-color: #ddd;
+}
+
+.simpletoc-collapsible::after {
+	content: "\02795"; /* Unicode character for "plus" sign (+) */
+	float: right;
+	margin-left: 5px;
+	font-size: 13px;
+}
+
+.simpletoc .active::after {
+	content: "\2796"; /* Unicode character for "minus" sign (-) */
+}
+
+.simpletoc-content {
+	padding: 14px 18px 0;
+	display: none;
+	overflow: hidden;
+	background-color: #f1f1f1;
+}
+
+
+/*# sourceMappingURL=index.css.map*/
