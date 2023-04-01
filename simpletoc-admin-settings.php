@@ -1,7 +1,8 @@
-<?php 
+<?php
 
 // Add SimpleTOC global settings page
-function simpletoc_add_settings_page() {
+function simpletoc_add_settings_page()
+{
     add_options_page(
         __('SimpleTOC Settings', 'simpletoc'),
         __('SimpleTOC', 'simpletoc'),
@@ -13,14 +14,15 @@ function simpletoc_add_settings_page() {
 add_action('admin_menu', 'simpletoc_add_settings_page');
 
 // SimpleTOC settings page content
-function simpletoc_settings_page() {
+function simpletoc_settings_page()
+{
     if (!current_user_can('manage_options')) {
         return;
     }
 
-    ?>
+?>
     <div class="wrap">
-        <h1><?php _e('SimpleTOC Global Settings', 'simpletoc'); ?></h1>
+        <h1><?php _e('SimpleTOC Settings', 'simpletoc'); ?></h1>
         <form method="post" action="options.php">
             <?php
             settings_fields('simpletoc_settings');
@@ -29,11 +31,12 @@ function simpletoc_settings_page() {
             ?>
         </form>
     </div>
-    <?php
+<?php
 }
 
 // Register SimpleTOC settings
-function simpletoc_register_settings() {
+function simpletoc_register_settings()
+{
     $wrapper_enabled_filter = apply_filters('simpletoc_wrapper_enabled', null);
     $accordion_enabled_filter = apply_filters('simpletoc_accordion_enabled', null);
     $smooth_enabled_filter = apply_filters('simpletoc_smooth_enabled', null);
@@ -58,6 +61,14 @@ function simpletoc_register_settings() {
     );
 
     add_settings_field(
+        'simpletoc_accordion_enabled',
+        __('Force accordion menu', 'simpletoc'),
+        'simpletoc_accordion_enabled_callback',
+        'simpletoc',
+        'simpletoc_wrapper_section'
+    );
+
+    add_settings_field(
         'simpletoc_wrapper_enabled',
         __('Force wrapper div', 'simpletoc'),
         'simpletoc_wrapper_enabled_callback',
@@ -65,13 +76,7 @@ function simpletoc_register_settings() {
         'simpletoc_wrapper_section'
     );
 
-    add_settings_field(
-        'simpletoc_accordion_enabled',
-        __('Force accordion menu', 'simpletoc'),
-        'simpletoc_accordion_enabled_callback',
-        'simpletoc',
-        'simpletoc_wrapper_section'
-    );
+
 
     add_settings_field(
         'simpletoc_smooth_enabled',
@@ -84,16 +89,22 @@ function simpletoc_register_settings() {
 
 add_action('admin_init', 'simpletoc_register_settings');
 
-function simpletoc_wrapper_section_callback() {
+function simpletoc_wrapper_section_callback()
+{
     $wrapper_enabled_filter = apply_filters('simpletoc_wrapper_enabled', null);
     $accordion_enabled_filter = apply_filters('simpletoc_accordion_enabled', null);
     $smooth_enabled_filter = apply_filters('simpletoc_smooth_enabled', null);
+    $donatelink = '<a href="https://marc.tv/out/donate">' . __('Donate here!', 'simpletoc') . '</a>';
 
-
-    echo '<p>' . __('Enforce these settings globally, ignoring any block-level configurations.', 'simpletoc') . '</p>';
+    echo '<p>' .
+        __('Enforce these settings globally, ignoring any block-level configurations.', 'simpletoc') . '</p><p>' . 
+        __('Think about making a donation if you use any of these features.', 'simpletoc') . ' ' . 
+        $donatelink .
+        '</p>';
 }
 
-function simpletoc_wrapper_enabled_callback() {
+function simpletoc_wrapper_enabled_callback()
+{
     $wrapper_enabled = get_option('simpletoc_wrapper_enabled', false);
 
     if (has_filter('simpletoc_wrapper_enabled')) {
@@ -105,15 +116,18 @@ function simpletoc_wrapper_enabled_callback() {
     }
 }
 
-function simpletoc_accordion_enabled_callback() {
+function simpletoc_accordion_enabled_callback()
+{
     $accordion_enabled = get_option('simpletoc_accordion_enabled', false);
-
+    if ($accordion_enabled) {
+        update_option('simpletoc_wrapper_enabled', true);
+    }
     echo '<input type="checkbox" name="simpletoc_accordion_enabled" id="simpletoc_accordion_enabled" value="1" ' . checked(1, $accordion_enabled, false) . ' />';
-    echo '<label for="simpletoc_accordion_enabled" class="description">' . __('Adds minimal JavaScript and css styles.', 'simpletoc') . '</label>';
-    
+    echo '<label for="simpletoc_accordion_enabled" class="description">' . __('Adds minimal JavaScript and css styles.', 'simpletoc') . ' <strong>' .  __('Notice:', 'simpletoc') . '</strong> ' . __('This will automatically enable the wrapper div.', 'simpletoc') . '</label>';
 }
 
-function simpletoc_smooth_enabled_callback() {
+function simpletoc_smooth_enabled_callback()
+{
     $smooth_enabled = get_option('simpletoc_smooth_enabled', false);
     echo '<input type="checkbox" name="simpletoc_smooth_enabled" id="simpletoc_smooth_enabled" value="1" ' . checked(1, $smooth_enabled, false) . ' />';
     echo '<label for="simpletoc_smooth_enabled" class="description">' . __('Adds the following CSS to the HTML element: "scroll-behavior: smooth;"', 'simpletoc') . '</label>';
