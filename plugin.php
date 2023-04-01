@@ -415,39 +415,20 @@ function generateToc( $headings, $attributes )
   $list = '';
   $html = '';
   $min_depth = 6;
-  $listtype = 'ul';
-  $absolute_url = '';
   $inital_depth = 6;
   $link_class = '';
-  $styles = '';
-  $smooth_css_html = '';
 
-  $title_text = esc_html( trim( $attributes['title_text'] ) );
-  if ( ! $title_text ) {
-    $title_text = __('Table of Contents', 'simpletoc');
-  }
+  $title_text = esc_html( trim( $attributes['title_text'] ) ) ?: __('Table of Contents', 'simpletoc');
 
-  $alignclass = '';
-  if ( isset ($attributes['align']) ) {
-    $align = $attributes['align'];
-    $alignclass = 'align' . $align;
-  }
+  $alignclass = isset($attributes['align']) ? 'align' . $attributes['align'] : '';
 
-  if ($attributes['remove_indent'] == true) {
-    $styles = 'style="padding-left:0;list-style:none;"';
-  }
+  $styles = $attributes['remove_indent'] ? 'style="padding-left:0;list-style:none;"' : '';
 
-  if ($attributes['add_smooth'] == true) {
-    $smooth_css_html = '<style>html { scroll-behavior: smooth; }</style>';
-  }
+  $smooth_css_html = $attributes['add_smooth'] ? '<style>html { scroll-behavior: smooth; }</style>' : '';
 
-  if ($attributes['use_ol'] == true) {
-    $listtype = 'ol';
-  }
+  $listtype = $attributes['use_ol'] ? 'ol' : 'ul';
 
-  if ($attributes['use_absolute_urls'] == true) {
-    $absolute_url = get_permalink();
-  }
+  $absolute_url = $attributes['use_absolute_urls'] ? get_permalink() : '';
 
   foreach ($headings as $line => $headline) {
     if ($min_depth > $headings[$line][2]) {
@@ -495,15 +476,11 @@ function generateToc( $headings, $attributes )
       $next_depth = '';
     }
 
-	// Get class attributes and check for `simpletoc-hidden` to exclude the headline.
-	preg_match( '/class="([^"]+)"/', $headline, $matches );
-	$exclude_headline = false;
-	if ( isset( $matches[1] ) ) {
-		$headline_classes = explode( ' ', $matches[1] );
-		if ( in_array( 'simpletoc-hidden', $headline_classes, true ) ) {
-			$exclude_headline = true;
-		}
-	}
+    // Get class attributes and check for `simpletoc-hidden` to exclude the headline.
+    $exclude_headline = false;
+    if (preg_match( '/class="([^"]+)"/', $headline, $matches ) && strpos($matches[1], 'simpletoc-hidden') !== false) {
+      $exclude_headline = true;
+    }
 
     // skip this heading because a max depth is set.
     if ($this_depth > $attributes['max_level'] or $exclude_headline) {
@@ -586,6 +563,7 @@ function generateToc( $headings, $attributes )
   }
 
   $html .= $accordion_end;
+  
   return $html;
 }
 
