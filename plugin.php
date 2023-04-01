@@ -558,21 +558,7 @@ function generateToc( $headings, $attributes )
   }
 
   if ( $attributes['accordion'] === true || $accordion_enabled === true ) {
-
-    wp_enqueue_script (
-      'simpletoc-accordion',
-      plugin_dir_url( __FILE__ ) . 'src/accordion.js',
-      array(),
-      '5.0.50',
-      true
-    );
-
-    wp_enqueue_style (
-      'simpletoc-accordion',
-       plugin_dir_url( __FILE__ ) . 'src/accordion.css',
-       array(),
-       '5.0.50'
-    );
+    enqueue_accordion_frontend();
 
     $accordion_start = '<button type="button" class="simpletoc-collapsible">' . $title_text . '</button>
     <div class="simpletoc-content">';
@@ -603,4 +589,21 @@ function generateToc( $headings, $attributes )
   return $html;
 }
 
+
+function enqueue_accordion_frontend(){
+  wp_enqueue_script (
+    'simpletoc-accordion',
+    plugin_dir_url( __FILE__ ) . 'src/accordion.js',
+    array(),
+    '5.0.50',
+    true
+  );
+
+  wp_enqueue_style (
+    'simpletoc-accordion',
+     plugin_dir_url( __FILE__ ) . 'src/accordion.css',
+     array(),
+     '5.0.50'
+  );
+}
 
