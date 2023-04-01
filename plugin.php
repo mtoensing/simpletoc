@@ -411,23 +411,14 @@ function addAnchorAttribute( $html )
 
 function generateToc( $headings, $attributes )
 {
-
   $list = '';
   $html = '';
   $min_depth = 6;
   $inital_depth = 6;
   $link_class = '';
-
-  $title_text = esc_html( trim( $attributes['title_text'] ) ) ?: __('Table of Contents', 'simpletoc');
-
   $alignclass = isset($attributes['align']) ? 'align' . $attributes['align'] : '';
-
   $styles = $attributes['remove_indent'] ? 'style="padding-left:0;list-style:none;"' : '';
-
-  $smooth_css_html = $attributes['add_smooth'] ? '<style>html { scroll-behavior: smooth; }</style>' : '';
-
   $listtype = $attributes['use_ol'] ? 'ol' : 'ul';
-
   $absolute_url = $attributes['use_absolute_urls'] ? get_permalink() : '';
 
   foreach ($headings as $line => $headline) {
@@ -446,124 +437,63 @@ function generateToc( $headings, $attributes )
   $itemcount = 0;
 
   foreach ($headings as $line => $headline) {
-
+  
     $title = strip_tags($headline);
-    $page = '';
-    $dom = new \DOMDocument();
-    @$dom->loadHTML($headline, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-    $xpath = new \DOMXPath($dom);
-    $nodes = $xpath->query('//*/@data-page');
-    $accordion_start = '';
-    $accordion_end = '';
-    $html = '';
-    $title_level = $attributes['title_level'];
-
-    if ( isset($nodes[0] ) && $nodes[0]->nodeValue > 1) {
-      $page = $nodes[0]->nodeValue . '/';
-      $absolute_url = get_permalink();
-    }
-
     $link = simpletoc_sanitize_string($title);
-    if (isset($nodes[0]) && !empty($nodes[0]->ownerElement->getAttribute('id'))) {
-      // if the node already has an attribute id, use that as anchor
-      $link = $nodes[0]->ownerElement->getAttribute('id');
-    }
-
     $this_depth = (int) $headings[$line][2];
-    if (isset($headings[$line + 1][2])) {
-      $next_depth = (int) $headings[$line + 1][2];
-    } else {
-      $next_depth = '';
+    $next_depth = isset($headings[$line + 1][2]) ? (int) $headings[$line + 1][2] : '';
+  
+    // Check for `simpletoc-hidden` class to exclude the headline.
+    $exclude_headline = preg_match('/class="([^"]+)"/', $headline, $matches) && strpos($matches[1], 'simpletoc-hidden') !== false;
+  
+    // Skip this heading if max depth is set or the headline is excluded.
+    if ($this_depth > $attributes['max_level'] || $exclude_headline) {
+      goto close_list;
     }
-
-    // Get class attributes and check for `simpletoc-hidden` to exclude the headline.
-    $exclude_headline = false;
-    if (preg_match( '/class="([^"]+)"/', $headline, $matches ) && strpos($matches[1], 'simpletoc-hidden') !== false) {
-      $exclude_headline = true;
-    }
-
-    // skip this heading because a max depth is set.
-    if ($this_depth > $attributes['max_level'] or $exclude_headline) {
-      goto closelist;
-    }
-
-    // skip this heading because a min depth is set.
-    if( $this_depth < $attributes['min_level'] ){
+  
+    // Skip this heading if min depth is set.
+    if ($this_depth < $attributes['min_level']) {
       continue;
     }
-
+  
     $itemcount++;
-
-    // start list
+  
+    // Start list.
     if ($this_depth == $min_depth) {
       $list .= "<li>\n";
     } else {
-      // we are not as base level. Start opening levels until base is reached.
+      // Open levels until base is reached.
       for ($min_depth; $min_depth < $this_depth; $min_depth++) {
         $list .= "\n\t\t<" . $listtype . "><li>\n";
       }
     }
-
-    $list .= "<a " . $link_class . " href=\"" . $absolute_url . esc_html($page) . "#" . $link . "\">" . $title . "</a>";
-
-    closelist:
-    // close lists
-    // check if this is not the last heading
+  
+    // Add link.
+    $list .= "<a " . $link_class . " href=\"" . $absolute_url . "#" . $link . "\">" . $title . "</a>";
+  
+    close_list:
+    // Close lists.
     if ($line != count($headings) - 1) {
-      // do we need to close the door behind us?
+      // Close levels if next depth is smaller.
       if ($min_depth > $next_depth) {
-        // If yes, how many times?
         for ($min_depth; $min_depth > $next_depth; $min_depth--) {
           $list .= "</li></" . $listtype . ">\n";
         }
       }
+      // Close current level if next depth is equal.
       if ($min_depth == $next_depth) {
         $list .= "</li>";
       }
-      // last heading
     } else {
+      // Close levels for last heading.
       for ($inital_depth; $inital_depth < $this_depth; $inital_depth++) {
         $list .= "</li></" . $listtype . ">\n";
       }
     }
   }
-
-  $accordion_enabled = false;
-
-  if (get_option('simpletoc_accordion_enabled') == 1) {
-    $accordion_enabled = true;
-  }
-
-  if ( $attributes['accordion'] === true || $accordion_enabled === true ) {
-    enqueue_accordion_frontend();
-
-    $accordion_start = '<button type="button" class="simpletoc-collapsible">' . $title_text . '</button>
-    <div class="simpletoc-content">';
-
-    /* class simpletoc-content closing div  */
-    $accordion_end = '</div>';
-  }
-
-  $html .= $accordion_start;
-
-
-  if ($attributes['no_title'] === false && $accordion_enabled === false && $attributes['accordion'] === false) {
-    if( $title_level > 0 ) {
-      $html = '<h' . $title_level .' class="simpletoc-title ' . $alignclass . '">' . $title_text . '</h' . $title_level . '>';
-    } else {
-      $html = '<p class="simpletoc-title ' . $alignclass . '"><strong>' . $title_text . '</strong></p>';
-    }
-  }
-  $html .= "<" . $listtype . " class=\"simpletoc-list\" " . $styles ."  " . $alignclass .">\n" . $list . "</li></" . $listtype . ">";
-
-  $html .= $smooth_css_html;
-
-  if($itemcount < 1) {
-    $html = '';
-  }
-
-  $html .= $accordion_end;
   
+  $html = addAccordion($html, $attributes, $itemcount, $listtype, $styles,$alignclass,$list);
+ 
   return $html;
 }
 
@@ -583,5 +513,45 @@ function enqueue_accordion_frontend(){
      array(),
      '5.0.50'
   );
+}
+
+function addAccordion($html,$attributes,$itemcount,$listtype,$styles,$alignclass,$list){
+  $accordion_enabled = get_option('simpletoc_accordion_enabled') == 1;
+  $accordion_start = '';
+  $accordion_end = '';
+  $title_text = esc_html( trim( $attributes['title_text'] ) ) ?: __('Table of Contents', 'simpletoc');
+  $title_level = $attributes['title_level'];
+  $smooth_css_html = $attributes['add_smooth'] ? '<style>html { scroll-behavior: smooth; }</style>' : '';
+
+  if ( $attributes['accordion'] === true || $accordion_enabled === true ) {
+    enqueue_accordion_frontend();
+
+    $accordion_start = '<button type="button" class="simpletoc-collapsible">' . $title_text . '</button>
+    <div class="simpletoc-content">';
+
+    /* class simpletoc-content closing div  */
+    $accordion_end = '</div>';
+  }
+
+  $html .= $accordion_start;
+
+  $showTitle = ($attributes['no_title'] === false && $accordion_enabled === false && $attributes['accordion'] === false);
+  if ($showTitle) {
+    $titleTag = ($title_level > 0) ? "h$title_level" : 'p';
+    $html = "<$titleTag class='simpletoc-title $alignclass'>$title_text</$titleTag>";
+  }
+
+  $html .= "<" . $listtype . " class=\"simpletoc-list\" " . $styles ."  " . $alignclass .">\n" . $list . "</li></" . $listtype . ">";
+
+  $html .= $smooth_css_html;
+
+  if($itemcount < 1) {
+    $html = '';
+  }
+
+  $html .= $accordion_end;
+
+  return $html;
+  
 }
 
