@@ -493,10 +493,19 @@ function generateToc( $headings, $attributes )
   }
   
   $html = addAccordion($html, $attributes, $itemcount, $listtype, $styles,$alignclass,$list);
+
+  $html = addSmooth($html, $attributes);
  
   return $html;
 }
 
+function addSmooth($html, $attributes) {
+    // Add smooth scrolling styles, if enabled by global option or block attribute
+    $isSmoothEnabled = $attributes['add_smooth'] || get_option('simpletoc_smooth_enabled') == 1;
+    $html .= $isSmoothEnabled ? '<style>html { scroll-behavior: smooth; }</style>' : '';
+
+    return $html;
+}
 
 function enqueue_accordion_frontend(){
   wp_enqueue_script (
@@ -541,9 +550,6 @@ function addAccordion($html, $attributes, $itemcount, $listtype, $styles, $align
 
   // Add the table of contents list to the output
   $html .= "<$listtype class='simpletoc-list $styles $alignclass'>\n$list</li></$listtype>";
-
-  // Add smooth scrolling styles, if enabled
-  $html .= $attributes['add_smooth'] ? '<style>html { scroll-behavior: smooth; }</style>' : '';
 
   // If there are no items in the table of contents, return an empty string
   if ($itemcount < 1) {
