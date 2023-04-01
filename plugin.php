@@ -467,12 +467,14 @@ function generateToc($headings, $attributes)
     $item_count++;
   }
 
-  $html = addAccordion($html, $attributes, $item_count, $align_class);
+  $html = addAccordionStart($html, $attributes, $item_count, $align_class);
   $html = addSmooth($html, $attributes);
 
   // Add the table of contents list to the output
   $html .= "<$list_type class='simpletoc-list $align_class' $styles>\n$list</li></$list_type>";
 
+  $html = addAccordionEnd($html, $attributes);
+  
   return $html;
 }
 
@@ -557,7 +559,7 @@ function enqueue_accordion_frontend()
   );
 }
 
-function addAccordion($html, $attributes, $itemcount, $alignclass)
+function addAccordionStart($html, $attributes, $itemcount, $alignclass)
 {
   // Check if accordion is enabled either through the function arguments or the options
   $isAccordionEnabled = $attributes['accordion'] || get_option('simpletoc_accordion_enabled') == 1;
@@ -587,8 +589,17 @@ function addAccordion($html, $attributes, $itemcount, $alignclass)
     return '';
   }
 
-  // Add the accordion end HTML to the output
-  $html .= $accordionEnd;
+  return $html;
+}
+
+function addAccordionEnd($html, $attributes)
+{
+  // Check if accordion is enabled either through the function arguments or the options
+  $isAccordionEnabled = $attributes['accordion'] || get_option('simpletoc_accordion_enabled') == 1;
+
+  if ($isAccordionEnabled) {
+    $html .= '</div>';
+  }
 
   return $html;
 }
