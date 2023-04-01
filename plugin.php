@@ -376,6 +376,7 @@ function simpletoc_plugin_meta($links, $file)
   return $links;
 }
 
+/* Change the ID of the existing headings in the text */
 function addAnchorAttribute($html)
 {
 
@@ -430,6 +431,7 @@ function generateToc($headings, $attributes)
   $item_count = 0;
 
   foreach ($headings as $line => $headline) {
+
     $this_depth = (int)$headings[$line][2];
     $next_depth = isset($headings[$line + 1][2]) ? (int)$headings[$line + 1][2] : '';
 
@@ -447,14 +449,19 @@ function generateToc($headings, $attributes)
     */
 
     $title = strip_tags($headline);
+    $customid = extractID($headline);
     $link = simpletoc_sanitize_string($title);
+
+    if ($customid) {
+      $link = $customid;
+    }
 
     openList($list, $list_type, $min_depth, $this_depth);
 
     $list .= "<a " . $link_class . " href=\"" . $absolute_url . "#" . $link . "\">" . $title . "</a>";
-    
-    if($item_count != 0){
-      closeList($list, $list_type, $min_depth, $next_depth, $line, count($headings) - 1, $initial_depth, $this_depth);  
+
+    if ($item_count != 0) {
+      closeList($list, $list_type, $min_depth, $next_depth, $line, count($headings) - 1, $initial_depth, $this_depth);
     }
 
     $item_count++;
@@ -463,8 +470,8 @@ function generateToc($headings, $attributes)
   $html = addAccordion($html, $attributes, $item_count, $align_class);
   $html = addSmooth($html, $attributes);
 
-   // Add the table of contents list to the output
-   $html .= "<$list_type class='simpletoc-list $align_class' $styles>\n$list</li></$list_type>";
+  // Add the table of contents list to the output
+  $html .= "<$list_type class='simpletoc-list $align_class' $styles>\n$list</li></$list_type>";
 
   return $html;
 }
@@ -504,9 +511,9 @@ function openList(&$list, $list_type, &$min_depth, $this_depth)
   }
 }
 
-function closeList(&$list, $list_type, &$min_depth, $next_depth, $line, $last_line, $initial_depth,$this_depth)
+function closeList(&$list, $list_type, &$min_depth, $next_depth, $line, $last_line, $initial_depth, $this_depth)
 {
-   if ($line != $last_line) {
+  if ($line != $last_line) {
     if ($min_depth > $next_depth) {
       for ($min_depth; $min_depth > $next_depth; $min_depth--) {
         $list .= "</li></" . $list_type . ">\n";
@@ -584,4 +591,15 @@ function addAccordion($html, $attributes, $itemcount, $alignclass)
   $html .= $accordionEnd;
 
   return $html;
+}
+
+function extractID($headline)
+{
+  $pattern = '/id="([^"]*)"/';
+  preg_match($pattern, $headline, $matches);
+  $idValue = $matches[1] ?? false;
+
+  if ($idValue != false) {
+    return  $idValue;
+  }
 }
