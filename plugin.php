@@ -435,12 +435,16 @@ function generateToc($headings, $attributes)
 
     $exclude_headline = shouldExcludeHeadline($headline);
 
-    if ($this_depth > $attributes['max_level'] || $exclude_headline || $this_depth < $attributes['min_level']) {
-      closeList($list, $list_type, $min_depth, $next_depth, $line, count($headings) - 1, $initial_depth, $this_depth);
+    if ($exclude_headline) {
       continue;
     }
 
-    $item_count++;
+    /* Fragment of refactoring??? 
+    if ($this_depth > $attributes['max_level'] || $exclude_headline || $this_depth < $attributes['min_level']) {
+      //closeList($list, $list_type, $min_depth, $next_depth, $line, count($headings) - 1, $initial_depth, $this_depth);
+      continue;
+    }
+    */
 
     $title = strip_tags($headline);
     $link = simpletoc_sanitize_string($title);
@@ -448,8 +452,12 @@ function generateToc($headings, $attributes)
     openList($list, $list_type, $min_depth, $this_depth);
 
     $list .= "<a " . $link_class . " href=\"" . $absolute_url . "#" . $link . "\">" . $title . "</a>";
+    
+    if($item_count != 0){
+      closeList($list, $list_type, $min_depth, $next_depth, $line, count($headings) - 1, $initial_depth, $this_depth);  
+    }
 
-    closeList($list, $list_type, $min_depth, $next_depth, $line, count($headings) - 1, $initial_depth, $this_depth);
+    $item_count++;
   }
 
   $html = addAccordion($html, $attributes, $item_count, $list_type, $styles, $align_class, $list);
@@ -495,14 +503,14 @@ function openList(&$list, $list_type, &$min_depth, $this_depth)
 
 function closeList(&$list, $list_type, &$min_depth, $next_depth, $line, $last_line, $initial_depth,$this_depth)
 {
-  if ($line != $last_line) {
+   if ($line != $last_line) {
     if ($min_depth > $next_depth) {
       for ($min_depth; $min_depth > $next_depth; $min_depth--) {
         $list .= "</li></" . $list_type . ">\n";
       }
     }
     if ($min_depth == $next_depth) {
-      $list .= "</li>";
+      $list .= "</li><!-- <span>meeeh</span> -->";
     }
   } else {
     for ($initial_depth; $initial_depth < $this_depth; $initial_depth++) {
