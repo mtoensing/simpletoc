@@ -168,107 +168,86 @@ function addIDstoBlocks_recursive($blocks)
 
 function render_callback_simpletoc($attributes)
 {
+    $is_backend = defined('REST_REQUEST') && REST_REQUEST && 'edit' === filter_input(INPUT_GET, 'context');
 
-  $is_backend = defined('REST_REQUEST') && true === REST_REQUEST && 'edit' === filter_input(INPUT_GET, 'context');
+    $title_text = $attributes['title_text'] ? esc_html(trim($attributes['title_text'])) : __('Table of Contents', 'simpletoc');
 
-  $title_text = esc_html(trim($attributes['title_text']));
-  if (!$title_text) {
-    $title_text = __('Table of Contents', 'simpletoc');
-  }
-
-  $alignclass = '';
-  if (isset($attributes['align'])) {
-    $align = $attributes['align'];
-    $alignclass = 'align' . $align;
-  }
-
-  $className = '';
-  if (isset($attributes['className'])) {
-    $className = strip_tags(htmlspecialchars($attributes['className']));
-  }
-
-  $pre_html = '';
-  $post_html = '';
-  $title_level = $attributes['title_level'];
-
-  // By default, the wrapper is not enabled because it causes problems on some themes
-  $wrapper_enabled = apply_filters('simpletoc_wrapper_enabled', false);
-
-  // Check if filter was set externally 
-  if (isset($wrapper_enabled)) {
-    // Check if the wrapper is enabled in the settings
-    if (get_option('simpletoc_wrapper_enabled') == 1) {
-      $wrapper_enabled = true;
+    $alignclass = '';
+    if (!empty($attributes['align'])) {
+        $alignclass = 'align' . $attributes['align'];
     }
-  }
 
-  if (get_option('simpletoc_accordion_enabled') == 1) {
-    $wrapper_enabled = true;
-  }
+    $className = !empty($attributes['className']) ? strip_tags($attributes['className']) : '';
 
-  if ($className !== '' || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper']) {
-    $wrapper_attrs = get_block_wrapper_attributes(['class' => 'simpletoc']);
-    $pre_html = '<div role="navigation" aria-label="' . __('Table of Contents', 'simpletoc') . '" ' . $wrapper_attrs . '>';
-    $post_html = '</div>';
-  }
+    $pre_html = '';
+    $post_html = '';
+    $title_level = $attributes['title_level'];
 
-  $post = get_post();
-  if (is_null($post) || is_null($post->post_content)) {
-    $blocks = '';
-  } else {
-    $blocks = parse_blocks($post->post_content);
-  }
+    // By default, the wrapper is not enabled because it causes problems on some themes
+    $wrapper_enabled = apply_filters('simpletoc_wrapper_enabled', false);
 
-  if (empty($blocks)) {
-    $html = '';
-    if ($is_backend == true) {
-      if ($attributes['no_title'] === false) {
-        $html = '<h' . $title_level . ' class="simpletoc-title ' . $alignclass . '">' . $title_text . '</h' . $title_level . '>';
-      }
-
-      $html .= '<p class="components-notice is-warning ' . $alignclass . '">' . __('No blocks found.', 'simpletoc')  . ' ' . __('Save or update post first.', 'simpletoc') . '</p>';
+    // Check if filter was set externally 
+    if (isset($wrapper_enabled)) {
+        // Check if the wrapper is enabled in the settings
+        if (get_option('simpletoc_wrapper_enabled') == 1) {
+            $wrapper_enabled = true;
+        }
     }
-    return $html;
-  }
 
-  $headings = array_reverse(filter_headings_recursive($blocks));
-
-  // enrich headings with pages as a data-attribute
-  $headings = simpletoc_add_pagenumber($blocks, $headings);
-
-  $headings_clean = array_map('trim', $headings);
-
-  if (empty($headings_clean)) {
-    $html = '';
-    if ($is_backend == true) {
-
-      if ($attributes['no_title'] == false) {
-        $html = '<h' . $title_level . ' class="simpletoc-title ' . $alignclass . '">' . $title_text . '</h' . $title_level . '>';
-      }
-
-      $html .= '<p class="components-notice is-warning ' . $alignclass . '">' . __('No headings found.', 'simpletoc') . ' ' . __('Save or update post first.', 'simpletoc') . '</p>';
+    if (get_option('simpletoc_accordion_enabled') == 1) {
+        $wrapper_enabled = true;
     }
-    return $html;
-  }
 
-  $toclist = generateToc($headings_clean, $attributes);
-
-  if (empty($toclist)) {
-    $html = '';
-    if ($is_backend == true) {
-
-      if ($attributes['no_title'] == false) {
-        $html = '<h' . $title_level . ' class="simpletoc-title ' . $alignclass . '">' . $title_text . '</h' . $title_level . '>';
-      }
-
-      $html .= '<p class="components-notice is-warning ' . $alignclass . '">' . __('No headings found.', 'simpletoc') . ' ' . __('Check minimal and maximum level block settings.', 'simpletoc') . '</p>';
+    if (!empty($className) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper']) {
+        $wrapper_attrs = get_block_wrapper_attributes(['class' => 'simpletoc']);
+        $pre_html = '<div role="navigation" aria-label="' . __('Table of Contents', 'simpletoc') . '" ' . $wrapper_attrs . '>';
+        $post_html = '</div>';
     }
-    return $html;
-  }
 
-  $output = $pre_html . $toclist . $post_html;
+    $post = get_post();
+    $blocks = !is_null($post) && !is_null($post->post_content) ? parse_blocks($post->post_content) : '';
 
-  return $output;
+    if (empty($blocks)) {
+        $html = '';
+        if ($is_backend && !$attributes['no_title']) {
+            $html .= sprintf('<h%d class="simpletoc-title %s">%s</h%d>', $title_level, $alignclass, $title_text, $title_level);
+            $html .= sprintf('<p class="components-notice is-warning %s">%s %s</p>', $alignclass, __('No blocks found.', 'simpletoc'), __('Save or update post first.', 'simpletoc'));
+        }
+        return $html;
+    }
+
+    $headings = array_reverse(filter_headings_recursive($blocks));
+
+    // enrich headings with pages as a data-attribute
+    $headings = simpletoc_add_pagenumber($blocks, $headings);
+
+    $headings_clean = array_map('trim', $headings);
+
+    if (empty($headings_clean)) {
+        $html = '';
+        if ($is_backend && !$attributes['no_title']) {
+            $html .= sprintf('<h%d class="simpletoc-title %s">%s</h%d>', $title_level, $alignclass, $title_text, $title_level);
+            $html .= sprintf('<p class="components-notice is-warning %s">%s %s</p>', $alignclass, __('No headings found.', 'simpletoc'), __('Save or update post first.', 'simpletoc'));
+        }
+        return $html;
+    }
+
+    $toclist = generateToc($headings_clean, $attributes);
+
+    if (empty($toclist)) {
+        $html = '';
+        if ($is_backend && !$attributes['no_title']) {
+            $html .= sprintf('<h%d class="simpletoc-title %s">%s</h%d>',
+
+ $title_level, $alignclass, $title_text, $title_level);
+ $html .= sprintf('<p class="components-notice is-warning %s">%s %s</p>', $alignclass, __('No headings found.', 'simpletoc'), __('Check minimal and maximum level block settings.', 'simpletoc'));
+}
+return $html;
+}
+
+$output = $pre_html . $toclist . $post_html;
+
+return $output;
 }
 
 
