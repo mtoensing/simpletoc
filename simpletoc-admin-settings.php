@@ -36,6 +36,7 @@ function simpletoc_settings_page() {
 function simpletoc_register_settings() {
     $wrapper_enabled_filter = apply_filters('simpletoc_wrapper_enabled', null);
     $accordion_enabled_filter = apply_filters('simpletoc_accordion_enabled', null);
+    $smooth_enabled_filter = apply_filters('simpletoc_smooth_enabled', null);
 
     if ($wrapper_enabled_filter === null) {
         register_setting('simpletoc_settings', 'simpletoc_wrapper_enabled');
@@ -43,6 +44,10 @@ function simpletoc_register_settings() {
 
     if ($accordion_enabled_filter === null) {
         register_setting('simpletoc_settings', 'simpletoc_accordion_enabled');
+    }
+
+    if ($smooth_enabled_filter === null) {
+        register_setting('simpletoc_settings', 'simpletoc_smooth_enabled');
     }
 
     add_settings_section(
@@ -67,6 +72,14 @@ function simpletoc_register_settings() {
         'simpletoc',
         'simpletoc_wrapper_section'
     );
+
+    add_settings_field(
+        'simpletoc_smooth_enabled',
+        __('Force smooth scrolling', 'simpletoc'),
+        'simpletoc_smooth_enabled_callback',
+        'simpletoc',
+        'simpletoc_wrapper_section'
+    );
 }
 
 add_action('admin_init', 'simpletoc_register_settings');
@@ -74,6 +87,8 @@ add_action('admin_init', 'simpletoc_register_settings');
 function simpletoc_wrapper_section_callback() {
     $wrapper_enabled_filter = apply_filters('simpletoc_wrapper_enabled', null);
     $accordion_enabled_filter = apply_filters('simpletoc_accordion_enabled', null);
+    $smooth_enabled_filter = apply_filters('simpletoc_smooth_enabled', null);
+
 
     echo '<p>' . __('Enforce these settings globally, ignoring any block-level configurations.', 'simpletoc') . '</p>';
 }
@@ -96,4 +111,10 @@ function simpletoc_accordion_enabled_callback() {
     echo '<input type="checkbox" name="simpletoc_accordion_enabled" id="simpletoc_accordion_enabled" value="1" ' . checked(1, $accordion_enabled, false) . ' />';
     echo '<label for="simpletoc_accordion_enabled" class="description">' . __('Adds minimal JavaScript and css styles.', 'simpletoc') . '</label>';
     
+}
+
+function simpletoc_smooth_enabled_callback() {
+    $smooth_enabled = get_option('simpletoc_smooth_enabled', false);
+    echo '<input type="checkbox" name="simpletoc_smooth_enabled" id="simpletoc_smooth_enabled" value="1" ' . checked(1, $smooth_enabled, false) . ' />';
+    echo '<label for="simpletoc_smooth_enabled" class="description">' . __('Adds the following CSS to the HTML element: "scroll-behavior: smooth;"', 'simpletoc') . '</label>';
 }
