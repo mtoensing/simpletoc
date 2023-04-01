@@ -460,8 +460,11 @@ function generateToc($headings, $attributes)
     $item_count++;
   }
 
-  $html = addAccordion($html, $attributes, $item_count, $list_type, $styles, $align_class, $list);
+  $html = addAccordion($html, $attributes, $item_count, $align_class);
   $html = addSmooth($html, $attributes);
+
+   // Add the table of contents list to the output
+   $html .= "<$list_type class='simpletoc-list $align_class' $styles>\n$list</li></$list_type>";
 
   return $html;
 }
@@ -510,7 +513,7 @@ function closeList(&$list, $list_type, &$min_depth, $next_depth, $line, $last_li
       }
     }
     if ($min_depth == $next_depth) {
-      $list .= "</li><!-- <span>meeeh</span> -->";
+      $list .= "</li>";
     }
   } else {
     for ($initial_depth; $initial_depth < $this_depth; $initial_depth++) {
@@ -547,7 +550,7 @@ function enqueue_accordion_frontend()
   );
 }
 
-function addAccordion($html, $attributes, $itemcount, $listtype, $styles, $alignclass, $list)
+function addAccordion($html, $attributes, $itemcount, $alignclass)
 {
   // Check if accordion is enabled either through the function arguments or the options
   $isAccordionEnabled = $attributes['accordion'] || get_option('simpletoc_accordion_enabled') == 1;
@@ -571,9 +574,6 @@ function addAccordion($html, $attributes, $itemcount, $listtype, $styles, $align
     $titleTag = $attributes['title_level'] > 0 ? "h{$attributes['title_level']}" : 'p';
     $html = "<$titleTag class='simpletoc-title $alignclass'>{$attributes['title_text']}</$titleTag>";
   }
-
-  // Add the table of contents list to the output
-  $html .= "<$listtype class='simpletoc-list $styles $alignclass'>\n$list</li></$listtype>";
 
   // If there are no items in the table of contents, return an empty string
   if ($itemcount < 1) {
