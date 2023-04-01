@@ -486,10 +486,10 @@ function shouldExcludeHeadline($headline, $attributes, $this_depth)
 function openList(&$list, $list_type, &$min_depth, $this_depth)
 {
   if ($this_depth == $min_depth) {
-    $list .= "<li>\n";
+    $list .= "<li>";
   } else {
     for ($min_depth; $min_depth < $this_depth; $min_depth++) {
-      $list .= "\n\t\t<" . $list_type . "><li>\n";
+      $list .= "\n<" . $list_type . "><li>\n";
     }
   }
 }
