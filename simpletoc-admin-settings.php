@@ -54,7 +54,7 @@ function simpletoc_register_settings() {
 
     add_settings_field(
         'simpletoc_wrapper_enabled',
-        __('Wrapper div', 'simpletoc'),
+        __('Force wrapper div', 'simpletoc'),
         'simpletoc_wrapper_enabled_callback',
         'simpletoc',
         'simpletoc_wrapper_section'
@@ -62,7 +62,7 @@ function simpletoc_register_settings() {
 
     add_settings_field(
         'simpletoc_accordion_enabled',
-        __('Accordion', 'simpletoc'),
+        __('Force accordion menu', 'simpletoc'),
         'simpletoc_accordion_enabled_callback',
         'simpletoc',
         'simpletoc_wrapper_section'
@@ -93,11 +93,7 @@ function simpletoc_wrapper_enabled_callback() {
 function simpletoc_accordion_enabled_callback() {
     $accordion_enabled = get_option('simpletoc_accordion_enabled', false);
 
-    if (has_filter('simpletoc_accordion_enabled')) {
-        echo '<input type="checkbox" name="simpletoc_accordion_enabled" id="simpletoc_accordion_enabled" value="1" checked="checked" disabled="disabled" />';
-        echo '<label for="simpletoc_accordion_enabled" class="description">' . __('Setting controlled by "simpletoc_accordion_enabled" filter. Remove filter to adjust setting.', 'simpletoc') . '</label>';
-    } else {
-        echo '<input type="checkbox" name="simpletoc_accordion_enabled" id="simpletoc_accordion_enabled" value="1" ' . checked(1, $accordion_enabled, false) . ' />';
-        echo '<label for="simpletoc_accordion_enabled" class="description">' . __('Enables the accordion feature for all SimpleTOC blocks.', 'simpletoc') . '</label>';
-    }
+    echo '<input type="checkbox" name="simpletoc_accordion_enabled" id="simpletoc_accordion_enabled" value="1" ' . checked(1, $accordion_enabled, false) . ' />';
+    echo '<label for="simpletoc_accordion_enabled" class="description">' . __('Adds minimal JavaScript and css styles.', 'simpletoc') . '</label>';
+    
 }
