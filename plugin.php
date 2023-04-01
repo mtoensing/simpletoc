@@ -420,7 +420,6 @@ function generateToc($headings, $attributes)
   $html = '';
   $min_depth = 6;
   $initial_depth = 6;
-  $link_class = '';
   $align_class = isset($attributes['align']) ? 'align' . $attributes['align'] : '';
   $styles = $attributes['remove_indent'] ? 'style="padding-left:0;list-style:none;"' : '';
   $list_type = $attributes['use_ol'] ? 'ol' : 'ul';
@@ -458,7 +457,7 @@ function generateToc($headings, $attributes)
 
     openList($list, $list_type, $min_depth, $this_depth);
 
-    $list .= "<a " . $link_class . " href=\"" . $absolute_url . "#" . $link . "\">" . $title . "</a>";
+    $list .= "<a href=\"" . $absolute_url . "#" . $link . "\">" . $title . "</a>";
 
     if ($item_count != 0) {
       closeList($list, $list_type, $min_depth, $next_depth, $line, count($headings) - 1, $initial_depth, $this_depth);
@@ -474,7 +473,7 @@ function generateToc($headings, $attributes)
   $html .= "<$list_type class='simpletoc-list $align_class' $styles>\n$list</li></$list_type>";
 
   $html = addAccordionEnd($html, $attributes);
-  
+
   return $html;
 }
 
