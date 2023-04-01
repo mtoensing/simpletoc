@@ -168,86 +168,91 @@ function addIDstoBlocks_recursive($blocks)
 
 function render_callback_simpletoc($attributes)
 {
-    $is_backend = defined('REST_REQUEST') && REST_REQUEST && 'edit' === filter_input(INPUT_GET, 'context');
+  $is_backend = defined('REST_REQUEST') && REST_REQUEST && 'edit' === filter_input(INPUT_GET, 'context');
 
-    $title_text = $attributes['title_text'] ? esc_html(trim($attributes['title_text'])) : __('Table of Contents', 'simpletoc');
+  $title_text = $attributes['title_text'] ? esc_html(trim($attributes['title_text'])) : __('Table of Contents', 'simpletoc');
 
-    $alignclass = '';
-    if (!empty($attributes['align'])) {
-        $alignclass = 'align' . $attributes['align'];
+  $alignclass = '';
+  if (!empty($attributes['align'])) {
+    $alignclass = 'align' . $attributes['align'];
+  }
+
+  $className = !empty($attributes['className']) ? strip_tags($attributes['className']) : '';
+
+  $pre_html = '';
+  $post_html = '';
+  $title_level = $attributes['title_level'];
+
+  // By default, the wrapper is not enabled because it causes problems on some themes
+  $wrapper_enabled = apply_filters('simpletoc_wrapper_enabled', false);
+
+  // Check if filter was set externally 
+  if (isset($wrapper_enabled)) {
+    // Check if the wrapper is enabled in the settings
+    if (get_option('simpletoc_wrapper_enabled') == 1) {
+      $wrapper_enabled = true;
     }
+  }
 
-    $className = !empty($attributes['className']) ? strip_tags($attributes['className']) : '';
+  if (get_option('simpletoc_accordion_enabled') == 1) {
+    $wrapper_enabled = true;
+  }
 
-    $pre_html = '';
-    $post_html = '';
-    $title_level = $attributes['title_level'];
+  if (!empty($className) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper']) {
+    $wrapper_attrs = get_block_wrapper_attributes(['class' => 'simpletoc']);
+    $pre_html = '<div role="navigation" aria-label="' . __('Table of Contents', 'simpletoc') . '" ' . $wrapper_attrs . '>';
+    $post_html = '</div>';
+  }
 
-    // By default, the wrapper is not enabled because it causes problems on some themes
-    $wrapper_enabled = apply_filters('simpletoc_wrapper_enabled', false);
+  $post = get_post();
+  $blocks = !is_null($post) && !is_null($post->post_content) ? parse_blocks($post->post_content) : '';
 
-    // Check if filter was set externally 
-    if (isset($wrapper_enabled)) {
-        // Check if the wrapper is enabled in the settings
-        if (get_option('simpletoc_wrapper_enabled') == 1) {
-            $wrapper_enabled = true;
-        }
+  if (empty($blocks)) {
+    $html = '';
+    if ($is_backend && !$attributes['no_title']) {
+      $html .= sprintf('<h%d class="simpletoc-title %s">%s</h%d>', $title_level, $alignclass, $title_text, $title_level);
+      $html .= sprintf('<p class="components-notice is-warning %s">%s %s</p>', $alignclass, __('No blocks found.', 'simpletoc'), __('Save or update post first.', 'simpletoc'));
     }
+    return $html;
+  }
 
-    if (get_option('simpletoc_accordion_enabled') == 1) {
-        $wrapper_enabled = true;
+  $headings = array_reverse(filter_headings_recursive($blocks));
+
+  // enrich headings with pages as a data-attribute
+  $headings = simpletoc_add_pagenumber($blocks, $headings);
+
+  $headings_clean = array_map('trim', $headings);
+
+  if (empty($headings_clean)) {
+    $html = '';
+    if ($is_backend && !$attributes['no_title']) {
+      $html .= sprintf('<h%d class="simpletoc-title %s">%s</h%d>', $title_level, $alignclass, $title_text, $title_level);
+      $html .= sprintf('<p class="components-notice is-warning %s">%s %s</p>', $alignclass, __('No headings found.', 'simpletoc'), __('Save or update post first.', 'simpletoc'));
     }
+    return $html;
+  }
 
-    if (!empty($className) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper']) {
-        $wrapper_attrs = get_block_wrapper_attributes(['class' => 'simpletoc']);
-        $pre_html = '<div role="navigation" aria-label="' . __('Table of Contents', 'simpletoc') . '" ' . $wrapper_attrs . '>';
-        $post_html = '</div>';
+  $toclist = generateToc($headings_clean, $attributes);
+
+  if (empty($toclist)) {
+    $html = '';
+    if ($is_backend && !$attributes['no_title']) {
+      $html .= sprintf(
+        '<h%d class="simpletoc-title %s">%s</h%d>',
+
+        $title_level,
+        $alignclass,
+        $title_text,
+        $title_level
+      );
+      $html .= sprintf('<p class="components-notice is-warning %s">%s %s</p>', $alignclass, __('No headings found.', 'simpletoc'), __('Check minimal and maximum level block settings.', 'simpletoc'));
     }
+    return $html;
+  }
 
-    $post = get_post();
-    $blocks = !is_null($post) && !is_null($post->post_content) ? parse_blocks($post->post_content) : '';
+  $output = $pre_html . $toclist . $post_html;
 
-    if (empty($blocks)) {
-        $html = '';
-        if ($is_backend && !$attributes['no_title']) {
-            $html .= sprintf('<h%d class="simpletoc-title %s">%s</h%d>', $title_level, $alignclass, $title_text, $title_level);
-            $html .= sprintf('<p class="components-notice is-warning %s">%s %s</p>', $alignclass, __('No blocks found.', 'simpletoc'), __('Save or update post first.', 'simpletoc'));
-        }
-        return $html;
-    }
-
-    $headings = array_reverse(filter_headings_recursive($blocks));
-
-    // enrich headings with pages as a data-attribute
-    $headings = simpletoc_add_pagenumber($blocks, $headings);
-
-    $headings_clean = array_map('trim', $headings);
-
-    if (empty($headings_clean)) {
-        $html = '';
-        if ($is_backend && !$attributes['no_title']) {
-            $html .= sprintf('<h%d class="simpletoc-title %s">%s</h%d>', $title_level, $alignclass, $title_text, $title_level);
-            $html .= sprintf('<p class="components-notice is-warning %s">%s %s</p>', $alignclass, __('No headings found.', 'simpletoc'), __('Save or update post first.', 'simpletoc'));
-        }
-        return $html;
-    }
-
-    $toclist = generateToc($headings_clean, $attributes);
-
-    if (empty($toclist)) {
-        $html = '';
-        if ($is_backend && !$attributes['no_title']) {
-            $html .= sprintf('<h%d class="simpletoc-title %s">%s</h%d>',
-
- $title_level, $alignclass, $title_text, $title_level);
- $html .= sprintf('<p class="components-notice is-warning %s">%s %s</p>', $alignclass, __('No headings found.', 'simpletoc'), __('Check minimal and maximum level block settings.', 'simpletoc'));
-}
-return $html;
-}
-
-$output = $pre_html . $toclist . $post_html;
-
-return $output;
+  return $output;
 }
 
 
@@ -413,18 +418,12 @@ function generateToc($headings, $attributes)
     $this_depth = (int)$headings[$line][2];
     $next_depth = isset($headings[$line + 1][2]) ? (int)$headings[$line + 1][2] : '';
 
-    $exclude_headline = shouldExcludeHeadline($headline);
+    $exclude_headline = shouldExcludeHeadline($headline, $attributes, $this_depth);
 
     if ($exclude_headline) {
-      continue;
-    }
-
-    /* Fragment of refactoring??? 
-    if ($this_depth > $attributes['max_level'] || $exclude_headline || $this_depth < $attributes['min_level']) {
       //closeList($list, $list_type, $min_depth, $next_depth, $line, count($headings) - 1, $initial_depth, $this_depth);
       continue;
     }
-    */
 
     $title = strip_tags($headline);
     $customid = extractID($headline);
@@ -438,9 +437,7 @@ function generateToc($headings, $attributes)
 
     $list .= "<a href=\"" . $absolute_url . "#" . $link . "\">" . $title . "</a>";
 
-    if ($item_count != 0) {
-      closeList($list, $list_type, $min_depth, $next_depth, $line, count($headings) - 1, $initial_depth, $this_depth);
-    }
+    closeList($list, $list_type, $min_depth, $next_depth, $line, count($headings) - 1, $initial_depth, $this_depth);
 
     $item_count++;
   }
@@ -475,9 +472,15 @@ function findMinDepth($headings, $attributes)
   return [$min_depth, $initial_depth];
 }
 
-function shouldExcludeHeadline($headline)
+function shouldExcludeHeadline($headline, $attributes, $this_depth)
 {
-  return preg_match('/class="([^"]+)"/', $headline, $matches) && strpos($matches[1], 'simpletoc-hidden') !== false;
+  $exclude_headline = false;
+  preg_match('/class="([^"]+)"/', $headline, $matches);
+  if (!empty($matches[1]) && strpos($matches[1], 'simpletoc-hidden') !== false) {
+    $exclude_headline = true;
+  }
+
+  return ($this_depth > $attributes['max_level'] || $exclude_headline || $this_depth < $attributes['min_level']);
 }
 
 function openList(&$list, $list_type, &$min_depth, $this_depth)
@@ -496,15 +499,15 @@ function closeList(&$list, $list_type, &$min_depth, $next_depth, $line, $last_li
   if ($line != $last_line) {
     if ($min_depth > $next_depth) {
       for ($min_depth; $min_depth > $next_depth; $min_depth--) {
-        $list .= "</li></" . $list_type . ">\n";
+        $list .= "</li>\n</" . $list_type . ">\n";
       }
     }
     if ($min_depth == $next_depth) {
-      $list .= "</li>";
+      $list .= "</li>\n";
     }
   } else {
     for ($initial_depth; $initial_depth < $this_depth; $initial_depth++) {
-      $list .= "</li></" . $list_type . ">\n";
+      $list .= "</li>\n</" . $list_type . ">\n";
     }
   }
 }
