@@ -515,43 +515,43 @@ function enqueue_accordion_frontend(){
   );
 }
 
-function addAccordion($html,$attributes,$itemcount,$listtype,$styles,$alignclass,$list){
-  $accordion_enabled = get_option('simpletoc_accordion_enabled') == 1;
-  $accordion_start = '';
-  $accordion_end = '';
-  $title_text = esc_html( trim( $attributes['title_text'] ) ) ?: __('Table of Contents', 'simpletoc');
-  $title_level = $attributes['title_level'];
-  $smooth_css_html = $attributes['add_smooth'] ? '<style>html { scroll-behavior: smooth; }</style>' : '';
+function addAccordion($html, $attributes, $itemcount, $listtype, $styles, $alignclass, $list) {
+  // Check if accordion is enabled either through the function arguments or the options
+  $isAccordionEnabled = $attributes['accordion'] || get_option('simpletoc_accordion_enabled') == 1;
 
-  if ( $attributes['accordion'] === true || $accordion_enabled === true ) {
+  // Start and end HTML for accordion, if enabled
+  $accordionStart = $accordionEnd = '';
+  if ($isAccordionEnabled) {
     enqueue_accordion_frontend();
-
-    $accordion_start = '<button type="button" class="simpletoc-collapsible">' . $title_text . '</button>
-    <div class="simpletoc-content">';
-
-    /* class simpletoc-content closing div  */
-    $accordion_end = '</div>';
+    $titleText = esc_html(trim($attributes['title_text'])) ?: __('Table of Contents', 'simpletoc');
+    $accordionStart = "<button type='button' class='simpletoc-collapsible'>$titleText</button>
+      <div class='simpletoc-content'>";
+    $accordionEnd = '</div>';
   }
 
-  $html .= $accordion_start;
+  // Add the accordion start HTML to the output
+  $html .= $accordionStart;
 
-  $showTitle = ($attributes['no_title'] === false && $accordion_enabled === false && $attributes['accordion'] === false);
+  // Add the table of contents title, if not hidden and not in accordion mode
+  $showTitle = !$attributes['no_title'] && !$isAccordionEnabled;
   if ($showTitle) {
-    $titleTag = ($title_level > 0) ? "h$title_level" : 'p';
-    $html = "<$titleTag class='simpletoc-title $alignclass'>$title_text</$titleTag>";
+    $titleTag = $attributes['title_level'] > 0 ? "h{$attributes['title_level']}" : 'p';
+    $html = "<$titleTag class='simpletoc-title $alignclass'>{$attributes['title_text']}</$titleTag>";
   }
 
-  $html .= "<" . $listtype . " class=\"simpletoc-list\" " . $styles ."  " . $alignclass .">\n" . $list . "</li></" . $listtype . ">";
+  // Add the table of contents list to the output
+  $html .= "<$listtype class='simpletoc-list $styles $alignclass'>\n$list</li></$listtype>";
 
-  $html .= $smooth_css_html;
+  // Add smooth scrolling styles, if enabled
+  $html .= $attributes['add_smooth'] ? '<style>html { scroll-behavior: smooth; }</style>' : '';
 
-  if($itemcount < 1) {
-    $html = '';
+  // If there are no items in the table of contents, return an empty string
+  if ($itemcount < 1) {
+    return '';
   }
 
-  $html .= $accordion_end;
+  // Add the accordion end HTML to the output
+  $html .= $accordionEnd;
 
   return $html;
-  
 }
-
