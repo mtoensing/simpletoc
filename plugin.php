@@ -440,7 +440,7 @@ function generateToc($headings, $attributes)
       continue;
     }
 
-    $title = strip_tags($headline);
+    $title = trim(strip_tags($headline));
     $customid = extractID($headline);
     $link = simpletoc_sanitize_string($title);
 
@@ -462,7 +462,18 @@ function generateToc($headings, $attributes)
 
   // Add the table of contents list to the output if the list is not empty.
   if( !empty($list) ) {
-    $html .= "<$list_type class='simpletoc-list $align_class' $styles>\n$list</li></$list_type>";
+
+    $html_class = 'simpletoc-list';
+    if ( ! empty( $align_class ) ) {
+        $html_class .= " $align_class";
+    }
+
+    $html_style = '';
+    if ( ! empty( $styles ) ) {
+        $html_style = " $styles";
+    }
+
+    $html .= "<$list_type class=\"$html_class\"$html_style>\n$list</li></$list_type>";
   }
 
   $html = addAccordionEnd($html, $attributes);
@@ -633,7 +644,14 @@ function addAccordionStart($html, $attributes, $itemcount, $alignclass)
   $showTitle = !$attributes['no_title'] && !$isAccordionEnabled;
   if ($showTitle) {
     $titleTag = $attributes['title_level'] > 0 ? "h{$attributes['title_level']}" : 'p';
-    $html = "<$titleTag class='simpletoc-title $alignclass'>{$attributes['title_text']}</$titleTag>";
+    $html_class = 'simpletoc-title';
+
+    if ( ! empty( $alignclass ) ) {
+        $html_class .= " $alignclass";
+    }
+
+    $html = "<$titleTag class=\"$html_class\">{$attributes["title_text"]}</$titleTag>\n";
+
   }
 
   // If there are no items in the table of contents, return an empty string
