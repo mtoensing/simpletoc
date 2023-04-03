@@ -194,22 +194,21 @@ function render_callback_simpletoc($attributes)
     $post = get_post();
     $blocks = !is_null($post) && !is_null($post->post_content) ? parse_blocks($post->post_content) : '';
 
-    if (empty($blocks)) {
-        return get_empty_blocks_message($is_backend, $attributes, $title_level, $alignclass, $title_text, __('No blocks found.', 'simpletoc'), __('Save or update post first.', 'simpletoc'));
-    }
-
     $headings = array_reverse(filter_headings_recursive($blocks));
     $headings = simpletoc_add_pagenumber($blocks, $headings);
     $headings_clean = array_map('trim', $headings);
+    $toclist = generateToc($headings_clean, $attributes);
+
+    if (empty($blocks)) {
+      return get_empty_blocks_message($is_backend, $attributes, $title_level, $alignclass, $title_text, __('No blocks found.', 'simpletoc'), __('Save or update post first.', 'simpletoc'));
+    }
 
     if (empty($headings_clean)) {
         return get_empty_blocks_message($is_backend, $attributes, $title_level, $alignclass, $title_text, __('No headings found.', 'simpletoc'), __('Save or update post first.', 'simpletoc'));
     }
 
-    $toclist = generateToc($headings_clean, $attributes);
-
     if (empty($toclist)) {
-        return get_empty_blocks_message($is_backend, $attributes, $title_level, $alignclass, $title_text, __('No headings found.', 'simpletoc'), __('Check minimal and maximum level block settings.', 'simpletoc'));
+      return get_empty_blocks_message($is_backend, $attributes, $title_level, $alignclass, $title_text, __('No headings found.', 'simpletoc'), __('Check minimal and maximum level block settings.', 'simpletoc'));
     }
 
     return $pre_html . $toclist . $post_html;
@@ -233,7 +232,7 @@ function get_empty_blocks_message($is_backend, $attributes, $title_level, $align
 {
     $html = '';
 
-    if ($is_backend && !$attributes['no_title']) {
+    if ($is_backend) {
         $html .= sprintf('<h%d class="simpletoc-title %s">%s</h%d>', $title_level, $alignclass, $title_text, $title_level);
         $html .= sprintf('<p class="components-notice is-warning %s">%s %s</p>', $alignclass, $warning_text1, $warning_text2);
     }
@@ -460,8 +459,10 @@ function generateToc($headings, $attributes)
   $html = addAccordionStart($html, $attributes, $item_count, $align_class);
   $html = addSmooth($html, $attributes);
 
-  // Add the table of contents list to the output
-  $html .= "<$list_type class='simpletoc-list $align_class' $styles>\n$list</li></$list_type>";
+  // Add the table of contents list to the output if the list is not empty.
+  if( !empty($list) ) {
+    $html .= "<$list_type class='simpletoc-list $align_class' $styles>\n$list</li></$list_type>";
+  }
 
   $html = addAccordionEnd($html, $attributes);
 
