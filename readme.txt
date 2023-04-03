@@ -23,10 +23,10 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 
 = Features =
 
+* Designed for Gutenberg.
 * Zero configuration: Add the SimpleTOC block to your post and that's it. 
 * Minimal and valid HTML output.
 * No JavaScript or CSS added. Unless you activate the accordion menu.
-* Designed for Gutenberg.
 * Style SimpleTOC with Gutenberg's native group styling options.
 * Inherits the style of your theme.
 * Smooth scrolling effect using CSS. 
@@ -51,7 +51,7 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 == Changelog ==
 
 = 6.0.0 =
-* Feature: Added SimpleTOC global settings to override individual block settings. 
+* Feature: Added SimpleTOC global settings to override individual block configuration. 
 * Refactored php code using artifical intelligence (ChatGPT4).
 
 = 5.0.56 =
