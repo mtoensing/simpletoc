@@ -20,9 +20,9 @@ require_once plugin_dir_path(__FILE__) . 'simpletoc-admin-settings.php';
  * If a WordPress function does not exist, it means that the file has not been run by WordPress.
  */
 if (!function_exists('add_filter')) {
-  header('Status: 403 Forbidden');
-  header('HTTP/1.1 403 Forbidden');
-  exit;
+    header('Status: 403 Forbidden');
+    header('HTTP/1.1 403 Forbidden');
+    exit;
 }
 
 /**
@@ -34,15 +34,15 @@ if (!function_exists('add_filter')) {
 function register_simpletoc_block()
 {
 
-  if (function_exists('wp_set_script_translations')) {
-    wp_set_script_translations('simpletoc-toc-editor-script', 'simpletoc');
-  }
+    if (function_exists('wp_set_script_translations')) {
+        wp_set_script_translations('simpletoc-toc-editor-script', 'simpletoc');
+    }
 
-  add_filter('plugin_row_meta', __NAMESPACE__ . '\\simpletoc_plugin_meta', 10, 2);
+    add_filter('plugin_row_meta', __NAMESPACE__ . '\\simpletoc_plugin_meta', 10, 2);
 
-  register_block_type(__DIR__ . '/build', [
+    register_block_type(__DIR__ . '/build', [
     'render_callback' => __NAMESPACE__ . '\\render_callback_simpletoc'
-  ]);
+    ]);
 }
 
 add_action('init', 'register_simpletoc_block');
@@ -62,41 +62,40 @@ add_action('init', 'register_simpletoc_block');
  * @return string|false|null JSON string
  */
 add_filter('load_script_translations', function ($translations, $file, $handle, $domain) {
-  if ('simpletoc' === $domain && $translations) {
-    // List of translations that we inject into the block-editor JS.
-    $dynamic_translations = [
-      'Table of Contents' => __('Table of Contents', 'simpletoc'),
-    ];
+    if ('simpletoc' === $domain && $translations) {
+        // List of translations that we inject into the block-editor JS.
+        $dynamic_translations = [
+        'Table of Contents' => __('Table of Contents', 'simpletoc'),
+        ];
 
-    $changed = false;
-    $obj = json_decode($translations, true);
+        $changed = false;
+        $obj = json_decode($translations, true);
 
-    // Confirm that the translation JSON is valid.
-    if (isset($obj['locale_data']) && isset($obj['locale_data']['messages'])) {
-      $messages = $obj['locale_data']['messages'];
+        // Confirm that the translation JSON is valid.
+        if (isset($obj['locale_data']) && isset($obj['locale_data']['messages'])) {
+            $messages = $obj['locale_data']['messages'];
 
-      // Inject dynamic translations, when needed.
-      foreach ($dynamic_translations as $key => $locale) {
-        if (
-          empty($messages[$key])
-          || !is_array($messages[$key])
-          || !array_key_exists(0, $messages[$key])
-          || $locale !== $messages[$key][0]
-        ) {
-          $messages[$key] = [$locale];
-          $changed = true;
+            // Inject dynamic translations, when needed.
+            foreach ($dynamic_translations as $key => $locale) {
+                if (empty($messages[$key])
+                || !is_array($messages[$key])
+                || !array_key_exists(0, $messages[$key])
+                || $locale !== $messages[$key][0]
+                ) {
+                    $messages[$key] = [$locale];
+                    $changed = true;
+                }
+            }
+
+            // Only modify the translations string when locales did change.
+            if ($changed) {
+                $obj['locale_data']['messages'] = $messages;
+                $translations = wp_json_encode($obj);
+            }
         }
-      }
-
-      // Only modify the translations string when locales did change.
-      if ($changed) {
-        $obj['locale_data']['messages'] = $messages;
-        $translations = wp_json_encode($obj);
-      }
     }
-  }
 
-  return $translations;
+    return $translations;
 }, 10, 4);
 
 /**
@@ -111,11 +110,11 @@ add_filter('load_script_translations', function ($translations, $file, $handle, 
  * @return array Modified settings array.
  */
 add_filter('block_type_metadata_settings', function ($settings, $metadata) {
-  if ('simpletoc/toc' === $metadata['name']) {
-    $settings['attributes']['title_text']['default'] = __('Table of Contents', 'simpletoc');
-  }
+    if ('simpletoc/toc' === $metadata['name']) {
+        $settings['attributes']['title_text']['default'] = __('Table of Contents', 'simpletoc');
+    }
 
-  return $settings;
+    return $settings;
 }, 10, 2);
 
 /**
@@ -124,8 +123,8 @@ add_filter('block_type_metadata_settings', function ($settings, $metadata) {
  * @param array TOC plugins.
  */
 add_filter('rank_math/researches/toc_plugins', function ($toc_plugins) {
-  $toc_plugins['simpletoc/plugin.php'] = 'SimpleTOC';
-  return $toc_plugins;
+    $toc_plugins['simpletoc/plugin.php'] = 'SimpleTOC';
+    return $toc_plugins;
 });
 
 /**
@@ -136,13 +135,13 @@ add_filter('rank_math/researches/toc_plugins', function ($toc_plugins) {
 function simpletoc_add_ids_to_content($content)
 {
 
-  $blocks = parse_blocks($content);
+    $blocks = parse_blocks($content);
 
-  $blocks = add_ids_to_blocks_recursive($blocks);
+    $blocks = add_ids_to_blocks_recursive($blocks);
 
-  $content = serialize_blocks($blocks);
+    $content = serialize_blocks($blocks);
 
-  return $content;
+    return $content;
 }
 
 add_filter('the_content', 'simpletoc_add_ids_to_content', 1);
@@ -155,21 +154,21 @@ add_filter('the_content', 'simpletoc_add_ids_to_content', 1);
 function add_ids_to_blocks_recursive($blocks)
 {
 
-  foreach ($blocks as &$block) {
-    if (isset($block['blockName']) && ($block['blockName'] === 'core/heading' || $block['blockName'] === 'generateblocks/headline') && isset($block['innerHTML']) && isset($block['innerContent']) && isset($block['innerContent'][0])) {
-      $block['innerHTML'] = add_anchor_attribute($block['innerHTML']);
-      $block['innerContent'][0] = add_anchor_attribute($block['innerContent'][0]);
-    } else if (isset($block['attrs']['ref'])) {
-      // search in reusable blocks (this is not finished because I ran out of ideas.)
-      // $reusable_block_id = $block['attrs']['ref'];
-      // $reusable_block_content = parse_blocks(get_post($reusable_block_id)->post_content);
-    } else if (!empty($block['innerBlocks'])) {
-      // search in groups
-      $block['innerBlocks'] = add_ids_to_blocks_recursive($block['innerBlocks']);
+    foreach ($blocks as &$block) {
+        if (isset($block['blockName']) && ($block['blockName'] === 'core/heading' || $block['blockName'] === 'generateblocks/headline') && isset($block['innerHTML']) && isset($block['innerContent']) && isset($block['innerContent'][0])) {
+            $block['innerHTML'] = add_anchor_attribute($block['innerHTML']);
+            $block['innerContent'][0] = add_anchor_attribute($block['innerContent'][0]);
+        } elseif (isset($block['attrs']['ref'])) {
+            // search in reusable blocks (this is not finished because I ran out of ideas.)
+            // $reusable_block_id = $block['attrs']['ref'];
+            // $reusable_block_content = parse_blocks(get_post($reusable_block_id)->post_content);
+        } elseif (!empty($block['innerBlocks'])) {
+            // search in groups
+            $block['innerBlocks'] = add_ids_to_blocks_recursive($block['innerBlocks']);
+        }
     }
-  }
 
-  return $blocks;
+    return $blocks;
 }
 
 /**
@@ -179,39 +178,39 @@ function add_ids_to_blocks_recursive($blocks)
  */
 function render_callback_simpletoc($attributes)
 {
-  $is_backend = defined('REST_REQUEST') && REST_REQUEST && 'edit' === filter_input(INPUT_GET, 'context');
-  $title_text = $attributes['title_text'] ? esc_html(trim($attributes['title_text'])) : __('Table of Contents', 'simpletoc');
-  $alignclass = !empty($attributes['align']) ? 'align' . $attributes['align'] : '';
-  $className = !empty($attributes['className']) ? strip_tags($attributes['className']) : '';
-  $title_level = $attributes['title_level'];
+    $is_backend = defined('REST_REQUEST') && REST_REQUEST && 'edit' === filter_input(INPUT_GET, 'context');
+    $title_text = $attributes['title_text'] ? esc_html(trim($attributes['title_text'])) : __('Table of Contents', 'simpletoc');
+    $alignclass = !empty($attributes['align']) ? 'align' . $attributes['align'] : '';
+    $className = !empty($attributes['className']) ? strip_tags($attributes['className']) : '';
+    $title_level = $attributes['title_level'];
 
-  $wrapper_enabled = apply_filters('simpletoc_wrapper_enabled', false) || get_option('simpletoc_wrapper_enabled') == 1 || get_option('simpletoc_accordion_enabled') == 1;
+    $wrapper_enabled = apply_filters('simpletoc_wrapper_enabled', false) || get_option('simpletoc_wrapper_enabled') == 1 || get_option('simpletoc_accordion_enabled') == 1;
 
-  $wrapper_attrs = get_block_wrapper_attributes(['class' => 'simpletoc']);
-  $pre_html = (!empty($className) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper']) ? '<div role="navigation" aria-label="' . __('Table of Contents', 'simpletoc') . '" ' . $wrapper_attrs . '>' : '';
-  $post_html = (!empty($className) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper']) ? '</div>' : '';
+    $wrapper_attrs = get_block_wrapper_attributes(['class' => 'simpletoc']);
+    $pre_html = (!empty($className) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper']) ? '<div role="navigation" aria-label="' . __('Table of Contents', 'simpletoc') . '" ' . $wrapper_attrs . '>' : '';
+    $post_html = (!empty($className) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper']) ? '</div>' : '';
 
-  $post = get_post();
-  $blocks = !is_null($post) && !is_null($post->post_content) ? parse_blocks($post->post_content) : '';
+    $post = get_post();
+    $blocks = !is_null($post) && !is_null($post->post_content) ? parse_blocks($post->post_content) : '';
 
-  $headings = array_reverse(filter_headings_recursive($blocks));
-  $headings = simpletoc_add_pagenumber($blocks, $headings);
-  $headings_clean = array_map('trim', $headings);
-  $toclist = generate_toc($headings_clean, $attributes);
+    $headings = array_reverse(filter_headings_recursive($blocks));
+    $headings = simpletoc_add_pagenumber($blocks, $headings);
+    $headings_clean = array_map('trim', $headings);
+    $toclist = generate_toc($headings_clean, $attributes);
 
-  if (empty($blocks)) {
-    return get_empty_blocks_message($is_backend, $attributes, $title_level, $alignclass, $title_text, __('No blocks found.', 'simpletoc'), __('Save or update post first.', 'simpletoc'));
-  }
+    if (empty($blocks)) {
+        return get_empty_blocks_message($is_backend, $attributes, $title_level, $alignclass, $title_text, __('No blocks found.', 'simpletoc'), __('Save or update post first.', 'simpletoc'));
+    }
 
-  if (empty($headings_clean)) {
-    return get_empty_blocks_message($is_backend, $attributes, $title_level, $alignclass, $title_text, __('No headings found.', 'simpletoc'), __('Save or update post first.', 'simpletoc'));
-  }
+    if (empty($headings_clean)) {
+        return get_empty_blocks_message($is_backend, $attributes, $title_level, $alignclass, $title_text, __('No headings found.', 'simpletoc'), __('Save or update post first.', 'simpletoc'));
+    }
 
-  if (empty($toclist)) {
-    return get_empty_blocks_message($is_backend, $attributes, $title_level, $alignclass, $title_text, __('No headings found.', 'simpletoc'), __('Check minimal and maximum level block settings.', 'simpletoc'));
-  }
+    if (empty($toclist)) {
+        return get_empty_blocks_message($is_backend, $attributes, $title_level, $alignclass, $title_text, __('No headings found.', 'simpletoc'), __('Check minimal and maximum level block settings.', 'simpletoc'));
+    }
 
-  return $pre_html . $toclist . $post_html;
+    return $pre_html . $toclist . $post_html;
 }
 
 /**
@@ -229,14 +228,14 @@ function render_callback_simpletoc($attributes)
  */
 function get_empty_blocks_message($is_backend, $attributes, $title_level, $alignclass, $title_text, $warning_text1, $warning_text2)
 {
-  $html = '';
+    $html = '';
 
-  if ($is_backend) {
-    $html .= sprintf('<h%d class="simpletoc-title %s">%s</h%d>', $title_level, $alignclass, $title_text, $title_level);
-    $html .= sprintf('<p class="components-notice is-warning %s">%s %s</p>', $alignclass, $warning_text1, $warning_text2);
-  }
+    if ($is_backend) {
+        $html .= sprintf('<h%d class="simpletoc-title %s">%s</h%d>', $title_level, $alignclass, $title_text, $title_level);
+        $html .= sprintf('<p class="components-notice is-warning %s">%s %s</p>', $alignclass, $warning_text1, $warning_text2);
+    }
 
-  return $html;
+    return $html;
 }
 
 /**
@@ -247,25 +246,24 @@ function get_empty_blocks_message($is_backend, $attributes, $title_level, $align
 */
 function simpletoc_add_pagenumber($blocks, $headings)
 {
-  $pages = 1;
+    $pages = 1;
 
-  foreach ($blocks as $block => $innerBlock) {
-
-    // count nextpage blocks
-    if (isset($blocks[$block]['blockName']) && $blocks[$block]['blockName'] === 'core/nextpage') {
-      $pages++;
-    }
-
-    if (isset($blocks[$block]['blockName']) && $blocks[$block]["blockName"] === 'core/heading') {
-      // make sure its a headline.
-      foreach ($headings as $heading => &$innerHeading) {
-        if ($innerHeading == $blocks[$block]["innerHTML"]) {
-          $innerHeading = preg_replace("/(<h1|<h2|<h3|<h4|<h5|<h6)/i", '$1 data-page="' . $pages . '"', $blocks[$block]["innerHTML"]);
+    foreach ($blocks as $block => $innerBlock) {
+        // count nextpage blocks
+        if (isset($blocks[$block]['blockName']) && $blocks[$block]['blockName'] === 'core/nextpage') {
+            $pages++;
         }
-      }
+
+        if (isset($blocks[$block]['blockName']) && $blocks[$block]["blockName"] === 'core/heading') {
+            // make sure its a headline.
+            foreach ($headings as $heading => &$innerHeading) {
+                if ($innerHeading == $blocks[$block]["innerHTML"]) {
+                    $innerHeading = preg_replace("/(<h1|<h2|<h3|<h4|<h5|<h6)/i", '$1 data-page="' . $pages . '"', $blocks[$block]["innerHTML"]);
+                }
+            }
+        }
     }
-  }
-  return $headings;
+    return $headings;
 }
 
 /**
@@ -276,46 +274,43 @@ function simpletoc_add_pagenumber($blocks, $headings)
 */
 function filter_headings_recursive(array $blocks): array
 {
-  $arr            = [];
-  // allow developers to ignore specific blocks
-  $ignored_blocks = apply_filters('simpletoc_excluded_blocks', []);
+    $arr            = [];
+    // allow developers to ignore specific blocks
+    $ignored_blocks = apply_filters('simpletoc_excluded_blocks', []);
 
-  foreach ($blocks as $innerBlock) {
+    foreach ($blocks as $innerBlock) {
+        if (is_array($innerBlock)) {
+            // if block is ignored, skip
+            if (isset($innerBlock['blockName']) && in_array($innerBlock['blockName'], $ignored_blocks)) {
+                continue;
+            }
 
-    if (is_array($innerBlock)) {
+            if (isset($innerBlock['attrs']['ref'])) {
+                // search in reusable blocks
+                $e_arr = parse_blocks(get_post($innerBlock['attrs']['ref'])->post_content);
+                $arr   = array_merge(filter_headings_recursive($e_arr), $arr);
+            } else {
+                // search in groups
+                $arr = array_merge(filter_headings_recursive($innerBlock), $arr);
+            }
+        } else {
+            if (isset($blocks['blockName']) && ($blocks['blockName'] === 'core/heading') && $innerBlock !== 'core/heading') {
+                // make sure it's a headline.
+                if (preg_match("/(<h1|<h2|<h3|<h4|<h5|<h6)/i", $innerBlock)) {
+                    $arr[] = $innerBlock;
+                }
+            }
 
-      // if block is ignored, skip
-      if (isset($innerBlock['blockName']) && in_array($innerBlock['blockName'], $ignored_blocks)) {
-        continue;
-      }
-
-      if (isset($innerBlock['attrs']['ref'])) {
-        // search in reusable blocks
-        $e_arr = parse_blocks(get_post($innerBlock['attrs']['ref'])->post_content);
-        $arr   = array_merge(filter_headings_recursive($e_arr), $arr);
-      } else {
-        // search in groups
-        $arr = array_merge(filter_headings_recursive($innerBlock), $arr);
-      }
-    } else {
-
-      if (isset($blocks['blockName']) && ($blocks['blockName'] === 'core/heading') && $innerBlock !== 'core/heading') {
-        // make sure it's a headline.
-        if (preg_match("/(<h1|<h2|<h3|<h4|<h5|<h6)/i", $innerBlock)) {
-          $arr[] = $innerBlock;
+            if (isset($blocks['blockName']) && ($blocks['blockName'] === 'generateblocks/headline') && $innerBlock !== 'core/heading') {
+                // make sure it's a headline.
+                if (preg_match("/(<h1|<h2|<h3|<h4|<h5|<h6)/i", $innerBlock)) {
+                    $arr[] = $innerBlock;
+                }
+            }
         }
-      }
-
-      if (isset($blocks['blockName']) && ($blocks['blockName'] === 'generateblocks/headline') && $innerBlock !== 'core/heading') {
-        // make sure it's a headline.
-        if (preg_match("/(<h1|<h2|<h3|<h4|<h5|<h6)/i", $innerBlock)) {
-          $arr[] = $innerBlock;
-        }
-      }
     }
-  }
 
-  return $arr;
+    return $arr;
 }
 
 /**
@@ -326,17 +321,17 @@ function filter_headings_recursive(array $blocks): array
 */
 function simpletoc_sanitize_string($string)
 {
-  // remove punctuation
-  $zero_punctuation = preg_replace("/\p{P}/u", "", $string);
-  // remove non-breaking spaces
-  $html_wo_nbs = str_replace("&nbsp;", " ", $zero_punctuation);
-  // remove umlauts and accents
-  $string_without_accents = remove_accents($html_wo_nbs);
-  // Sanitizes a title, replacing whitespace and a few other characters with dashes.
-  $sanitized_string = sanitize_title_with_dashes($string_without_accents);
-  // Encode for use in an url
-  $urlencoded = urlencode($sanitized_string);
-  return $urlencoded;
+    // remove punctuation
+    $zero_punctuation = preg_replace("/\p{P}/u", "", $string);
+    // remove non-breaking spaces
+    $html_wo_nbs = str_replace("&nbsp;", " ", $zero_punctuation);
+    // remove umlauts and accents
+    $string_without_accents = remove_accents($html_wo_nbs);
+    // Sanitizes a title, replacing whitespace and a few other characters with dashes.
+    $sanitized_string = sanitize_title_with_dashes($string_without_accents);
+    // Encode for use in an url
+    $urlencoded = urlencode($sanitized_string);
+    return $urlencoded;
 }
 
 /**
@@ -348,13 +343,13 @@ function simpletoc_sanitize_string($string)
 function simpletoc_plugin_meta($links, $file)
 {
 
-  if (false !== strpos($file, 'simpletoc')) {
-    $links = array_merge($links, array('<a href="https://wordpress.org/support/plugin/simpletoc">' . __('Support', 'simpletoc') . '</a>'));
-    $links = array_merge($links, array('<a href="https://marc.tv/out/donate">' . __('Donate', 'simpletoc') . '</a>'));
-    $links = array_merge($links, array('<a href="https://wordpress.org/support/plugin/simpletoc/reviews/#new-post">' . __('Write a review', 'simpletoc') . '&nbsp;⭐️⭐️⭐️⭐️⭐️</a>'));
-  }
+    if (false !== strpos($file, 'simpletoc')) {
+        $links = array_merge($links, array('<a href="https://wordpress.org/support/plugin/simpletoc">' . __('Support', 'simpletoc') . '</a>'));
+        $links = array_merge($links, array('<a href="https://marc.tv/out/donate">' . __('Donate', 'simpletoc') . '</a>'));
+        $links = array_merge($links, array('<a href="https://wordpress.org/support/plugin/simpletoc/reviews/#new-post">' . __('Write a review', 'simpletoc') . '&nbsp;⭐️⭐️⭐️⭐️⭐️</a>'));
+    }
 
-  return $links;
+    return $links;
 }
 
 /**
@@ -365,38 +360,38 @@ function simpletoc_plugin_meta($links, $file)
 function add_anchor_attribute($html)
 {
 
-  // remove non-breaking space entites from input HTML
-  $html_wo_nbs = str_replace("&nbsp;", " ", $html);
+    // remove non-breaking space entites from input HTML
+    $html_wo_nbs = str_replace("&nbsp;", " ", $html);
 
-  // Thank you Nick Diego
-  if (!$html_wo_nbs) {
-    return $html;
-  }
-
-  libxml_use_internal_errors(TRUE);
-  $dom = new \DOMDocument();
-  @$dom->loadHTML('<?xml version="1.0" encoding="UTF-8"?>' . "\n" . $html_wo_nbs, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-
-  // use xpath to select the Heading html tags.
-  $xpath = new \DOMXPath($dom);
-  $tags = $xpath->evaluate("//*[self::h1 or self::h2 or self::h3 or self::h4 or self::h5 or self::h6]");
-
-  // Loop through all the found tags
-  foreach ($tags as $tag) {
-    // if tag already has an attribute "id" defined, no need for creating a new one
-    if (!empty($tag->getAttribute('id'))) {
-      continue;
+    // Thank you Nick Diego
+    if (!$html_wo_nbs) {
+        return $html;
     }
-    // Set id attribute
-    $heading_text = strip_tags($html);
-    $anchor = simpletoc_sanitize_string($heading_text);
-    $tag->setAttribute("id", $anchor);
-  }
 
-  // Save the HTML changes
-  $content = $dom->saveHTML($dom->documentElement);
+    libxml_use_internal_errors(true);
+    $dom = new \DOMDocument();
+    @$dom->loadHTML('<?xml version="1.0" encoding="UTF-8"?>' . "\n" . $html_wo_nbs, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
-  return $content;
+    // use xpath to select the Heading html tags.
+    $xpath = new \DOMXPath($dom);
+    $tags = $xpath->evaluate("//*[self::h1 or self::h2 or self::h3 or self::h4 or self::h5 or self::h6]");
+
+    // Loop through all the found tags
+    foreach ($tags as $tag) {
+        // if tag already has an attribute "id" defined, no need for creating a new one
+        if (!empty($tag->getAttribute('id'))) {
+            continue;
+        }
+        // Set id attribute
+        $heading_text = strip_tags($html);
+        $anchor = simpletoc_sanitize_string($heading_text);
+        $tag->setAttribute("id", $anchor);
+    }
+
+    // Save the HTML changes
+    $content = $dom->saveHTML($dom->documentElement);
+
+    return $content;
 }
 
 /**
@@ -407,72 +402,70 @@ function add_anchor_attribute($html)
 */
 function generate_toc($headings, $attributes)
 {
-  $list = '';
-  $html = '';
-  $min_depth = 6;
-  $initial_depth = 6;
-  $align_class = isset($attributes['align']) ? 'align' . $attributes['align'] : '';
-  $styles = $attributes['remove_indent'] ? 'style="padding-left:0;list-style:none;"' : '';
-  $list_type = $attributes['use_ol'] ? 'ol' : 'ul';
-  $global_absolut_urls_enabled = get_option('simpletoc_absolute_urls_enabled', false);
-  $absolute_url = $attributes['use_absolute_urls'] || $global_absolut_urls_enabled ? get_permalink() : '';
+    $list = '';
+    $html = '';
+    $min_depth = 6;
+    $initial_depth = 6;
+    $align_class = isset($attributes['align']) ? 'align' . $attributes['align'] : '';
+    $styles = $attributes['remove_indent'] ? 'style="padding-left:0;list-style:none;"' : '';
+    $list_type = $attributes['use_ol'] ? 'ol' : 'ul';
+    $global_absolut_urls_enabled = get_option('simpletoc_absolute_urls_enabled', false);
+    $absolute_url = $attributes['use_absolute_urls'] || $global_absolut_urls_enabled ? get_permalink() : '';
 
-  list($min_depth, $initial_depth) = find_min_depth($headings, $attributes);
+    list($min_depth, $initial_depth) = find_min_depth($headings, $attributes);
 
-  $item_count = 0;
+    $item_count = 0;
 
-  foreach ($headings as $line => $headline) {
+    foreach ($headings as $line => $headline) {
+        $this_depth = (int)$headings[$line][2];
+        $next_depth = isset($headings[$line + 1][2]) ? (int)$headings[$line + 1][2] : '';
 
-    $this_depth = (int)$headings[$line][2];
-    $next_depth = isset($headings[$line + 1][2]) ? (int)$headings[$line + 1][2] : '';
+        $exclude_headline = should_exclude_headline($headline, $attributes, $this_depth);
 
-    $exclude_headline = should_exclude_headline($headline, $attributes, $this_depth);
+        if ($exclude_headline) {
+            continue;
+        }
 
-    if ($exclude_headline) {
-      continue;
+        $title = trim(strip_tags($headline));
+        $customid = extract_id($headline);
+        $link = simpletoc_sanitize_string($title);
+
+        if ($customid) {
+            $link = $customid;
+        }
+
+        open_list($list, $list_type, $min_depth, $this_depth);
+
+        $page = get_page_number_from_headline($headline);
+
+        $list .= "<a href=\"" . $absolute_url . $page . "#" . $link . "\">" . $title . "</a>";
+
+        close_list($list, $list_type, $min_depth, $next_depth, $line, count($headings) - 1, $initial_depth, $this_depth);
+
+        $item_count++;
     }
 
-    $title = trim(strip_tags($headline));
-    $customid = extract_id($headline);
-    $link = simpletoc_sanitize_string($title);
+    $html = add_accordion_start($html, $attributes, $item_count, $align_class);
+    $html = add_smooth($html, $attributes);
 
-    if ($customid) {
-      $link = $customid;
+    // Add the table of contents list to the output if the list is not empty.
+    if (!empty($list)) {
+        $html_class = 'simpletoc-list';
+        if (!empty($align_class)) {
+            $html_class .= " $align_class";
+        }
+
+        $html_style = '';
+        if (!empty($styles)) {
+            $html_style = " $styles";
+        }
+
+        $html .= "<$list_type class=\"$html_class\"$html_style>\n$list</li></$list_type>";
     }
 
-    open_list($list, $list_type, $min_depth, $this_depth);
+    $html = add_accordion_end($html, $attributes);
 
-    $page = get_page_number_from_headline($headline);
-
-    $list .= "<a href=\"" . $absolute_url . $page . "#" . $link . "\">" . $title . "</a>";
-
-    close_list($list, $list_type, $min_depth, $next_depth, $line, count($headings) - 1, $initial_depth, $this_depth);
-
-    $item_count++;
-  }
-
-  $html = add_accordion_start($html, $attributes, $item_count, $align_class);
-  $html = add_smooth($html, $attributes);
-
-  // Add the table of contents list to the output if the list is not empty.
-  if (!empty($list)) {
-
-    $html_class = 'simpletoc-list';
-    if (!empty($align_class)) {
-      $html_class .= " $align_class";
-    }
-
-    $html_style = '';
-    if (!empty($styles)) {
-      $html_style = " $styles";
-    }
-
-    $html .= "<$list_type class=\"$html_class\"$html_style>\n$list</li></$list_type>";
-  }
-
-  $html = add_accordion_end($html, $attributes);
-
-  return $html;
+    return $html;
 }
 
 /**
@@ -483,21 +476,21 @@ function generate_toc($headings, $attributes)
 */
 function find_min_depth($headings, $attributes)
 {
-  $min_depth = 6;
-  $initial_depth = 6;
+    $min_depth = 6;
+    $initial_depth = 6;
 
-  foreach ($headings as $line => $headline) {
-    if ($min_depth > $headings[$line][2]) {
-      $min_depth = (int)$headings[$line][2];
-      $initial_depth = $min_depth;
+    foreach ($headings as $line => $headline) {
+        if ($min_depth > $headings[$line][2]) {
+            $min_depth = (int)$headings[$line][2];
+            $initial_depth = $min_depth;
+        }
     }
-  }
 
-  if ($attributes['min_level'] > $min_depth) {
-    $min_depth = $attributes['min_level'];
-  }
+    if ($attributes['min_level'] > $min_depth) {
+        $min_depth = $attributes['min_level'];
+    }
 
-  return [$min_depth, $initial_depth];
+    return [$min_depth, $initial_depth];
 }
 
 /**
@@ -509,13 +502,13 @@ function find_min_depth($headings, $attributes)
 */
 function should_exclude_headline($headline, $attributes, $this_depth)
 {
-  $exclude_headline = false;
-  preg_match('/class="([^"]+)"/', $headline, $matches);
-  if (!empty($matches[1]) && strpos($matches[1], 'simpletoc-hidden') !== false) {
-    $exclude_headline = true;
-  }
+    $exclude_headline = false;
+    preg_match('/class="([^"]+)"/', $headline, $matches);
+    if (!empty($matches[1]) && strpos($matches[1], 'simpletoc-hidden') !== false) {
+        $exclude_headline = true;
+    }
 
-  return ($this_depth > $attributes['max_level'] || $exclude_headline || $this_depth < $attributes['min_level']);
+    return ($this_depth > $attributes['max_level'] || $exclude_headline || $this_depth < $attributes['min_level']);
 }
 
 /**
@@ -528,13 +521,13 @@ function should_exclude_headline($headline, $attributes, $this_depth)
 */
 function open_list(&$list, $list_type, &$min_depth, $this_depth)
 {
-  if ($this_depth == $min_depth) {
-    $list .= "<li>";
-  } else {
-    for ($min_depth; $min_depth < $this_depth; $min_depth++) {
-      $list .= "\n<" . $list_type . "><li>\n";
+    if ($this_depth == $min_depth) {
+        $list .= "<li>";
+    } else {
+        for ($min_depth; $min_depth < $this_depth; $min_depth++) {
+            $list .= "\n<" . $list_type . "><li>\n";
+        }
     }
-  }
 }
 
 /**
@@ -551,20 +544,20 @@ function open_list(&$list, $list_type, &$min_depth, $this_depth)
 */
 function close_list(&$list, $list_type, &$min_depth, $next_depth, $line, $last_line, $initial_depth, $this_depth)
 {
-  if ($line != $last_line) {
-    if ($min_depth > $next_depth) {
-      for ($min_depth; $min_depth > $next_depth; $min_depth--) {
-        $list .= "</li>\n</" . $list_type . ">\n";
-      }
+    if ($line != $last_line) {
+        if ($min_depth > $next_depth) {
+            for ($min_depth; $min_depth > $next_depth; $min_depth--) {
+                $list .= "</li>\n</" . $list_type . ">\n";
+            }
+        }
+        if ($min_depth == $next_depth) {
+            $list .= "</li>\n";
+        }
+    } else {
+        for ($initial_depth; $initial_depth < $this_depth; $initial_depth++) {
+            $list .= "</li>\n</" . $list_type . ">\n";
+        }
     }
-    if ($min_depth == $next_depth) {
-      $list .= "</li>\n";
-    }
-  } else {
-    for ($initial_depth; $initial_depth < $this_depth; $initial_depth++) {
-      $list .= "</li>\n</" . $list_type . ">\n";
-    }
-  }
 }
 
 /**
@@ -575,11 +568,11 @@ function close_list(&$list, $list_type, &$min_depth, $next_depth, $line, $last_l
 */
 function add_smooth($html, $attributes)
 {
-  // Add smooth scrolling styles, if enabled by global option or block attribute
-  $isSmoothEnabled = $attributes['add_smooth'] || get_option('simpletoc_smooth_enabled') == 1;
-  $html .= $isSmoothEnabled ? '<style>html { scroll-behavior: smooth; }</style>' : '';
+    // Add smooth scrolling styles, if enabled by global option or block attribute
+    $isSmoothEnabled = $attributes['add_smooth'] || get_option('simpletoc_smooth_enabled') == 1;
+    $html .= $isSmoothEnabled ? '<style>html { scroll-behavior: smooth; }</style>' : '';
 
-  return $html;
+    return $html;
 }
 
 /**
@@ -587,20 +580,20 @@ function add_smooth($html, $attributes)
 */
 function enqueue_accordion_frontend()
 {
-  wp_enqueue_script(
-    'simpletoc-accordion',
-    plugin_dir_url(__FILE__) . 'src/accordion.js',
-    array(),
-    '1.0.0',
-    true
-  );
+    wp_enqueue_script(
+        'simpletoc-accordion',
+        plugin_dir_url(__FILE__) . 'src/accordion.js',
+        array(),
+        '1.0.0',
+        true
+    );
 
-  wp_enqueue_style(
-    'simpletoc-accordion',
-    plugin_dir_url(__FILE__) . 'src/accordion.css',
-    array(),
-    '1.0.0'
-  );
+    wp_enqueue_style(
+        'simpletoc-accordion',
+        plugin_dir_url(__FILE__) . 'src/accordion.css',
+        array(),
+        '1.0.0'
+    );
 }
 
 /**
@@ -612,41 +605,41 @@ function enqueue_accordion_frontend()
 */
 function add_accordion_start($html, $attributes, $itemcount, $alignclass)
 {
-  // Check if accordion is enabled either through the function arguments or the options
-  $isAccordionEnabled = $attributes['accordion'] || get_option('simpletoc_accordion_enabled') == 1;
+    // Check if accordion is enabled either through the function arguments or the options
+    $isAccordionEnabled = $attributes['accordion'] || get_option('simpletoc_accordion_enabled') == 1;
 
-  // Start and end HTML for accordion, if enabled
-  $accordionStart = $accordionEnd = '';
-  if ($isAccordionEnabled) {
-    enqueue_accordion_frontend();
-    $titleText = esc_html(trim($attributes['title_text'])) ?: __('Table of Contents', 'simpletoc');
-    $accordionStart = "<button type='button' class='simpletoc-collapsible'>$titleText</button>
+    // Start and end HTML for accordion, if enabled
+    $accordionStart = $accordionEnd = '';
+    if ($isAccordionEnabled) {
+        enqueue_accordion_frontend();
+        $titleText = esc_html(trim($attributes['title_text'])) ?: __('Table of Contents', 'simpletoc');
+        $accordionStart = "<button type='button' class='simpletoc-collapsible'>$titleText</button>
       <div class='simpletoc-content'>";
-    $accordionEnd = '</div>';
-  }
-
-  // Add the accordion start HTML to the output
-  $html .= $accordionStart;
-
-  // Add the table of contents title, if not hidden and not in accordion mode
-  $showTitle = !$attributes['no_title'] && !$isAccordionEnabled;
-  if ($showTitle) {
-    $titleTag = $attributes['title_level'] > 0 ? "h{$attributes['title_level']}" : 'p';
-    $html_class = 'simpletoc-title';
-
-    if (!empty($alignclass)) {
-      $html_class .= " $alignclass";
+        $accordionEnd = '</div>';
     }
 
-    $html = "<$titleTag class=\"$html_class\">{$attributes["title_text"]}</$titleTag>\n";
-  }
+    // Add the accordion start HTML to the output
+    $html .= $accordionStart;
 
-  // If there are no items in the table of contents, return an empty string
-  if ($itemcount < 1) {
-    return '';
-  }
+    // Add the table of contents title, if not hidden and not in accordion mode
+    $showTitle = !$attributes['no_title'] && !$isAccordionEnabled;
+    if ($showTitle) {
+        $titleTag = $attributes['title_level'] > 0 ? "h{$attributes['title_level']}" : 'p';
+        $html_class = 'simpletoc-title';
 
-  return $html;
+        if (!empty($alignclass)) {
+            $html_class .= " $alignclass";
+        }
+
+        $html = "<$titleTag class=\"$html_class\">{$attributes["title_text"]}</$titleTag>\n";
+    }
+
+    // If there are no items in the table of contents, return an empty string
+    if ($itemcount < 1) {
+        return '';
+    }
+
+    return $html;
 }
 
 /**
@@ -657,14 +650,14 @@ function add_accordion_start($html, $attributes, $itemcount, $alignclass)
 */
 function add_accordion_end($html, $attributes)
 {
-  // Check if accordion is enabled either through the function arguments or the options
-  $isAccordionEnabled = $attributes['accordion'] || get_option('simpletoc_accordion_enabled') == 1;
+    // Check if accordion is enabled either through the function arguments or the options
+    $isAccordionEnabled = $attributes['accordion'] || get_option('simpletoc_accordion_enabled') == 1;
 
-  if ($isAccordionEnabled) {
-    $html .= '</div>';
-  }
+    if ($isAccordionEnabled) {
+        $html .= '</div>';
+    }
 
-  return $html;
+    return $html;
 }
 
 /**
@@ -674,13 +667,13 @@ function add_accordion_end($html, $attributes)
 */
 function extract_id($headline)
 {
-  $pattern = '/id="([^"]*)"/';
-  preg_match($pattern, $headline, $matches);
-  $idValue = $matches[1] ?? false;
+    $pattern = '/id="([^"]*)"/';
+    preg_match($pattern, $headline, $matches);
+    $idValue = $matches[1] ?? false;
 
-  if ($idValue != false) {
-    return  $idValue;
-  }
+    if ($idValue != false) {
+        return  $idValue;
+    }
 }
 
 /**
@@ -690,16 +683,16 @@ function extract_id($headline)
 */
 function get_page_number_from_headline($headline)
 {
-  $dom = new \DOMDocument();
-  @$dom->loadHTML($headline, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+    $dom = new \DOMDocument();
+    @$dom->loadHTML($headline, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
-  $xpath = new \DOMXPath($dom);
-  $nodes = $xpath->query('//*/@data-page');
+    $xpath = new \DOMXPath($dom);
+    $nodes = $xpath->query('//*/@data-page');
 
-  if (isset($nodes[0]) && $nodes[0]->nodeValue > 1) {
-    $pageNumber = $nodes[0]->nodeValue . '/';
-    return esc_html($pageNumber);
-  } else {
-    return '';
-  }
+    if (isset($nodes[0]) && $nodes[0]->nodeValue > 1) {
+        $pageNumber = $nodes[0]->nodeValue . '/';
+        return esc_html($pageNumber);
+    } else {
+        return '';
+    }
 }
