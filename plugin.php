@@ -133,39 +133,39 @@ add_filter('rank_math/researches/toc_plugins', function ($toc_plugins) {
 * @return string The content with IDs added to its headings
 */
 
-function simpletoc_addIDstoContent($content)
+function simpletoc_add_ids_to_content($content)
 {
 
   $blocks = parse_blocks($content);
 
-  $blocks = addIDstoBlocks_recursive($blocks);
+  $blocks = add_ids_to_blocks_recursive($blocks);
 
   $content = serialize_blocks($blocks);
 
   return $content;
 }
 
-add_filter('the_content', 'simpletoc_addIDstoContent', 1);
+add_filter('the_content', 'simpletoc_add_ids_to_content', 1);
 
 /*
 * Recursively adds IDs to the headings of a nested block structure.
 * @param array $blocks The blocks to add IDs to
 * @return array The blocks with IDs added to their headings
 */
-function addIDstoBlocks_recursive($blocks)
+function add_ids_to_blocks_recursive($blocks)
 {
 
   foreach ($blocks as &$block) {
     if (isset($block['blockName']) && ($block['blockName'] === 'core/heading' || $block['blockName'] === 'generateblocks/headline') && isset($block['innerHTML']) && isset($block['innerContent']) && isset($block['innerContent'][0])) {
-      $block['innerHTML'] = addAnchorAttribute($block['innerHTML']);
-      $block['innerContent'][0] = addAnchorAttribute($block['innerContent'][0]);
+      $block['innerHTML'] = add_anchor_attribute($block['innerHTML']);
+      $block['innerContent'][0] = add_anchor_attribute($block['innerContent'][0]);
     } else if (isset($block['attrs']['ref'])) {
       // search in reusable blocks (this is not finished because I ran out of ideas.)
       // $reusable_block_id = $block['attrs']['ref'];
       // $reusable_block_content = parse_blocks(get_post($reusable_block_id)->post_content);
     } else if (!empty($block['innerBlocks'])) {
       // search in groups
-      $block['innerBlocks'] = addIDstoBlocks_recursive($block['innerBlocks']);
+      $block['innerBlocks'] = add_ids_to_blocks_recursive($block['innerBlocks']);
     }
   }
 
@@ -197,7 +197,7 @@ function render_callback_simpletoc($attributes)
   $headings = array_reverse(filter_headings_recursive($blocks));
   $headings = simpletoc_add_pagenumber($blocks, $headings);
   $headings_clean = array_map('trim', $headings);
-  $toclist = generateToc($headings_clean, $attributes);
+  $toclist = generate_toc($headings_clean, $attributes);
 
   if (empty($blocks)) {
     return get_empty_blocks_message($is_backend, $attributes, $title_level, $alignclass, $title_text, __('No blocks found.', 'simpletoc'), __('Save or update post first.', 'simpletoc'));
@@ -369,7 +369,7 @@ function simpletoc_plugin_meta($links, $file)
 * @return string The modified HTML content with ID attributes added to the Heading tags
 */
 
-function addAnchorAttribute($html)
+function add_anchor_attribute($html)
 {
 
   // remove non-breaking space entites from input HTML
@@ -413,7 +413,7 @@ function addAnchorAttribute($html)
 * @return string The generated table of contents as HTML
 */
 
-function generateToc($headings, $attributes)
+function generate_toc($headings, $attributes)
 {
   $list = '';
   $html = '';
@@ -425,7 +425,7 @@ function generateToc($headings, $attributes)
   $global_absolut_urls_enabled = get_option('simpletoc_absolute_urls_enabled', false);
   $absolute_url = $attributes['use_absolute_urls'] || $global_absolut_urls_enabled ? get_permalink() : '';
 
-  list($min_depth, $initial_depth) = findMinDepth($headings, $attributes);
+  list($min_depth, $initial_depth) = find_min_depth($headings, $attributes);
 
   $item_count = 0;
 
@@ -434,33 +434,33 @@ function generateToc($headings, $attributes)
     $this_depth = (int)$headings[$line][2];
     $next_depth = isset($headings[$line + 1][2]) ? (int)$headings[$line + 1][2] : '';
 
-    $exclude_headline = shouldExcludeHeadline($headline, $attributes, $this_depth);
+    $exclude_headline = should_exclude_headline($headline, $attributes, $this_depth);
 
     if ($exclude_headline) {
       continue;
     }
 
     $title = trim(strip_tags($headline));
-    $customid = extractID($headline);
+    $customid = extract_id($headline);
     $link = simpletoc_sanitize_string($title);
 
     if ($customid) {
       $link = $customid;
     }
 
-    openList($list, $list_type, $min_depth, $this_depth);
+    open_list($list, $list_type, $min_depth, $this_depth);
 
     $page = get_page_number_from_headline($headline);
-  
+
     $list .= "<a href=\"" . $absolute_url . $page . "#" . $link . "\">" . $title . "</a>";
 
-    closeList($list, $list_type, $min_depth, $next_depth, $line, count($headings) - 1, $initial_depth, $this_depth);
+    close_list($list, $list_type, $min_depth, $next_depth, $line, count($headings) - 1, $initial_depth, $this_depth);
 
     $item_count++;
   }
 
-  $html = addAccordionStart($html, $attributes, $item_count, $align_class);
-  $html = addSmooth($html, $attributes);
+  $html = add_accordion_start($html, $attributes, $item_count, $align_class);
+  $html = add_smooth($html, $attributes);
 
   // Add the table of contents list to the output if the list is not empty.
   if (!empty($list)) {
@@ -478,7 +478,7 @@ function generateToc($headings, $attributes)
     $html .= "<$list_type class=\"$html_class\"$html_style>\n$list</li></$list_type>";
   }
 
-  $html = addAccordionEnd($html, $attributes);
+  $html = add_accordion_end($html, $attributes);
 
   return $html;
 }
@@ -490,7 +490,7 @@ function generateToc($headings, $attributes)
 * @return array An array containing the minimum depth level and the initial depth level
 */
 
-function findMinDepth($headings, $attributes)
+function find_min_depth($headings, $attributes)
 {
   $min_depth = 6;
   $initial_depth = 6;
@@ -517,7 +517,7 @@ function findMinDepth($headings, $attributes)
 * @return bool True if the headline should be excluded, false otherwise
 */
 
-function shouldExcludeHeadline($headline, $attributes, $this_depth)
+function should_exclude_headline($headline, $attributes, $this_depth)
 {
   $exclude_headline = false;
   preg_match('/class="([^"]+)"/', $headline, $matches);
@@ -529,7 +529,7 @@ function shouldExcludeHeadline($headline, $attributes, $this_depth)
 }
 
 /*
-* The openList function appends a new list item to the global $list variable, adding necessary opening tags if needed to maintain the correct nesting of the list.
+* The open_list function appends a new list item to the global $list variable, adding necessary opening tags if needed to maintain the correct nesting of the list.
 * @param string &$list The global list variable to append the new list item to.
 * @param string $list_type The type of list to be created, either "ul" (unordered list) or "ol" (ordered list).
 * @param int &$min_depth The minimum depth of headings that should be included in the table of contents.
@@ -537,7 +537,7 @@ function shouldExcludeHeadline($headline, $attributes, $this_depth)
 * @return void The function modifies the input $list variable directly.
 */
 
-function openList(&$list, $list_type, &$min_depth, $this_depth)
+function open_list(&$list, $list_type, &$min_depth, $this_depth)
 {
   if ($this_depth == $min_depth) {
     $list .= "<li>";
@@ -561,7 +561,7 @@ function openList(&$list, $list_type, &$min_depth, $this_depth)
 * @return void
 */
 
-function closeList(&$list, $list_type, &$min_depth, $next_depth, $line, $last_line, $initial_depth, $this_depth)
+function close_list(&$list, $list_type, &$min_depth, $next_depth, $line, $last_line, $initial_depth, $this_depth)
 {
   if ($line != $last_line) {
     if ($min_depth > $next_depth) {
@@ -586,7 +586,7 @@ function closeList(&$list, $list_type, &$min_depth, $next_depth, $line, $last_li
 * @return string The modified HTML string with the added smooth scrolling styles.
 */
 
-function addSmooth($html, $attributes)
+function add_smooth($html, $attributes)
 {
   // Add smooth scrolling styles, if enabled by global option or block attribute
   $isSmoothEnabled = $attributes['add_smooth'] || get_option('simpletoc_smooth_enabled') == 1;
@@ -624,7 +624,7 @@ function enqueue_accordion_frontend()
 * @param string $alignclass The alignment class for the table of contents block
 */
 
-function addAccordionStart($html, $attributes, $itemcount, $alignclass)
+function add_accordion_start($html, $attributes, $itemcount, $alignclass)
 {
   // Check if accordion is enabled either through the function arguments or the options
   $isAccordionEnabled = $attributes['accordion'] || get_option('simpletoc_accordion_enabled') == 1;
@@ -670,7 +670,7 @@ function addAccordionStart($html, $attributes, $itemcount, $alignclass)
 * @return string The modified HTML string with the closing tag(s) added
 */
 
-function addAccordionEnd($html, $attributes)
+function add_accordion_end($html, $attributes)
 {
   // Check if accordion is enabled either through the function arguments or the options
   $isAccordionEnabled = $attributes['accordion'] || get_option('simpletoc_accordion_enabled') == 1;
@@ -683,12 +683,12 @@ function addAccordionEnd($html, $attributes)
 }
 
 /**
-* Extracts the ID value from the provided heading HTML string.
-* @param string $headline The heading HTML string to extract the ID value from
-* @return mixed Returns the extracted ID value, or false if no ID value is found
-*/
+ * Extracts the ID value from the provided heading HTML string.
+ * @param string $headline The heading HTML string to extract the ID value from
+ * @return mixed Returns the extracted ID value, or false if no ID value is found
+ */
 
-function extractID($headline)
+function extract_id($headline)
 {
   $pattern = '/id="([^"]*)"/';
   preg_match($pattern, $headline, $matches);
@@ -705,7 +705,8 @@ function extractID($headline)
  * @return string The page number (in the format "X/") if it exists and is greater than 1, or an empty string otherwise.
  */
 
- function get_page_number_from_headline($headline) {
+function get_page_number_from_headline($headline)
+{
   $dom = new \DOMDocument();
   @$dom->loadHTML($headline, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
@@ -713,9 +714,9 @@ function extractID($headline)
   $nodes = $xpath->query('//*/@data-page');
 
   if (isset($nodes[0]) && $nodes[0]->nodeValue > 1) {
-      $pageNumber = $nodes[0]->nodeValue . '/';
-      return esc_html($pageNumber);
+    $pageNumber = $nodes[0]->nodeValue . '/';
+    return esc_html($pageNumber);
   } else {
-      return '';
+    return '';
   }
 }
