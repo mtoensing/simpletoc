@@ -40,6 +40,11 @@ function simpletoc_register_settings()
     $wrapper_enabled_filter = apply_filters('simpletoc_wrapper_enabled', null);
     $accordion_enabled_filter = apply_filters('simpletoc_accordion_enabled', null);
     $smooth_enabled_filter = apply_filters('simpletoc_smooth_enabled', null);
+    $absolute_urls_enabled_filter = apply_filters('simpletoc_absolute_urls_enabled', null);
+
+    if ($absolute_urls_enabled_filter === null) {
+        register_setting('simpletoc_settings', 'simpletoc_absolute_urls_enabled');
+    }
 
     if ($wrapper_enabled_filter === null) {
         register_setting('simpletoc_settings', 'simpletoc_wrapper_enabled');
@@ -77,11 +82,18 @@ function simpletoc_register_settings()
     );
 
 
-
     add_settings_field(
         'simpletoc_smooth_enabled',
         __('Force smooth scrolling', 'simpletoc'),
         'simpletoc_smooth_enabled_callback',
+        'simpletoc',
+        'simpletoc_wrapper_section'
+    );
+
+    add_settings_field(
+        'simpletoc_absolute_urls_enabled',
+        __('Force absolute urls', 'simpletoc'),
+        'simpletoc_absolute_urls_enabled_callback',
         'simpletoc',
         'simpletoc_wrapper_section'
     );
@@ -91,9 +103,6 @@ add_action('admin_init', 'simpletoc_register_settings');
 
 function simpletoc_wrapper_section_callback()
 {
-    $wrapper_enabled_filter = apply_filters('simpletoc_wrapper_enabled', null);
-    $accordion_enabled_filter = apply_filters('simpletoc_accordion_enabled', null);
-    $smooth_enabled_filter = apply_filters('simpletoc_smooth_enabled', null);
     $donatelink = '<a href="https://marc.tv/out/donate">' . __('Donate here!', 'simpletoc') . '</a>';
 
     echo '<p>' .
@@ -131,4 +140,11 @@ function simpletoc_smooth_enabled_callback()
     $smooth_enabled = get_option('simpletoc_smooth_enabled', false);
     echo '<input type="checkbox" name="simpletoc_smooth_enabled" id="simpletoc_smooth_enabled" value="1" ' . checked(1, $smooth_enabled, false) . ' />';
     echo '<label for="simpletoc_smooth_enabled" class="description">' . __('Adds the following CSS to the HTML element: "scroll-behavior: smooth;"', 'simpletoc') . '</label>';
+}
+
+function simpletoc_absolute_urls_enabled_callback()
+{
+    $absolute_urls_enabled = get_option('simpletoc_absolute_urls_enabled', false);
+    echo '<input type="checkbox" name="simpletoc_absolute_urls_enabled" id="simpletoc_absolute_urls_enabled" value="1" ' . checked(1, $absolute_urls_enabled, false) . ' />';
+    echo '<label for="simpletoc_absolute_urls_enabled" class="description">' . __('Adds the permalink url to the fragment.', 'simpletoc') . '</label>';
 }

@@ -422,7 +422,8 @@ function generateToc($headings, $attributes)
   $align_class = isset($attributes['align']) ? 'align' . $attributes['align'] : '';
   $styles = $attributes['remove_indent'] ? 'style="padding-left:0;list-style:none;"' : '';
   $list_type = $attributes['use_ol'] ? 'ol' : 'ul';
-  $absolute_url = $attributes['use_absolute_urls'] ? get_permalink() : '';
+  $global_absolut_urls_enabled = get_option('simpletoc_absolute_urls_enabled', false);
+  $absolute_url = $attributes['use_absolute_urls'] || $global_absolut_urls_enabled ? get_permalink() : '';
 
   list($min_depth, $initial_depth) = findMinDepth($headings, $attributes);
 
