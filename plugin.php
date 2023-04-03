@@ -179,39 +179,39 @@ function addIDstoBlocks_recursive($blocks)
  */
 function render_callback_simpletoc($attributes)
 {
-    $is_backend = defined('REST_REQUEST') && REST_REQUEST && 'edit' === filter_input(INPUT_GET, 'context');
-    $title_text = $attributes['title_text'] ? esc_html(trim($attributes['title_text'])) : __('Table of Contents', 'simpletoc');
-    $alignclass = !empty($attributes['align']) ? 'align' . $attributes['align'] : '';
-    $className = !empty($attributes['className']) ? strip_tags($attributes['className']) : '';
-    $title_level = $attributes['title_level'];
+  $is_backend = defined('REST_REQUEST') && REST_REQUEST && 'edit' === filter_input(INPUT_GET, 'context');
+  $title_text = $attributes['title_text'] ? esc_html(trim($attributes['title_text'])) : __('Table of Contents', 'simpletoc');
+  $alignclass = !empty($attributes['align']) ? 'align' . $attributes['align'] : '';
+  $className = !empty($attributes['className']) ? strip_tags($attributes['className']) : '';
+  $title_level = $attributes['title_level'];
 
-    $wrapper_enabled = apply_filters('simpletoc_wrapper_enabled', false) || get_option('simpletoc_wrapper_enabled') == 1 || get_option('simpletoc_accordion_enabled') == 1;
+  $wrapper_enabled = apply_filters('simpletoc_wrapper_enabled', false) || get_option('simpletoc_wrapper_enabled') == 1 || get_option('simpletoc_accordion_enabled') == 1;
 
-    $wrapper_attrs = get_block_wrapper_attributes(['class' => 'simpletoc']);
-    $pre_html = (!empty($className) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper']) ? '<div role="navigation" aria-label="' . __('Table of Contents', 'simpletoc') . '" ' . $wrapper_attrs . '>' : '';
-    $post_html = (!empty($className) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper']) ? '</div>' : '';
+  $wrapper_attrs = get_block_wrapper_attributes(['class' => 'simpletoc']);
+  $pre_html = (!empty($className) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper']) ? '<div role="navigation" aria-label="' . __('Table of Contents', 'simpletoc') . '" ' . $wrapper_attrs . '>' : '';
+  $post_html = (!empty($className) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper']) ? '</div>' : '';
 
-    $post = get_post();
-    $blocks = !is_null($post) && !is_null($post->post_content) ? parse_blocks($post->post_content) : '';
+  $post = get_post();
+  $blocks = !is_null($post) && !is_null($post->post_content) ? parse_blocks($post->post_content) : '';
 
-    $headings = array_reverse(filter_headings_recursive($blocks));
-    $headings = simpletoc_add_pagenumber($blocks, $headings);
-    $headings_clean = array_map('trim', $headings);
-    $toclist = generateToc($headings_clean, $attributes);
+  $headings = array_reverse(filter_headings_recursive($blocks));
+  $headings = simpletoc_add_pagenumber($blocks, $headings);
+  $headings_clean = array_map('trim', $headings);
+  $toclist = generateToc($headings_clean, $attributes);
 
-    if (empty($blocks)) {
-      return get_empty_blocks_message($is_backend, $attributes, $title_level, $alignclass, $title_text, __('No blocks found.', 'simpletoc'), __('Save or update post first.', 'simpletoc'));
-    }
+  if (empty($blocks)) {
+    return get_empty_blocks_message($is_backend, $attributes, $title_level, $alignclass, $title_text, __('No blocks found.', 'simpletoc'), __('Save or update post first.', 'simpletoc'));
+  }
 
-    if (empty($headings_clean)) {
-        return get_empty_blocks_message($is_backend, $attributes, $title_level, $alignclass, $title_text, __('No headings found.', 'simpletoc'), __('Save or update post first.', 'simpletoc'));
-    }
+  if (empty($headings_clean)) {
+    return get_empty_blocks_message($is_backend, $attributes, $title_level, $alignclass, $title_text, __('No headings found.', 'simpletoc'), __('Save or update post first.', 'simpletoc'));
+  }
 
-    if (empty($toclist)) {
-      return get_empty_blocks_message($is_backend, $attributes, $title_level, $alignclass, $title_text, __('No headings found.', 'simpletoc'), __('Check minimal and maximum level block settings.', 'simpletoc'));
-    }
+  if (empty($toclist)) {
+    return get_empty_blocks_message($is_backend, $attributes, $title_level, $alignclass, $title_text, __('No headings found.', 'simpletoc'), __('Check minimal and maximum level block settings.', 'simpletoc'));
+  }
 
-    return $pre_html . $toclist . $post_html;
+  return $pre_html . $toclist . $post_html;
 }
 
 /**
@@ -230,14 +230,14 @@ function render_callback_simpletoc($attributes)
 
 function get_empty_blocks_message($is_backend, $attributes, $title_level, $alignclass, $title_text, $warning_text1, $warning_text2)
 {
-    $html = '';
+  $html = '';
 
-    if ($is_backend) {
-        $html .= sprintf('<h%d class="simpletoc-title %s">%s</h%d>', $title_level, $alignclass, $title_text, $title_level);
-        $html .= sprintf('<p class="components-notice is-warning %s">%s %s</p>', $alignclass, $warning_text1, $warning_text2);
-    }
+  if ($is_backend) {
+    $html .= sprintf('<h%d class="simpletoc-title %s">%s</h%d>', $title_level, $alignclass, $title_text, $title_level);
+    $html .= sprintf('<p class="components-notice is-warning %s">%s %s</p>', $alignclass, $warning_text1, $warning_text2);
+  }
 
-    return $html;
+  return $html;
 }
 
 
@@ -461,16 +461,16 @@ function generateToc($headings, $attributes)
   $html = addSmooth($html, $attributes);
 
   // Add the table of contents list to the output if the list is not empty.
-  if( !empty($list) ) {
+  if (!empty($list)) {
 
     $html_class = 'simpletoc-list';
-    if ( ! empty( $align_class ) ) {
-        $html_class .= " $align_class";
+    if (!empty($align_class)) {
+      $html_class .= " $align_class";
     }
 
     $html_style = '';
-    if ( ! empty( $styles ) ) {
-        $html_style = " $styles";
+    if (!empty($styles)) {
+      $html_style = " $styles";
     }
 
     $html .= "<$list_type class=\"$html_class\"$html_style>\n$list</li></$list_type>";
@@ -646,12 +646,11 @@ function addAccordionStart($html, $attributes, $itemcount, $alignclass)
     $titleTag = $attributes['title_level'] > 0 ? "h{$attributes['title_level']}" : 'p';
     $html_class = 'simpletoc-title';
 
-    if ( ! empty( $alignclass ) ) {
-        $html_class .= " $alignclass";
+    if (!empty($alignclass)) {
+      $html_class .= " $alignclass";
     }
 
     $html = "<$titleTag class=\"$html_class\">{$attributes["title_text"]}</$titleTag>\n";
-
   }
 
   // If there are no items in the table of contents, return an empty string
