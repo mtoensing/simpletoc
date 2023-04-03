@@ -4,7 +4,7 @@
  * Plugin Name:   SimpleTOC - Table of Contents Block
  * Plugin URI:    https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
  * Description:   SEO-friendly Table of Contents Gutenberg block. No JavaScript and no CSS means faster loading.
- * Version:       5.0.57
+ * Version:       6.0.0
  * Author:        Marc Tönsing
  * Author URI:    https://marc.tv
  * Text Domain:   simpletoc
@@ -528,7 +528,7 @@ function enqueue_accordion_frontend()
     'simpletoc-accordion',
     plugin_dir_url(__FILE__) . 'src/accordion.js',
     array(),
-    '5.0.50',
+    '1.0.0',
     true
   );
 
@@ -536,7 +536,7 @@ function enqueue_accordion_frontend()
     'simpletoc-accordion',
     plugin_dir_url(__FILE__) . 'src/accordion.css',
     array(),
-    '5.0.50'
+    '1.0.0'
   );
 }
 

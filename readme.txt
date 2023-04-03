@@ -3,8 +3,8 @@ Contributors: MarcDK
 Tags: Gutenberg, block, TOC, Table of Contents, AMP
 Requires at least: 5.9
 Donate link: https://marc.tv/out/donate
-Tested up to: 6.1
-Stable tag: 5.0.57
+Tested up to: 6.2
+Stable tag: 6.0.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -41,6 +41,7 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 * Choose between an ordered, bullet HTML list. Or indent the list.
 * Select a heading level or turn it into a paragraph.
 * Disable the h2 heading of the TOC block and add your own.
+* Administrators can utilize global settings to supersede the individual block settings.
 
 = Compatibility =
 
@@ -48,6 +49,10 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 * Works with popular AMP plugins.
 
 == Changelog ==
+
+= 6.0.0 =
+* Feature: Added SimpleTOC global settings to override individual block settings. 
+* Refactored php code using artifical intelligence (ChatGPT4).
 
 = 5.0.56 =
 * Feature: Optional div wrapper with role=navigation and ARIA attributes. 
