@@ -450,7 +450,9 @@ function generateToc($headings, $attributes)
 
     openList($list, $list_type, $min_depth, $this_depth);
 
-    $list .= "<a href=\"" . $absolute_url . "#" . $link . "\">" . $title . "</a>";
+    $page = get_page_number_from_headline($headline);
+  
+    $list .= "<a href=\"" . $absolute_url . $page . "#" . $link . "\">" . $title . "</a>";
 
     closeList($list, $list_type, $min_depth, $next_depth, $line, count($headings) - 1, $initial_depth, $this_depth);
 
@@ -680,7 +682,7 @@ function addAccordionEnd($html, $attributes)
   return $html;
 }
 
-/*
+/**
 * Extracts the ID value from the provided heading HTML string.
 * @param string $headline The heading HTML string to extract the ID value from
 * @return mixed Returns the extracted ID value, or false if no ID value is found
@@ -694,5 +696,26 @@ function extractID($headline)
 
   if ($idValue != false) {
     return  $idValue;
+  }
+}
+
+/**
+ * Gets the page number from a headline string.
+ * @param string $headline The headline string.
+ * @return string The page number (in the format "X/") if it exists and is greater than 1, or an empty string otherwise.
+ */
+
+ function get_page_number_from_headline($headline) {
+  $dom = new \DOMDocument();
+  @$dom->loadHTML($headline, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+
+  $xpath = new \DOMXPath($dom);
+  $nodes = $xpath->query('//*/@data-page');
+
+  if (isset($nodes[0]) && $nodes[0]->nodeValue > 1) {
+      $pageNumber = $nodes[0]->nodeValue . '/';
+      return esc_html($pageNumber);
+  } else {
+      return '';
   }
 }
