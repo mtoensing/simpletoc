@@ -20,15 +20,15 @@ function simpletoc_settings_page()
         return;
     }
 
-?>
+    ?>
     <div class="wrap">
         <h1><?php _e('SimpleTOC Settings', 'simpletoc'); ?></h1>
         <form method="post" action="options.php">
             <?php
-            settings_fields('simpletoc_settings');
-            do_settings_sections('simpletoc');
-            submit_button();
-            ?>
+                settings_fields('simpletoc_settings');
+    do_settings_sections('simpletoc');
+    submit_button();
+    ?>
         </form>
     </div>
 <?php
@@ -106,8 +106,8 @@ function simpletoc_wrapper_section_callback()
     $donatelink = '<a href="https://marc.tv/out/donate">' . __('Donate here!', 'simpletoc') . '</a>';
 
     echo '<p>' .
-        __('Enforce these settings globally, ignoring any block-level configurations.', 'simpletoc') . '</p><p>' . 
-        __('Think about making a donation if you use any of these features.', 'simpletoc') . ' ' . 
+        __('Enforce these settings globally, ignoring any block-level configurations.', 'simpletoc') . '</p><p>' .
+        __('Think about making a donation if you use any of these features.', 'simpletoc') . ' ' .
         $donatelink .
         '</p>';
 }
