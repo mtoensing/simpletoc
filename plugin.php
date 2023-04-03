@@ -173,99 +173,74 @@ function addIDstoBlocks_recursive($blocks)
 }
 
 /*
-* Renders a Table of Contents block for a post
-* @param array $attributes An array of attributes for the Table of Contents block
-* @return string The HTML output for the Table of Contents block
-*/
-
+ * Renders a Table of Contents block for a post
+ * @param array $attributes An array of attributes for the Table of Contents block
+ * @return string The HTML output for the Table of Contents block
+ */
 function render_callback_simpletoc($attributes)
 {
-  $is_backend = defined('REST_REQUEST') && REST_REQUEST && 'edit' === filter_input(INPUT_GET, 'context');
+    $is_backend = defined('REST_REQUEST') && REST_REQUEST && 'edit' === filter_input(INPUT_GET, 'context');
+    $title_text = $attributes['title_text'] ? esc_html(trim($attributes['title_text'])) : __('Table of Contents', 'simpletoc');
+    $alignclass = !empty($attributes['align']) ? 'align' . $attributes['align'] : '';
+    $className = !empty($attributes['className']) ? strip_tags($attributes['className']) : '';
+    $title_level = $attributes['title_level'];
 
-  $title_text = $attributes['title_text'] ? esc_html(trim($attributes['title_text'])) : __('Table of Contents', 'simpletoc');
+    $wrapper_enabled = apply_filters('simpletoc_wrapper_enabled', false) || get_option('simpletoc_wrapper_enabled') == 1 || get_option('simpletoc_accordion_enabled') == 1;
 
-  $alignclass = '';
-  if (!empty($attributes['align'])) {
-    $alignclass = 'align' . $attributes['align'];
-  }
-
-  $className = !empty($attributes['className']) ? strip_tags($attributes['className']) : '';
-
-  $pre_html = '';
-  $post_html = '';
-  $title_level = $attributes['title_level'];
-
-  // Enable wrapper by filter. By default, the wrapper is not enabled because it causes problems on some themes. 
-  $wrapper_enabled = apply_filters('simpletoc_wrapper_enabled', false);
-
-  // Check if filter was set externally by a filter
-  if (isset($wrapper_enabled)) {
-    // Check if the wrapper is enabled in the settings
-    if (get_option('simpletoc_wrapper_enabled') == 1) {
-      $wrapper_enabled = true;
-    }
-  }
-
-  if (get_option('simpletoc_accordion_enabled') == 1) {
-    $wrapper_enabled = true;
-  }
-
-  if (!empty($className) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper']) {
     $wrapper_attrs = get_block_wrapper_attributes(['class' => 'simpletoc']);
-    $pre_html = '<div role="navigation" aria-label="' . __('Table of Contents', 'simpletoc') . '" ' . $wrapper_attrs . '>';
-    $post_html = '</div>';
-  }
+    $pre_html = (!empty($className) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper']) ? '<div role="navigation" aria-label="' . __('Table of Contents', 'simpletoc') . '" ' . $wrapper_attrs . '>' : '';
+    $post_html = (!empty($className) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper']) ? '</div>' : '';
 
-  $post = get_post();
-  $blocks = !is_null($post) && !is_null($post->post_content) ? parse_blocks($post->post_content) : '';
+    $post = get_post();
+    $blocks = !is_null($post) && !is_null($post->post_content) ? parse_blocks($post->post_content) : '';
 
-  if (empty($blocks)) {
-    $html = '';
-    if ($is_backend && !$attributes['no_title']) {
-      $html .= sprintf('<h%d class="simpletoc-title %s">%s</h%d>', $title_level, $alignclass, $title_text, $title_level);
-      $html .= sprintf('<p class="components-notice is-warning %s">%s %s</p>', $alignclass, __('No blocks found.', 'simpletoc'), __('Save or update post first.', 'simpletoc'));
+    if (empty($blocks)) {
+        return get_empty_blocks_message($is_backend, $attributes, $title_level, $alignclass, $title_text, __('No blocks found.', 'simpletoc'), __('Save or update post first.', 'simpletoc'));
     }
-    return $html;
-  }
 
-  $headings = array_reverse(filter_headings_recursive($blocks));
+    $headings = array_reverse(filter_headings_recursive($blocks));
+    $headings = simpletoc_add_pagenumber($blocks, $headings);
+    $headings_clean = array_map('trim', $headings);
 
-  // enrich headings with pages as a data-attribute
-  $headings = simpletoc_add_pagenumber($blocks, $headings);
-
-  $headings_clean = array_map('trim', $headings);
-
-  if (empty($headings_clean)) {
-    $html = '';
-    if ($is_backend && !$attributes['no_title']) {
-      $html .= sprintf('<h%d class="simpletoc-title %s">%s</h%d>', $title_level, $alignclass, $title_text, $title_level);
-      $html .= sprintf('<p class="components-notice is-warning %s">%s %s</p>', $alignclass, __('No headings found.', 'simpletoc'), __('Save or update post first.', 'simpletoc'));
+    if (empty($headings_clean)) {
+        return get_empty_blocks_message($is_backend, $attributes, $title_level, $alignclass, $title_text, __('No headings found.', 'simpletoc'), __('Save or update post first.', 'simpletoc'));
     }
-    return $html;
-  }
 
-  $toclist = generateToc($headings_clean, $attributes);
+    $toclist = generateToc($headings_clean, $attributes);
 
-  if (empty($toclist)) {
-    $html = '';
-    if ($is_backend && !$attributes['no_title']) {
-      $html .= sprintf(
-        '<h%d class="simpletoc-title %s">%s</h%d>',
-
-        $title_level,
-        $alignclass,
-        $title_text,
-        $title_level
-      );
-      $html .= sprintf('<p class="components-notice is-warning %s">%s %s</p>', $alignclass, __('No headings found.', 'simpletoc'), __('Check minimal and maximum level block settings.', 'simpletoc'));
+    if (empty($toclist)) {
+        return get_empty_blocks_message($is_backend, $attributes, $title_level, $alignclass, $title_text, __('No headings found.', 'simpletoc'), __('Check minimal and maximum level block settings.', 'simpletoc'));
     }
-    return $html;
-  }
 
-  $output = $pre_html . $toclist . $post_html;
-
-  return $output;
+    return $pre_html . $toclist . $post_html;
 }
+
+/**
+ * Generates an HTML message for empty blocks cases in the Table of Contents.
+ *
+ * @param bool   $is_backend    Indicates if the request is from the backend (i.e., the WordPress editor).
+ * @param array  $attributes    An array of attributes for the Table of Contents block.
+ * @param int    $title_level   The heading level for the Table of Contents title.
+ * @param string $alignclass    The CSS class for alignment of the Table of Contents block.
+ * @param string $title_text    The text for the Table of Contents title.
+ * @param string $warning_text1 The first part of the warning message to be displayed.
+ * @param string $warning_text2 The second part of the warning message to be displayed.
+ *
+ * @return string The HTML output for the empty blocks message.
+ */
+
+function get_empty_blocks_message($is_backend, $attributes, $title_level, $alignclass, $title_text, $warning_text1, $warning_text2)
+{
+    $html = '';
+
+    if ($is_backend && !$attributes['no_title']) {
+        $html .= sprintf('<h%d class="simpletoc-title %s">%s</h%d>', $title_level, $alignclass, $title_text, $title_level);
+        $html .= sprintf('<p class="components-notice is-warning %s">%s %s</p>', $alignclass, $warning_text1, $warning_text2);
+    }
+
+    return $html;
+}
+
 
 /*
 * Adds page numbers to headings in the provided blocks array.
