@@ -127,7 +127,11 @@ add_filter('rank_math/researches/toc_plugins', function ($toc_plugins) {
   return $toc_plugins;
 });
 
-add_filter('the_content', 'simpletoc_addIDstoContent', 1);
+/*
+* Adds IDs to the headings of the provided post content using a recursive block structure.
+* @param string $content The content to add IDs to
+* @return string The content with IDs added to its headings
+*/
 
 function simpletoc_addIDstoContent($content)
 {
@@ -141,6 +145,13 @@ function simpletoc_addIDstoContent($content)
   return $content;
 }
 
+add_filter('the_content', 'simpletoc_addIDstoContent', 1);
+
+/*
+* Recursively adds IDs to the headings of a nested block structure.
+* @param array $blocks The blocks to add IDs to
+* @return array The blocks with IDs added to their headings
+*/
 function addIDstoBlocks_recursive($blocks)
 {
 
@@ -161,10 +172,11 @@ function addIDstoBlocks_recursive($blocks)
   return $blocks;
 }
 
-/**
- * Render block output
- *
- */
+/*
+* Renders a Table of Contents block for a post
+* @param array $attributes An array of attributes for the Table of Contents block
+* @return string The HTML output for the Table of Contents block
+*/
 
 function render_callback_simpletoc($attributes)
 {
@@ -183,10 +195,10 @@ function render_callback_simpletoc($attributes)
   $post_html = '';
   $title_level = $attributes['title_level'];
 
-  // By default, the wrapper is not enabled because it causes problems on some themes
+  // Enable wrapper by filter. By default, the wrapper is not enabled because it causes problems on some themes. 
   $wrapper_enabled = apply_filters('simpletoc_wrapper_enabled', false);
 
-  // Check if filter was set externally 
+  // Check if filter was set externally by a filter
   if (isset($wrapper_enabled)) {
     // Check if the wrapper is enabled in the settings
     if (get_option('simpletoc_wrapper_enabled') == 1) {
@@ -255,6 +267,12 @@ function render_callback_simpletoc($attributes)
   return $output;
 }
 
+/*
+* Adds page numbers to headings in the provided blocks array.
+* @param array $blocks The array of blocks to process.
+* @param array $headings The array of headings to add page numbers to.
+* @return array The modified headings array with page numbers added.
+*/
 
 function simpletoc_add_pagenumber($blocks, $headings)
 {
@@ -279,12 +297,13 @@ function simpletoc_add_pagenumber($blocks, $headings)
   return $headings;
 }
 
-/**
+/*
  * Return all headings with a recursive walk through all blocks.
  * This includes groups and reusable block with groups within reusable blocks.
  * @var array[] $blocks
  * @return array[]
  */
+
 function filter_headings_recursive(array $blocks): array
 {
   $arr            = [];
@@ -329,9 +348,12 @@ function filter_headings_recursive(array $blocks): array
   return $arr;
 }
 
-/**
- * Remove all problematic characters for toc links
- */
+/*
+* Sanitizes a string to be used as an anchor attribute in HTML by removing punctuation, non-breaking spaces, umlauts, and accents,
+* and replacing whitespace and other characters with dashes.
+* @param string $string The input string to be sanitized.
+* @return string The sanitized string encoded for use in a URL.
+*/
 
 function simpletoc_sanitize_string($string)
 {
@@ -348,6 +370,13 @@ function simpletoc_sanitize_string($string)
   return $urlencoded;
 }
 
+/*
+* Add additional plugin meta links to the SimpleTOC plugin page.
+* @param array $links An array of plugin meta links.
+* @param string $file The plugin file path.
+* @return array The modified array of plugin meta links.
+*/
+
 function simpletoc_plugin_meta($links, $file)
 {
 
@@ -360,7 +389,12 @@ function simpletoc_plugin_meta($links, $file)
   return $links;
 }
 
-/* Change the ID of the existing headings in the text */
+/*
+* Adds an ID attribute to all Heading tags in the provided HTML.
+* @param string $html The HTML content to modify
+* @return string The modified HTML content with ID attributes added to the Heading tags
+*/
+
 function addAnchorAttribute($html)
 {
 
@@ -398,6 +432,13 @@ function addAnchorAttribute($html)
   return $content;
 }
 
+/*
+* Generates a table of contents based on the provided headings and attributes
+* @param array $headings An array of headings to include in the table of contents
+* @param array $attributes An array of attributes to customize the output
+* @return string The generated table of contents as HTML
+*/
+
 function generateToc($headings, $attributes)
 {
   $list = '';
@@ -421,7 +462,6 @@ function generateToc($headings, $attributes)
     $exclude_headline = shouldExcludeHeadline($headline, $attributes, $this_depth);
 
     if ($exclude_headline) {
-      //closeList($list, $list_type, $min_depth, $next_depth, $line, count($headings) - 1, $initial_depth, $this_depth);
       continue;
     }
 
@@ -453,6 +493,13 @@ function generateToc($headings, $attributes)
   return $html;
 }
 
+/*
+* Finds the minimum depth level of headings in the provided array and adjusts it based on the provided attributes
+* @param array $headings An array of headings to search through
+* @param array $attributes An array of attributes to adjust the minimum depth level
+* @return array An array containing the minimum depth level and the initial depth level
+*/
+
 function findMinDepth($headings, $attributes)
 {
   $min_depth = 6;
@@ -472,6 +519,14 @@ function findMinDepth($headings, $attributes)
   return [$min_depth, $initial_depth];
 }
 
+/*
+* Determines if a given headline should be excluded based on the provided attributes
+* @param string $headline The headline to check for exclusion
+* @param array $attributes An array of attributes to use for exclusion
+* @param int $this_depth The depth level of the headline
+* @return bool True if the headline should be excluded, false otherwise
+*/
+
 function shouldExcludeHeadline($headline, $attributes, $this_depth)
 {
   $exclude_headline = false;
@@ -483,6 +538,15 @@ function shouldExcludeHeadline($headline, $attributes, $this_depth)
   return ($this_depth > $attributes['max_level'] || $exclude_headline || $this_depth < $attributes['min_level']);
 }
 
+/*
+* The openList function appends a new list item to the global $list variable, adding necessary opening tags if needed to maintain the correct nesting of the list.
+* @param string &$list The global list variable to append the new list item to.
+* @param string $list_type The type of list to be created, either "ul" (unordered list) or "ol" (ordered list).
+* @param int &$min_depth The minimum depth of headings that should be included in the table of contents.
+* @param int $this_depth The depth of the current heading being processed.
+* @return void The function modifies the input $list variable directly.
+*/
+
 function openList(&$list, $list_type, &$min_depth, $this_depth)
 {
   if ($this_depth == $min_depth) {
@@ -493,6 +557,19 @@ function openList(&$list, $list_type, &$min_depth, $this_depth)
     }
   }
 }
+
+/*
+* Closes an HTML list tag and updates the list string and minimum depth variable as necessary.
+* @param string $list A reference to the list string being built.
+* @param string $list_type The type of list tag being used (ul or ol).
+* @param int $min_depth A reference to the minimum depth variable.
+* @param int|null $next_depth The depth of the next list item, or null if this is the last item.
+* @param int $line The index of the current list item.
+* @param int $last_line The index of the last list item.
+* @param int $initial_depth The initial depth of the list.
+* @param int $this_depth The depth of the current list item.
+* @return void
+*/
 
 function closeList(&$list, $list_type, &$min_depth, $next_depth, $line, $last_line, $initial_depth, $this_depth)
 {
@@ -512,6 +589,12 @@ function closeList(&$list, $list_type, &$min_depth, $next_depth, $line, $last_li
   }
 }
 
+/*
+* Adds smooth scrolling styles to the output HTML, if enabled by global option or block attribute.
+* @param string $html The HTML string to which the styles will be added.
+* @param array $attributes An array of block attributes.
+* @return string The modified HTML string with the added smooth scrolling styles.
+*/
 
 function addSmooth($html, $attributes)
 {
@@ -522,6 +605,9 @@ function addSmooth($html, $attributes)
   return $html;
 }
 
+/*
+* Enqueues the necessary CSS and JS files for the accordion functionality on the frontend.
+*/
 function enqueue_accordion_frontend()
 {
   wp_enqueue_script(
@@ -539,6 +625,14 @@ function enqueue_accordion_frontend()
     '1.0.0'
   );
 }
+
+/*
+* Adds the opening HTML tag(s) for the accordion element and the table of contents title, if applicable.
+* @param string $html The HTML string to add the opening tag(s) to
+* @param array $attributes The attributes of the table of contents block
+* @param int $itemcount The number of items in the table of contents
+* @param string $alignclass The alignment class for the table of contents block
+*/
 
 function addAccordionStart($html, $attributes, $itemcount, $alignclass)
 {
@@ -573,6 +667,13 @@ function addAccordionStart($html, $attributes, $itemcount, $alignclass)
   return $html;
 }
 
+/*
+* Adds the closing HTML tag(s) for the accordion element if the accordion is enabled.
+* @param string $html The HTML string to add the closing tag(s) to
+* @param array $attributes The attributes of the table of contents block
+* @return string The modified HTML string with the closing tag(s) added
+*/
+
 function addAccordionEnd($html, $attributes)
 {
   // Check if accordion is enabled either through the function arguments or the options
@@ -584,6 +685,12 @@ function addAccordionEnd($html, $attributes)
 
   return $html;
 }
+
+/*
+* Extracts the ID value from the provided heading HTML string.
+* @param string $headline The heading HTML string to extract the ID value from
+* @return mixed Returns the extracted ID value, or false if no ID value is found
+*/
 
 function extractID($headline)
 {
