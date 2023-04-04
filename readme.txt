@@ -52,7 +52,7 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 
 = 6.0.0 =
 * Feature: Added SimpleTOC global settings to override individual block configuration. 
-* Fix: Refactored php code using artifical intelligence (ChatGPT-4).
+* Fix: Refactored php code using artifical intelligence (GPT-4).
 * Fix: Better output with well-formed HTML and consistent double quotation marks.
 
 = 5.0.56 =
