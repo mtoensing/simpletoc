@@ -684,7 +684,8 @@ function extract_id($headline)
 function get_page_number_from_headline($headline)
 {
     $dom = new \DOMDocument();
-    @$dom->loadHTML($headline, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+    
+    @$dom->loadHTML('<?xml version="1.0" encoding="UTF-8"?>' . "\n" . $headline, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
     $xpath = new \DOMXPath($dom);
     $nodes = $xpath->query('//*/@data-page');
