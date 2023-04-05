@@ -35,13 +35,13 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 
 = Customization = 
 
+* Administrators can utilize global settings to supersede the individual block settings.
 * Add background and text color with Gutenberg groups.
 * Native block support for wide and full width.
 * Control the maximum depth of the headings.
 * Choose between an ordered, bullet HTML list. Or indent the list.
 * Select a heading level or turn it into a paragraph.
 * Disable the h2 heading of the TOC block and add your own.
-* Administrators can utilize global settings to supersede the individual block settings.
 
 = Compatibility =
 
@@ -137,11 +137,7 @@ You can convert your configured SimpleTOC block into a reusable block in Gutenbe
 
 = How to add a div tag wrapper to the TOC? =
 
-If you add a custom class to the SimpleTOC block in "Advanced" and then "Additional CSS Class(es)" a div with that class will be wrapped around the HTML output. You can force this with a filter, too.
-
-Example: 
-
-    add_filter( 'simpletoc_wrapper_enabled', '__return_true' );
+If you add a custom class to the SimpleTOC block in "Advanced" and then "Additional CSS Class(es)" a div with that class will be wrapped around the HTML output. 
 
 = How to allow developers to exclude specific headings programmatically? = 
 
@@ -187,4 +183,3 @@ This plugin is forked from [pdewouters](https://github.com/pdewouters/gutentoc) 
 Many thanks to [Tom J Nowell](https://tomjn.com) and and Sally CJ who both helped me a lot with my questions over at wordpress.stackexchange.com
 
 Thanks to Quintus Valerius Soranus for inventing the Table of Contents around 100 BC. 
-
