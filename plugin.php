@@ -272,9 +272,9 @@ function simpletoc_add_pagenumber($blocks, $headings)
 * @var array[] $blocks
 * @return array[]
 */
-function filter_headings_recursive(array $blocks): array
+function filter_headings_recursive($blocks)
 {
-    $arr            = [];
+    $arr = [];
     // allow developers to ignore specific blocks
     $ignored_blocks = apply_filters('simpletoc_excluded_blocks', []);
 
