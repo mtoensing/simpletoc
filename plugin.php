@@ -4,7 +4,7 @@
  * Plugin Name:   SimpleTOC - Table of Contents Block
  * Plugin URI:    https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
  * Description:   SEO-friendly Table of Contents Gutenberg block. No JavaScript and no CSS means faster loading.
- * Version:       6.0.1
+ * Version:       6.0.2
  * Author:        Marc Tönsing
  * Author URI:    https://marc.tv
  * Text Domain:   simpletoc
@@ -248,6 +248,10 @@ function simpletoc_add_pagenumber($blocks, $headings)
 {
     $pages = 1;
 
+    if (!is_array($blocks)) {
+        return $headings;
+    }
+
     foreach ($blocks as $block => $innerBlock) {
         // count nextpage blocks
         if (isset($blocks[$block]['blockName']) && $blocks[$block]['blockName'] === 'core/nextpage') {
@@ -275,6 +279,11 @@ function simpletoc_add_pagenumber($blocks, $headings)
 function filter_headings_recursive($blocks)
 {
     $arr = [];
+
+    if (!is_array($blocks)) {
+        return $arr;
+    }
+
     // allow developers to ignore specific blocks
     $ignored_blocks = apply_filters('simpletoc_excluded_blocks', []);
 
@@ -684,7 +693,7 @@ function extract_id($headline)
 function get_page_number_from_headline($headline)
 {
     $dom = new \DOMDocument();
-    
+
     @$dom->loadHTML('<?xml version="1.0" encoding="UTF-8"?>' . "\n" . $headline, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
     $xpath = new \DOMXPath($dom);
