@@ -383,7 +383,7 @@ function add_anchor_attribute($html)
             continue;
         }
         // Set id attribute
-        $heading_text = strip_tags($html);
+        $heading_text = trim(strip_tags($html));
         $anchor = simpletoc_sanitize_string($heading_text);
         $tag->setAttribute("id", $anchor);
     }
@@ -426,8 +426,8 @@ function generate_toc($headings, $attributes)
             continue;
         }
 
-        $title = trim(strip_tags($headline));
         $customid = extract_id($headline);
+        $title = trim(strip_tags($headline));
         $link = simpletoc_sanitize_string($title);
 
         if ($customid) {
