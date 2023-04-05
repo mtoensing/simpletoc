@@ -4,7 +4,7 @@ Tags: Gutenberg, block, TOC, Table of Contents, AMP
 Requires at least: 5.9
 Donate link: https://marc.tv/out/donate
 Tested up to: 6.2
-Stable tag: 6.0.0
+Stable tag: 6.0.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -49,6 +49,9 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 * Works with popular AMP plugins.
 
 == Changelog ==
+
+= 6.0.1 =
+* Fix: "Update failed" with error 500 when Rank Math is installed.  
 
 = 6.0.0 =
 * Feature: Added SimpleTOC global settings to override individual block configuration. 
