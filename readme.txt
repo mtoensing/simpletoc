@@ -119,6 +119,10 @@ In Gutenberg, add a block and search for "SimpleTOC" or just "TOC". Please save 
 
 == Frequently Asked Questions ==
 
+= Configuring Global Settings in SimpleTOC =
+
+SimpleTOC allows you to configure global settings for your WordPress website. These settings can be enforced globally, overriding any block-level configurations that may exist. To access these settings, navigate to the SimpleTOC section of the WordPress Settings.
+
 = How do I add a background color to SimpleTOC using Gutenberg groups? =
 
 Select the block and select "group" in the context menu. Apply "background color", "link color" and "text color" to this group. SimpleTOC will inherit these styles. You would like to use this styled SimpleTOC group next time you write a post? Convert it to a reusable block.
