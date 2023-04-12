@@ -428,30 +428,21 @@ function generate_toc($headings, $attributes)
     foreach ($headings as $line => $headline) {
         $this_depth = (int)$headings[$line][2];
         $next_depth = isset($headings[$line + 1][2]) ? (int)$headings[$line + 1][2] : '';
-
         $exclude_headline = should_exclude_headline($headline, $attributes, $this_depth);
-
-        if ($exclude_headline) {
-            continue;
-        }
-
-        $customid = extract_id($headline);
         $title = trim(strip_tags($headline));
-        $link = simpletoc_sanitize_string($title);
+        $customId = extract_id($headline);
+        $link = $customId ? $customId : simpletoc_sanitize_string($title);
 
-        if ($customid) {
-            $link = $customid;
+        if (!$exclude_headline) {
+
+            $item_count++;
+            open_list($list, $list_type, $min_depth, $this_depth);
+            $page = get_page_number_from_headline($headline);
+            $list .= "<a href=\"" . $absolute_url . $page . "#" . $link . "\">" . $title . "</a>";
+
         }
-
-        open_list($list, $list_type, $min_depth, $this_depth);
-
-        $page = get_page_number_from_headline($headline);
-
-        $list .= "<a href=\"" . $absolute_url . $page . "#" . $link . "\">" . $title . "</a>";
-
         close_list($list, $list_type, $min_depth, $next_depth, $line, count($headings) - 1, $initial_depth, $this_depth);
-
-        $item_count++;
+       
     }
 
     $html = add_accordion_start($html, $attributes, $item_count, $align_class);
