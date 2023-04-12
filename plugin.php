@@ -196,7 +196,7 @@ function render_callback_simpletoc($attributes)
     $headings = array_reverse(filter_headings_recursive($blocks));
     $headings = simpletoc_add_pagenumber($blocks, $headings);
     $headings_clean = array_map('trim', $headings);
-    $toclist = generate_toc($headings_clean, $attributes);
+    $toc_html = generate_toc($headings_clean, $attributes);
 
     if (empty($blocks)) {
         return get_empty_blocks_message($is_backend, $attributes, $title_level, $alignclass, $title_text, __('No blocks found.', 'simpletoc'), __('Save or update post first.', 'simpletoc'));
@@ -206,11 +206,11 @@ function render_callback_simpletoc($attributes)
         return get_empty_blocks_message($is_backend, $attributes, $title_level, $alignclass, $title_text, __('No headings found.', 'simpletoc'), __('Save or update post first.', 'simpletoc'));
     }
 
-    if (empty($toclist)) {
+    if (empty($toc_html)) {
         return get_empty_blocks_message($is_backend, $attributes, $title_level, $alignclass, $title_text, __('No headings found.', 'simpletoc'), __('Check minimal and maximum level block settings.', 'simpletoc'));
     }
 
-    return $pre_html . $toclist . $post_html;
+    return $pre_html . $toc_html . $post_html;
 }
 
 /**
@@ -464,6 +464,11 @@ function generate_toc($headings, $attributes)
     }
 
     $html = add_accordion_end($html, $attributes);
+
+    // return an emtpy string if stripped result is empty 
+    if (empty(trim(strip_tags($html)))) {
+        $html = '';
+    }
 
     return $html;
 }
