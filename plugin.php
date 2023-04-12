@@ -442,7 +442,7 @@ function generate_toc($headings, $attributes)
 
         }
         close_list($list, $list_type, $min_depth, $next_depth, $line, count($headings) - 1, $initial_depth, $this_depth);
-       
+
     }
 
     $html = add_accordion_start($html, $attributes, $item_count, $align_class);
@@ -465,7 +465,7 @@ function generate_toc($headings, $attributes)
 
     $html = add_accordion_end($html, $attributes);
 
-    // return an emtpy string if stripped result is empty 
+    // return an emtpy string if stripped result is empty
     if (empty(trim(strip_tags($html)))) {
         $html = '';
     }
