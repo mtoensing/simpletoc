@@ -1,0 +1,65 @@
+== Changelog ==
+
+= 6.0.4 =
+* Fix: specific min/max values for could result in merged headlines.
+
+= 6.0.2 =
+* Fix: "Update failed" with error 500 when Rank Math is installed. 
+
+= 6.0.0 =
+* Feature: Added SimpleTOC global settings to override individual block configuration. 
+* Fix: Better output with well-formed HTML and consistent double quotation marks.
+* Fix: Refactored php code using GPT-4.
+
+= 5.0.56 =
+* Feature: Optional div wrapper with role=navigation and ARIA attributes. 
+* Fix: Removed deprecated php function 'utf8_decode'.
+
+= 5.0.55 = 
+* Feature: Better smooth-scrolling support. Thanks Clarus Dignus!
+
+= 5.0.53 = 
+* Fix: Prevent direct access to plugin files. Thanks rafaucau!
+
+= 5.0.52 =
+* Fix: wp_set_script_translations undefined in older WordPress installations.
+
+= 5.0.51 =
+* Fix: Accordion menu CSS alignment.  
+
+= 5.0.50 =
+* Fix: Identifier 'i' has already been declared
+* Fix: SimpleTOC will not nag the user about changed content in the editor anymore. Therefore I removed the corresponding option from the settings.
+* Fix: Minor changes to accordion css.
+
+= 5.0.45 =
+* Feature: Option to render SimpleTOC heading as paragraph.
+* Fix: Added margin to the bottom of the accordion menu.
+
+= 5.0.43 =
+* Compatibility with WordPress 6.1
+* Feature: Hide SimpleTOC in an accordion menu. Adds minimal JavaScript and css styles if enabled.
+* Feature: Option to change SimpleTOC block heading level.
+* Fix: Accordion menu can now be added multiple times.
+* Fix: Accordion styling in Gutenberg editor.
+* Fix: Minor accordion styling fixes.
+* Fix: Added JavaScript and CSS for the accordion menu by using standard methods.
+
+= 5.0.36 =
+* Feature: [Spin up](https://demo.tastewp.com/simpletoc) a new WordPress instance with the SimpleTOC plugin already installed.
+* Fix: Better handling for `simpletoc-hidden` class to hide headings. Thank you blronaldhuereca!
+
+= 5.0.34 =
+* Feature: Moved list controls to toolbar and rearranged settings to fit block order.
+* Feature: Filter for developers to wrap toc with a div tag. Thank you rafaucau!
+* Fix: Minor localization tweaks. 
+
+= 5.0.31 =
+* Feature: Filter for developers to exclude specific blocks. See faq for details. Thanks rafaucau!
+* Feature: Easier development with @wordpress/env to start a dev environment. Thanks rafaucau!
+
+= 5.0.28 =
+* Feature: Change the TOC headline in the block options. Thank you Philipp Stracker!
+
+= 5.0.17 =
+* Feature: Support for custom Anchor IDs in headings. Thank you Matthias Altmann!
