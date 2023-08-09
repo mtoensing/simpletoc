@@ -3,8 +3,8 @@ Contributors: MarcDK
 Tags: Gutenberg, block, TOC, Table of Contents, AMP
 Requires at least: 5.9
 Donate link: https://marc.tv/out/donate
-Tested up to: 6.2
-Stable tag: 6.0.4
+Tested up to: 6.3
+Stable tag: 6.0.5
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -50,8 +50,8 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 
 == Changelog ==
 
-= 6.0.4 =
-* Fix: 
+= 6.0.5 =
+* Compatibilty with WordPress 6.3
 
 == Installation ==
 
