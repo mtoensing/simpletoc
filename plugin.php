@@ -618,7 +618,7 @@ function add_accordion_start($html, $attributes, $itemcount, $alignclass)
     if ($isAccordionEnabled) {
         enqueue_accordion_frontend();
         $titleText = esc_html(trim($attributes['title_text'])) ?: __('Table of Contents', 'simpletoc');
-        $accordionStart = '<h2><button type="button" aria-expanded="false" aria-controls="simpletoc-content-container" class="simpletoc-collapsible">' . $titleText . '</button></h2><div class="simpletoc-content">';
+        $accordionStart = '<h2 style="margin: 0;"><button type="button" aria-expanded="false" aria-controls="simpletoc-content-container" class="simpletoc-collapsible">' . $titleText . '</button></h2><div class="simpletoc-content">';
         $accordionEnd = '</div>';
     }
 
