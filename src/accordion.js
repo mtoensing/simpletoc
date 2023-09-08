@@ -1,13 +1,13 @@
-const coll = document.getElementsByClassName( 'simpletoc-collapsible' );
+const button = document.querySelector( 'button.simpletoc-collapsible ' );
 
-for ( const element of coll ) {
-	element.addEventListener( 'click', function () {
+if ( button ) {
+	button.addEventListener( 'click', function () {
 		this.classList.toggle( 'active' );
-		const content = this.nextElementSibling;
+		const content = this.parentElement.nextElementSibling;
 		content.style.display =
 			content.style.display === 'block' ? 'none' : 'block';
 
-		// Toggle aria-expanded attribute
+		// Toggle aria-expanded attribute on the button
 		const ariaExpanded = this.getAttribute( 'aria-expanded' );
 		if ( ariaExpanded === 'true' ) {
 			this.setAttribute( 'aria-expanded', 'false' );

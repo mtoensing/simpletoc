@@ -2,6 +2,10 @@
 	margin-bottom: 1em;
 }
 
+.wp-block-simpletoc-toc h2 {
+	margin: 0;
+}
+
 .simpletoc-collapsible {
 	background-color: #eee;
 	color: #444;
