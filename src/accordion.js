@@ -1,6 +1,6 @@
-const button = document.querySelector( 'button.simpletoc-collapsible ' );
+const buttons = document.querySelectorAll( 'button.simpletoc-collapsible' );
 
-if ( button ) {
+buttons.forEach( ( button ) => {
 	button.addEventListener( 'click', function () {
 		this.classList.toggle( 'active' );
 		const content = this.parentElement.nextElementSibling;
@@ -15,4 +15,4 @@ if ( button ) {
 			this.setAttribute( 'aria-expanded', 'true' );
 		}
 	} );
-}
+} );
