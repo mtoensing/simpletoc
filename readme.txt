@@ -51,7 +51,7 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 == Changelog ==
 
 = 6.0.7 =
-* Fixed: Caching of accordion JavaScript. 
+* Fixed: Caching of accordion JavaScript. Thanks jghitchcock!
 
 = 6.0.6 =
 * Added ARIA accessibility labels for the accordion. Thanks Amber Hinds!
