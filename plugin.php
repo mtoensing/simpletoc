@@ -4,7 +4,7 @@
  * Plugin Name:   SimpleTOC - Table of Contents Block
  * Plugin URI:    https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
  * Description:   SEO-friendly Table of Contents Gutenberg block. No JavaScript and no CSS means faster loading.
- * Version:       6.0.8
+ * Version:       6.0.9
  * Author:        Marc Tönsing
  * Author URI:    https://marc.tv
  * Text Domain:   simpletoc
@@ -589,7 +589,7 @@ function enqueue_accordion_frontend()
         'simpletoc-accordion',
         plugin_dir_url(__FILE__) . 'src/accordion.js',
         array(),
-        '6.0.8',
+        '6.0.9',
         true
     );
 
@@ -597,7 +597,7 @@ function enqueue_accordion_frontend()
         'simpletoc-accordion',
         plugin_dir_url(__FILE__) . 'src/accordion.css',
         array(),
-        '6.0.8'
+        '6.0.9'
     );
 }
 
@@ -618,7 +618,7 @@ function add_accordion_start($html, $attributes, $itemcount, $alignclass)
     if ($isAccordionEnabled) {
         enqueue_accordion_frontend();
         $titleText = esc_html(trim($attributes['title_text'])) ?: __('Table of Contents', 'simpletoc');
-        $accordionStart = '<h2 style="margin: 0;"><button type="button" aria-expanded="false" aria-controls="simpletoc-content" class="simpletoc-collapsible">' . $titleText . '</button></h2><div class="simpletoc-content">';
+        $accordionStart = '<h2 style="margin: 0;"><button type="button" aria-expanded="false" aria-controls="simpletoc-content-container" class="simpletoc-collapsible">' . $titleText . '</button></h2><div id="simpletoc-content-container" class="simpletoc-content">';
         $accordionEnd = '</div>';
     }
 
