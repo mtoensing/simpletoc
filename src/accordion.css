@@ -19,14 +19,14 @@
 	background-color: #ddd;
 }
 
-.simpletoc-collapsible::after {
+.simpletoc-collapsible .simpletoc-icon::after {
 	content: "\02795"; /* Unicode character for "plus" sign (+) */
 	float: right;
 	margin-left: 5px;
 	font-size: 13px;
 }
 
-.simpletoc .active::after {
+.simpletoc .active .simpletoc-icon::after {
 	content: "\2796"; /* Unicode character for "minus" sign (-) */
 }
 
