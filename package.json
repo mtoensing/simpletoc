@@ -1,6 +1,6 @@
 {
 	"name": "simpletoc",
-	"version": "6.0.10",
+	"version": "6.0.11",
 	"author": "Marc Tönsing",
 	"description": "SEO-friendly Table of Contents Gutenberg block. No JavaScript and no CSS means faster loading.",
 	"main": "build/index.js",
@@ -22,12 +22,12 @@
 		"wp-int": "npm install @wordpress/scripts --save-dev --save-exact @wordpress/scripts"
 	},
 	"devDependencies": {
-		"@wordpress/env": "^8.8.0",
-		"@wordpress/scripts": "^26.13.0"
+		"@wordpress/env": "^8.11.0",
+		"@wordpress/scripts": "^26.16.0"
 	},
 	"dependencies": {
-		"@wordpress/i18n": "^4.42.0",
-		"@wordpress/icons": "^9.33.0",
-		"@wordpress/server-side-render": "^4.19.0"
+		"@wordpress/i18n": "^4.45.0",
+		"@wordpress/icons": "^9.36.0",
+		"@wordpress/server-side-render": "^4.22.0"
 	}
 }
