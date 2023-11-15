@@ -20,7 +20,7 @@ const simpletocicon = (
 import Edit from './edit';
 import save from './save';
 
-registerBlockType(metadata, {
+registerBlockType( metadata, {
 	icon: simpletocicon,
 	/**
 	 * @see ./edit.js
@@ -31,4 +31,4 @@ registerBlockType(metadata, {
 	 * @see ./save.js
 	 */
 	save,
-});
+} );
