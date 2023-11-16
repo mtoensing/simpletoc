@@ -6,7 +6,7 @@
  * Description:   SEO-friendly Table of Contents Gutenberg block. No JavaScript and no CSS means faster loading.
  * Version:       6.0.11
  * Author:        Marc Tönsing
- * Author URI:    https://marc.tv
+ * Author URI:    https://toensing.com
  * Text Domain:   simpletoc
  * License: GPL   v2 or later
  * License URI:   http://www.gnu.org/licenses/gpl-2.0.html
