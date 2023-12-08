@@ -296,8 +296,11 @@ function filter_headings_recursive($blocks)
 
             if (isset($innerBlock['attrs']['ref'])) {
                 // search in reusable blocks
-                $e_arr = parse_blocks(get_post($innerBlock['attrs']['ref'])->post_content);
-                $arr   = array_merge(filter_headings_recursive($e_arr), $arr);
+                $post = get_post($innerBlock['attrs']['ref']);
+                if ($post) {
+                    $e_arr = parse_blocks($post->post_content);
+                    $arr = array_merge(filter_headings_recursive($e_arr), $arr);
+                }
             } else {
                 // search in groups
                 $arr = array_merge(filter_headings_recursive($innerBlock), $arr);
