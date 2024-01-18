@@ -51,6 +51,9 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 
 == Changelog ==
 
+= 6.1.0 =
+* Fixed: Broken markup when tags closed for headers below minimum. Thanks @harmoney !
+
 = 6.0.14 =
 * Fixed: Attempt to read property post_content
 
