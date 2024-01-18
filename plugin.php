@@ -556,7 +556,7 @@ function open_list(&$list, $list_type, &$min_depth, $this_depth)
 function close_list(&$list, $list_type, &$min_depth, $min_level, $max_level, $next_depth, $line, $last_line, $initial_depth, $this_depth)
 {
     if ($line !== $last_line) {
-        $list .=  PHP_EOL . "<!-- What do? this $this_depth, next $next_depth, min $min_level, max $max_level, $line, $last_line -->" . PHP_EOL;
+        $list .=  PHP_EOL;
         if($next_depth < $this_depth) {
             // Next heading goes back shallower in the ToC!
             if($next_depth >= $min_level) {
