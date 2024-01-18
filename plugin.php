@@ -441,7 +441,7 @@ function generate_toc($headings, $attributes)
             $item_count++;
             open_list($list, $list_type, $min_depth, $this_depth);
             $page = get_page_number_from_headline($headline);
-            $list .= "<a href=\"" . $absolute_url . $page . "#" . $link . "\">" . $title . "</a>";
+            $list .= "<a href=\"" . $absolute_url . $page . "#" . $link . "\">" . $title . "</a>" . PHP_EOL;
 
         }
         close_list($list, $list_type, $min_depth, $next_depth, $line, count($headings) - 1, $initial_depth, $this_depth);
