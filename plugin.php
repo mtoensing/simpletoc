@@ -444,7 +444,7 @@ function generate_toc($headings, $attributes)
             $list .= "<a href=\"" . $absolute_url . $page . "#" . $link . "\">" . $title . "</a>" . PHP_EOL;
 
         }
-        close_list($list, $list_type, $min_depth, $next_depth, $line, count($headings) - 1, $initial_depth, $this_depth);
+        close_list($list, $list_type, $min_depth, $attributes['min_level'], $attributes['max_level'], $next_depth, $line, count($headings) - 1, $initial_depth, $this_depth);
 
     }
 
@@ -496,6 +496,7 @@ function find_min_depth($headings, $attributes)
 
     if ($attributes['min_level'] > $min_depth) {
         $min_depth = $attributes['min_level'];
+        $initial_depth = $min_depth;
     }
 
     return [$min_depth, $initial_depth];
@@ -543,6 +544,8 @@ function open_list(&$list, $list_type, &$min_depth, $this_depth)
 * @param string $list A reference to the list string being built.
 * @param string $list_type The type of list tag being used (ul or ol).
 * @param int $min_depth A reference to the minimum depth variable.
+* @param int $min_depth Minimum depth setting, which is a low number like 1.
+* @param int $max_depth Maximum depth setting, which is a high number like 6.
 * @param int|null $next_depth The depth of the next list item, or null if this is the last item.
 * @param int $line The index of the current list item.
 * @param int $last_line The index of the last list item.
@@ -550,18 +553,51 @@ function open_list(&$list, $list_type, &$min_depth, $this_depth)
 * @param int $this_depth The depth of the current list item.
 * @return void
 */
-function close_list(&$list, $list_type, &$min_depth, $next_depth, $line, $last_line, $initial_depth, $this_depth)
+function close_list(&$list, $list_type, &$min_depth, $min_level, $max_level, $next_depth, $line, $last_line, $initial_depth, $this_depth)
 {
-    if ($line != $last_line) {
-        if ($min_depth > $next_depth) {
-            for ($min_depth; $min_depth > $next_depth; $min_depth--) {
-                $list .= "</li>\n</" . $list_type . ">\n";
+    if ($line !== $last_line) {
+        $list .=  PHP_EOL . "<!-- What do? this $this_depth, next $next_depth, min $min_level, max $max_level, $line, $last_line -->" . PHP_EOL;
+        if($next_depth < $this_depth) {
+            // Next heading goes back shallower in the ToC!
+            if($next_depth >= $min_level) {
+                // Next heading is within min depth bounds and WILL get ToC'd
+                // Close this item and step back shallower in the ToC.
+                $list .=  PHP_EOL . "<!-- Close SUBLIST going shallower within bounds; this $this_depth, min $min_level, max $max_level, next $next_depth -->" . PHP_EOL;
+                for ($min_depth; $min_depth > $next_depth; $min_depth--) {
+                    $list .= "</li>\n</" . $list_type . ">\n";
+                }
+            } else {
+                // SKIP CLOSING! Next heading won't be included in the ToC at all.
+                $list .=  PHP_EOL . "<!-- Leave OPEN going shallower beyond bounds; this $this_depth, min $min_level, max $max_level, next $next_depth -->" . PHP_EOL;
+            }
+        } elseif($next_depth === $this_depth) {
+            // Next heading is exactly as deep. Not going shallower or deeper in the ToC hierarchy.
+            // E.g. this is h3, next is h3
+            if ($next_depth < $min_level) {
+                // E.g. this is h3, next is h3, min is h2
+                // This heading didn't open a ToC item. Nothing to close.
+                $list .=  PHP_EOL . "<!-- Leave OPEN going across. Too deep. this $this_depth, min $min_level, max $max_level, next $next_depth -->" . PHP_EOL;
+            } else {
+                // SKIP CLOSING! Next heading will open a new sub-list in the ToC.
+                $list .=  PHP_EOL . "<!-- Close list ITEM this $this_depth, min $min_level, max $max_level, next $next_depth -->" . PHP_EOL;
+                $list .= "</li>\n";
+            }
+        } else {
+            // Next heading is deeper in the ToC.
+            if ($next_depth <= $max_level) {
+                // Next deeper heading is within bounds and will open a new sub-list. Leave this one open.
+                // E.g. this is h3, next is h4, min is h2, max is h5
+                $list .=  PHP_EOL . "<!-- Leave OPEN going deeper within bounds; this $this_depth, min $min_level, max $max_level, next $next_depth -->" . PHP_EOL;
+            } else {
+                // Next heading is too deep and will be ignored. We'll close out coming up or finishing the ToC.
+                // E.g. this is h3, next is h4, max is h3
+                $list .=  PHP_EOL . "<!-- Leave OPEN going down too deep; this $this_depth, min $min_level, max $max_level, next $next_depth -->" . PHP_EOL;
             }
         }
-        if ($min_depth == $next_depth) {
-            $list .= "</li>\n";
-        }
     } else {
+        // This is the last line of the ToC. Close out the whole thing.
+        // IMPORTANT NOTE: The overall ToC list will be wrapped in a list element and closed out.
+        $list .=  PHP_EOL . "<!-- close the whole list this $this_depth, initial $initial_depth, min $min_level, max $max_level, min depth $min_depth, next $next_depth -->" . PHP_EOL;
         for ($initial_depth; $initial_depth < $this_depth; $initial_depth++) {
             $list .= "</li>\n</" . $list_type . ">\n";
         }
