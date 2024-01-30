@@ -65,6 +65,10 @@
     "wrapper": {
       "type": "boolean",
       "default": false
+    },
+    "autoupdate": {
+      "type": "boolean",
+      "default": true
     }
   },
   "textdomain": "simpletoc",

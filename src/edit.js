@@ -10,6 +10,7 @@ import {
 	formatListBullets,
 	formatOutdent,
 	formatIndent,
+	update,
 	formatListNumbered,
 } from '@wordpress/icons';
 import {
@@ -30,6 +31,8 @@ import './accordion.css';
 
 export default function Edit( { attributes, setAttributes } ) {
 	const blockProps = useBlockProps();
+
+	const { autoupdate } = attributes;
 
 	const { returnisSaving, returnisSavingNonPostEntityChanges } = useSelect(
 		( select ) => {
@@ -93,6 +96,13 @@ export default function Edit( { attributes, setAttributes } ) {
 					setAttributes( { remove_indent: false } );
 				} }
 			/>
+			{ ! attributes.autoupdate && (
+			<ToolbarButton
+				icon={ update }
+				label={__("Update table of contents", "simpletoc")}
+				onClick={() => setAttributes({ updated: Date.now() })}
+          	/>
+		  	)}
 		</BlockControls>
 	);
 
@@ -336,6 +346,21 @@ export default function Edit( { attributes, setAttributes } ) {
 							}
 						/>
 					</PanelRow>
+					<PanelRow>
+						<ToggleControl
+							label={ __( 'Autoupdate', 'simpletoc' ) }
+							help={ __(
+								'Enables the auto refresh of the toc.',
+								'simpletoc'
+							) }
+							checked={ attributes.autoupdate }
+							onChange={ () =>
+								setAttributes( {
+									autoupdate: ! attributes.autoupdate,
+								} )
+							}
+						/>
+					</PanelRow>
 				</PanelBody>
 			</Panel>
 		</InspectorControls>
@@ -345,14 +370,15 @@ export default function Edit( { attributes, setAttributes } ) {
 		<div { ...blockProps }>
 			{ controls }
 			{ controlssidebar }
-			{ returnisSaving || returnisSavingNonPostEntityChanges ? (
-				<Spinner />
-			) : (
-				<ServerSideRender
-					block="simpletoc/toc"
-					attributes={ attributes }
-				/>
-			) }
+			{/* Conditional rendering based on autoupdate attribute */}
+			{ (autoupdate && (returnisSaving || returnisSavingNonPostEntityChanges)) ? (
+                <Spinner />
+            ) : (
+                <ServerSideRender
+                    block="simpletoc/toc"
+                    attributes={attributes}
+                />
+            )}
 		</div>
 	);
 }
