@@ -51,6 +51,9 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 
 == Changelog ==
 
+= 6.3.0 =
+* Added: Option for autoupdates. This can be disabled in the blocks advanced settings.
+
 = 6.2.0 =
 * Added: Implemented smooth animation for improved user interaction in the accordion menu.
 * Added: Upgraded styling of the accordion menu for a more visually appealing and modern user experience.
