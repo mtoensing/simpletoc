@@ -7,11 +7,18 @@
 	color: #444;
 	cursor: pointer;
 	padding: 18px;
+	font-weight: 700;
 	width: 100%;
 	border: none;
 	text-align: left;
 	outline: none;
 	font-size: 18px;
+	border-radius: 5px;
+}
+
+.simpletoc-collapsible.active {
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
 }
 
 .simpletoc .active,
@@ -31,8 +38,15 @@
 }
 
 .simpletoc-content {
-	padding: 14px 18px 0;
+	padding: 0;
 	display: none;
 	overflow: hidden;
 	background-color: #f1f1f1;
+	overflow: hidden;
+	transition: max-height 0.25s ease-in-out;
+	display: block; /* Ensure the content is set to display */
+	max-height: 0; /* Initial state for collapsed content */
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
 }
+

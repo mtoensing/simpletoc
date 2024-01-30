@@ -4,7 +4,7 @@ Tags: TOC, Table of Contents, Gutenberg, block, FAQ
 Requires at least: 5.9
 Donate link: https://marc.tv/out/donate
 Tested up to: 6.4
-Stable tag: 6.1.0
+Stable tag: 6.1.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -54,13 +54,6 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 = 6.1.0 =
 * Fixed: Broken markup when tags closed for headers below minimum. Thanks @harmoney !
 
-= 6.0.14 =
-* Fixed: Attempt to read property post_content
-
-= 6.0.11 = 
-* Tested with WordPress 6.4.
-* Removed deprecated filter function.
-
 = 6.0.10 =
 * Added aria-hidden attribute to icon in accordion. Thanks Alex Stine!
 
@@ -68,9 +61,6 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 * Added ARIA accessibility labels for the accordion. Thanks Amber Hinds!
 * Fixed: Caching of accordion JavaScript. Thanks jghitchcock!
 * Added correct ARIA controls attribute.
-
-= 6.0.5 =
-* Compatibilty with WordPress 6.3
 
 == Installation ==
 
