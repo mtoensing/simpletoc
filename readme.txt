@@ -52,8 +52,8 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 == Changelog ==
 
 = 6.2.0 =
-* Feature: Added animation to accordion menu.
-* Feature: Better styling for accordion menu.
+* Added: Implemented smooth animation for improved user interaction in the accordion menu.
+* Added: Upgraded styling of the accordion menu for a more visually appealing and modern user experience.
 
 = 6.1.0 =
 * Fixed: Broken markup when tags closed for headers below minimum. Thanks @harmoney !
