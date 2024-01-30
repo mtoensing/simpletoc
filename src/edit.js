@@ -97,12 +97,12 @@ export default function Edit( { attributes, setAttributes } ) {
 				} }
 			/>
 			{ ! attributes.autoupdate && (
-			<ToolbarButton
-				icon={ update }
-				label={__("Update table of contents", "simpletoc")}
-				onClick={() => setAttributes({ updated: Date.now() })}
-          	/>
-		  	)}
+				<ToolbarButton
+					icon={ update }
+					label={ __( 'Update table of contents', 'simpletoc' ) }
+					onClick={ () => setAttributes( { updated: Date.now() } ) }
+				/>
+			) }
 		</BlockControls>
 	);
 
@@ -370,15 +370,16 @@ export default function Edit( { attributes, setAttributes } ) {
 		<div { ...blockProps }>
 			{ controls }
 			{ controlssidebar }
-			{/* Conditional rendering based on autoupdate attribute */}
-			{ (autoupdate && (returnisSaving || returnisSavingNonPostEntityChanges)) ? (
-                <Spinner />
-            ) : (
-                <ServerSideRender
-                    block="simpletoc/toc"
-                    attributes={attributes}
-                />
-            )}
+			{ /* Conditional rendering based on autoupdate attribute */ }
+			{ autoupdate &&
+			( returnisSaving || returnisSavingNonPostEntityChanges ) ? (
+				<Spinner />
+			) : (
+				<ServerSideRender
+					block="simpletoc/toc"
+					attributes={ attributes }
+				/>
+			) }
 		</div>
 	);
 }
