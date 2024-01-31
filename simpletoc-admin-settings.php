@@ -1,8 +1,7 @@
 <?php
 
 // Add SimpleTOC global settings page
-function simpletoc_add_settings_page()
-{
+function simpletoc_add_settings_page() {
     add_options_page(
         __('SimpleTOC Settings', 'simpletoc'),
         __('SimpleTOC', 'simpletoc'),
@@ -14,8 +13,7 @@ function simpletoc_add_settings_page()
 add_action('admin_menu', 'simpletoc_add_settings_page');
 
 // SimpleTOC settings page content
-function simpletoc_settings_page()
-{
+function simpletoc_settings_page() {
     if (!current_user_can('manage_options')) {
         return;
     }
@@ -26,25 +24,21 @@ function simpletoc_settings_page()
         <form method="post" action="options.php">
             <?php
                 settings_fields('simpletoc_settings');
-    do_settings_sections('simpletoc');
-    submit_button();
-    ?>
+                do_settings_sections('simpletoc');
+                submit_button();
+            ?>
         </form>
     </div>
-<?php
+    <?php
 }
 
 // Register SimpleTOC settings
-function simpletoc_register_settings()
-{
+function simpletoc_register_settings() {
+    // Register settings and filters for existing features
     $wrapper_enabled_filter = apply_filters('simpletoc_wrapper_enabled', null);
     $accordion_enabled_filter = apply_filters('simpletoc_accordion_enabled', null);
     $smooth_enabled_filter = apply_filters('simpletoc_smooth_enabled', null);
     $absolute_urls_enabled_filter = apply_filters('simpletoc_absolute_urls_enabled', null);
-
-    if ($absolute_urls_enabled_filter === null) {
-        register_setting('simpletoc_settings', 'simpletoc_absolute_urls_enabled');
-    }
 
     if ($wrapper_enabled_filter === null) {
         register_setting('simpletoc_settings', 'simpletoc_wrapper_enabled');
@@ -58,6 +52,21 @@ function simpletoc_register_settings()
         register_setting('simpletoc_settings', 'simpletoc_smooth_enabled');
     }
 
+    if ($absolute_urls_enabled_filter === null) {
+        register_setting('simpletoc_settings', 'simpletoc_absolute_urls_enabled');
+    }
+
+    // Register setting for autoupdate feature
+    $autoupdate_enabled_filter = apply_filters('simpletoc_autoupdate_enabled', null);
+    if ($autoupdate_enabled_filter === null) {
+        $defaults = array(
+            'show_in_rest' => true,
+            'default' => true
+        );
+        register_setting('simpletoc_settings', 'simpletoc_autoupdate_enabled', $defaults );
+    }
+
+    // Add settings sections and fields
     add_settings_section(
         'simpletoc_wrapper_section',
         __('Global settings', 'simpletoc'),
@@ -81,7 +90,6 @@ function simpletoc_register_settings()
         'simpletoc_wrapper_section'
     );
 
-
     add_settings_field(
         'simpletoc_smooth_enabled',
         __('Force smooth scrolling', 'simpletoc'),
@@ -94,6 +102,15 @@ function simpletoc_register_settings()
         'simpletoc_absolute_urls_enabled',
         __('Force absolute urls', 'simpletoc'),
         'simpletoc_absolute_urls_enabled_callback',
+        'simpletoc',
+        'simpletoc_wrapper_section'
+    );
+
+    // Add the autoupdate settings field
+    add_settings_field(
+        'simpletoc_autoupdate_enabled',
+        __('Enable TOC Autoupdate', 'simpletoc'),
+        'simpletoc_autoupdate_enabled_callback',
         'simpletoc',
         'simpletoc_wrapper_section'
     );
@@ -147,4 +164,11 @@ function simpletoc_absolute_urls_enabled_callback()
     $absolute_urls_enabled = get_option('simpletoc_absolute_urls_enabled', false);
     echo '<input type="checkbox" name="simpletoc_absolute_urls_enabled" id="simpletoc_absolute_urls_enabled" value="1" ' . checked(1, $absolute_urls_enabled, false) . ' />';
     echo '<label for="simpletoc_absolute_urls_enabled" class="description">' . __('Adds the permalink url to the fragment.', 'simpletoc') . '</label>';
+}
+
+function simpletoc_autoupdate_enabled_callback()
+{
+    $autoupdate_enabled = get_option('simpletoc_autoupdate_enabled', true);
+    echo '<input type="checkbox" name="simpletoc_autoupdate_enabled" id="simpletoc_autoupdate_enabled" value="1" ' . checked(1, $autoupdate_enabled, false) . ' />';
+    echo '<label for="simpletoc_autoupdate_enabled" class="description">' . __('Automatic updating of the table of contents.', 'simpletoc') . '</label>';
 }

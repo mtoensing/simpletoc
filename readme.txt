@@ -43,6 +43,7 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 * Choose between an ordered, bullet HTML list. Or indent the list.
 * Select a heading level or turn it into a paragraph.
 * Disable the h2 heading of the TOC block and add your own.
+* Configure many options globally in WordPress SimpleTOC settings.
 
 = Compatibility =
 
@@ -52,7 +53,8 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 == Changelog ==
 
 = 6.3.0 =
-* Added: Option for autoupdates. This can be disabled in the blocks advanced settings.
+* Added: Option for automatic refresh. This can be disabled in the blocks advanced settings.
+* Added: Option to globally disable automatic refresh in the WordPress SimpleTOC settings.
 
 = 6.2.0 =
 * Added: Implemented smooth animation for improved user interaction in the accordion menu.

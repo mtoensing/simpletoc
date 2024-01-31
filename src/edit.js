@@ -32,6 +32,13 @@ import './accordion.css';
 export default function Edit( { attributes, setAttributes } ) {
 	const blockProps = useBlockProps();
 
+	// Get the current option value.
+	const autoupdateOption = useSelect( ( select ) => {
+		const optionValue =
+			select( 'core' ).getSite()?.simpletoc_autoupdate_enabled;
+		return Boolean( optionValue ); // or use !!optionValue
+	}, [] );
+
 	const { autoupdate } = attributes;
 
 	const { returnisSaving, returnisSavingNonPostEntityChanges } = useSelect(
@@ -96,13 +103,16 @@ export default function Edit( { attributes, setAttributes } ) {
 					setAttributes( { remove_indent: false } );
 				} }
 			/>
-			{ ! attributes.autoupdate && (
-				<ToolbarButton
-					icon={ update }
-					label={ __( 'Update table of contents', 'simpletoc' ) }
-					onClick={ () => setAttributes( { updated: Date.now() } ) }
-				/>
-			) }
+			{ ! attributes.autoupdate ||
+				( ! autoupdateOption && (
+					<ToolbarButton
+						icon={ update }
+						label={ __( 'Update table of contents', 'simpletoc' ) }
+						onClick={ () =>
+							setAttributes( { updated: Date.now() } )
+						}
+					/>
+				) ) }
 		</BlockControls>
 	);
 
@@ -348,9 +358,9 @@ export default function Edit( { attributes, setAttributes } ) {
 					</PanelRow>
 					<PanelRow>
 						<ToggleControl
-							label={ __( 'Autoupdate', 'simpletoc' ) }
+							label={ __( 'Automatic refresh', 'simpletoc' ) }
 							help={ __(
-								'Enables the auto refresh of the toc.',
+								'Automatic updating of the table of contents.',
 								'simpletoc'
 							) }
 							checked={ attributes.autoupdate }
@@ -371,7 +381,8 @@ export default function Edit( { attributes, setAttributes } ) {
 			{ controls }
 			{ controlssidebar }
 			{ /* Conditional rendering based on autoupdate attribute */ }
-			{ autoupdate &&
+			{ autoupdateOption &&
+			autoupdate &&
 			( returnisSaving || returnisSavingNonPostEntityChanges ) ? (
 				<Spinner />
 			) : (
