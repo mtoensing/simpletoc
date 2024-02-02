@@ -43,7 +43,6 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 * Choose between an ordered, bullet HTML list. Or indent the list.
 * Select a heading level or turn it into a paragraph.
 * Disable the h2 heading of the TOC block and add your own.
-* Configure many options globally in WordPress SimpleTOC settings.
 
 = Compatibility =
 
