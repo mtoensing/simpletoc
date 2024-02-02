@@ -32,11 +32,14 @@ import './accordion.css';
 export default function Edit( { attributes, setAttributes } ) {
 	const blockProps = useBlockProps();
 
-	// Get the current option value.
+	// Get the autoupdate option from WordPress php.
 	const autoupdateOption = useSelect( ( select ) => {
 		const optionValue =
 			select( 'core' ).getSite()?.simpletoc_autoupdate_enabled;
-		return Boolean( optionValue ); // or use !!optionValue
+		if ( optionValue !== 1 ) {
+			return true;
+		}
+		return false;
 	}, [] );
 
 	const { autoupdate } = attributes;

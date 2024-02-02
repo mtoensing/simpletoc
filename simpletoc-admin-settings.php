@@ -39,6 +39,7 @@ function simpletoc_register_settings() {
     $accordion_enabled_filter = apply_filters('simpletoc_accordion_enabled', null);
     $smooth_enabled_filter = apply_filters('simpletoc_smooth_enabled', null);
     $absolute_urls_enabled_filter = apply_filters('simpletoc_absolute_urls_enabled', null);
+    $autoupdate_enabled_filter = apply_filters('simpletoc_autoupdate_enabled', null);
 
     if ($wrapper_enabled_filter === null) {
         register_setting('simpletoc_settings', 'simpletoc_wrapper_enabled');
@@ -56,14 +57,8 @@ function simpletoc_register_settings() {
         register_setting('simpletoc_settings', 'simpletoc_absolute_urls_enabled');
     }
 
-    // Register setting for autoupdate feature
-    $autoupdate_enabled_filter = apply_filters('simpletoc_autoupdate_enabled', null);
     if ($autoupdate_enabled_filter === null) {
-        $defaults = array(
-            'show_in_rest' => true,
-            'default' => true
-        );
-        register_setting('simpletoc_settings', 'simpletoc_autoupdate_enabled', $defaults );
+        register_setting('simpletoc_settings', 'simpletoc_autoupdate_enabled', array( 'show_in_rest' => true ) );
     }
 
     // Add settings sections and fields
@@ -109,7 +104,7 @@ function simpletoc_register_settings() {
     // Add the autoupdate settings field
     add_settings_field(
         'simpletoc_autoupdate_enabled',
-        __('Enable TOC Autoupdate', 'simpletoc'),
+        __('Force no auto refresh', 'simpletoc'),
         'simpletoc_autoupdate_enabled_callback',
         'simpletoc',
         'simpletoc_wrapper_section'
@@ -168,7 +163,7 @@ function simpletoc_absolute_urls_enabled_callback()
 
 function simpletoc_autoupdate_enabled_callback()
 {
-    $autoupdate_enabled = get_option('simpletoc_autoupdate_enabled', true);
+    $autoupdate_enabled = get_option('simpletoc_autoupdate_enabled', false);
     echo '<input type="checkbox" name="simpletoc_autoupdate_enabled" id="simpletoc_autoupdate_enabled" value="1" ' . checked(1, $autoupdate_enabled, false) . ' />';
-    echo '<label for="simpletoc_autoupdate_enabled" class="description">' . __('Automatic updating of the table of contents.', 'simpletoc') . '</label>';
+    echo '<label for="simpletoc_autoupdate_enabled" class="description">' . __('Deactivate the automatic table of contents refresh feature.', 'simpletoc') . '</label>';
 }
