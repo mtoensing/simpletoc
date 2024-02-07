@@ -36,7 +36,7 @@ export default function Edit( { attributes, setAttributes } ) {
 	const autoupdateOption = useSelect( ( select ) => {
 		const optionValue =
 			select( 'core' ).getSite()?.simpletoc_autoupdate_enabled;
-		if ( optionValue !== 1 ) {
+		if ( Number( optionValue ) !== 1 ) {
 			return true;
 		}
 		return false;
@@ -106,16 +106,13 @@ export default function Edit( { attributes, setAttributes } ) {
 					setAttributes( { remove_indent: false } );
 				} }
 			/>
-			{ ! attributes.autoupdate ||
-				( ! autoupdateOption && (
-					<ToolbarButton
-						icon={ update }
-						label={ __( 'Update table of contents', 'simpletoc' ) }
-						onClick={ () =>
-							setAttributes( { updated: Date.now() } )
-						}
-					/>
-				) ) }
+			{ ( ! attributes.autoupdate || ! autoupdateOption ) && (
+				<ToolbarButton
+					icon={ update }
+					label={ __( 'Update table of contents', 'simpletoc' ) }
+					onClick={ () => setAttributes( { updated: Date.now() } ) }
+				/>
+			) }
 		</BlockControls>
 	);
 
