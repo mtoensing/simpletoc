@@ -5,6 +5,12 @@
 	"description": "SEO-friendly Table of Contents Gutenberg block. No JavaScript and no CSS means faster loading.",
 	"main": "build/index.js",
 	"license": "GPL-2.0-or-later",
+	"files": [
+		"build",
+		"plugin.php",
+		"src/accordion*"
+		,"*.php"
+	],
 	"scripts": {
 		"format": "wp-scripts format",
 		"lint:css": "wp-scripts lint-style",
@@ -19,15 +25,16 @@
 		"lint-css": "wp-scripts lint-style",
 		"lint-css:fix": "wp-scripts lint-style --fix",
 		"wp-env": "wp-env",
+		"plugin-zip": "wp-scripts plugin-zip",
 		"wp-int": "npm install @wordpress/scripts --save-dev --save-exact @wordpress/scripts"
 	},
 	"devDependencies": {
-		"@wordpress/env": "^9.2.0",
-		"@wordpress/scripts": "^27.1.0"
+		"@wordpress/env": "^9.5.0",
+		"@wordpress/scripts": "^27.4.0"
 	},
 	"dependencies": {
-		"@wordpress/i18n": "^4.50.0",
-		"@wordpress/icons": "^9.41.0",
-		"@wordpress/server-side-render": "^4.27.1"
+		"@wordpress/i18n": "^4.53.0",
+		"@wordpress/icons": "^9.44.0",
+		"@wordpress/server-side-render": "^4.30.0"
 	}
 }
