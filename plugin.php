@@ -619,17 +619,17 @@ function enqueue_accordion_frontend()
 {
     wp_enqueue_script(
         'simpletoc-accordion',
-        plugin_dir_url(__FILE__) . 'src/accordion.js',
+        plugin_dir_url(__FILE__) . 'assets/accordion.js',
         array(),
-        '6.3.0',
+        '6.4.0',
         true
     );
 
     wp_enqueue_style(
         'simpletoc-accordion',
-        plugin_dir_url(__FILE__) . 'src/accordion.css',
+        plugin_dir_url(__FILE__) . 'assets/accordion.css',
         array(),
-        '6.3.0'
+        '6.4.0'
     );
 }
 

@@ -27,7 +27,7 @@ import {
 import HeadingLevelDropdown from './heading-level-dropdown';
 import { useSelect } from '@wordpress/data';
 import './editor.scss';
-import './accordion.css';
+import './../assets/accordion.css';
 
 export default function Edit( { attributes, setAttributes } ) {
 	const blockProps = useBlockProps();

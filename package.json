@@ -8,7 +8,7 @@
 	"files": [
 		"build",
 		"plugin.php",
-		"src/accordion*",
+		"assets",
 		"*.php"
 	],
 	"scripts": {
