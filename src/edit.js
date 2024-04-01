@@ -336,7 +336,7 @@ export default function Edit( { attributes, setAttributes } ) {
 								}
 								options={ [
 									{
-										label: 'Hide natively in <details> tag',
+										label: 'Hide with a clickable dropdown (using <details> tag).',
 										value: 'hidden',
 									},
 									{
