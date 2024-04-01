@@ -314,15 +314,20 @@ export default function Edit( { attributes, setAttributes } ) {
 							label={ __( 'Hide SimpleTOC', 'simpletoc' ) }
 							checked={ attributes.hideTOC }
 							onChange={ ( value ) => {
-								// If hideTOC is being checked, set a default behavior.
-								// In this case, ensure hidden is true (and accordion is false) by default.
-								setAttributes( {
-									hideTOC: value,
-									hidden: value ? true : false,
-									accordion: value
-										? false
-										: attributes.accordion,
-								} );
+								if ( ! value ) {
+									// When turning off the "Hide SimpleTOC", reset both 'hidden' and 'accordion'
+									setAttributes( {
+										hideTOC: false,
+										hidden: false,
+										accordion: false,
+									} );
+								} else {
+									// When turning on, set 'hidden' true by default (and 'accordion' remains false unless chosen otherwise)
+									setAttributes( {
+										hideTOC: true,
+										hidden: true,
+									} );
+								}
 							} }
 						/>
 					</PanelRow>
