@@ -52,6 +52,9 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 
 == Changelog ==
 
+= 6.5.0 =
+* Added: Utilizes the browser's built-in details tag for a collapsible interface.
+
 = 6.3.2 =
 * Fixed: Option for automatic refresh did not work in some instances.
 
