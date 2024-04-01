@@ -54,6 +54,10 @@
 			"type": "boolean",
 			"default": false
 		},
+		"hidden": {
+			"type": "boolean",
+			"default": false
+		},
 		"wrapper": {
 			"type": "boolean",
 			"default": false

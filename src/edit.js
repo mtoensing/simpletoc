@@ -310,6 +310,24 @@ export default function Edit( { attributes, setAttributes } ) {
 					<PanelRow>
 						<ToggleControl
 							label={ __(
+								'Hide SimpleTOC',
+								'simpletoc'
+							) }
+							help={ __(
+								'Use <details> tag to hide SimpleTOC',
+								'simpletoc'
+							) }
+							checked={ attributes.hidden }
+							onChange={ () =>
+								setAttributes( {
+									hidden: ! attributes.hidden,
+								} )
+							}
+						/>
+					</PanelRow>
+					<PanelRow>
+						<ToggleControl
+							label={ __(
 								'Smooth scrolling support',
 								'simpletoc'
 							) }

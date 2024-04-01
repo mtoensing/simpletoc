@@ -449,7 +449,9 @@ function generate_toc($headings, $attributes)
     }
 
     $html = add_accordion_start($html, $attributes, $item_count, $align_class);
+    $html = add_hidden_markup_start($html, $attributes, $item_count, $align_class);
     $html = add_smooth($html, $attributes);
+
 
     // Add the table of contents list to the output if the list is not empty.
     if (!empty($list)) {
@@ -467,6 +469,7 @@ function generate_toc($headings, $attributes)
     }
 
     $html = add_accordion_end($html, $attributes);
+    $html = add_hidden_markup_end($html, $attributes);
 
     // return an emtpy string if stripped result is empty
     if (empty(trim(strip_tags($html)))) {
@@ -633,6 +636,35 @@ function enqueue_accordion_frontend()
     );
 }
 
+function add_hidden_markup_start($html, $attributes, $itemcount, $alignclass) {
+    $isHiddenEnabled = $attributes['hidden'];
+
+    if ($isHiddenEnabled) {
+        $titleText = esc_html(trim($attributes['title_text'])) ?: __('Table of Contents', 'simpletoc');
+        $hiddenStart = '<details id="simpletoc-details" class="simpletoc" aria-labelledby="simpletoc-title">
+        <summary>' . $titleText . '</summary>';
+        $html .= $hiddenStart;
+    }   
+
+    // If there are no items in the table of contents, return an empty string
+    if ($itemcount < 1) {
+        return '';
+    }
+
+    return $html;
+}
+
+function add_hidden_markup_end($html, $attributes)
+{
+    $isHiddenEnabled = $attributes['hidden'];
+
+    if ($isHiddenEnabled) {
+        $html .= '</details>';
+    }
+
+    return $html;
+}
+
 /**
 * Adds the opening HTML tag(s) for the accordion element and the table of contents title, if applicable.
 * @param string $html The HTML string to add the opening tag(s) to
@@ -644,21 +676,21 @@ function add_accordion_start($html, $attributes, $itemcount, $alignclass)
 {
     // Check if accordion is enabled either through the function arguments or the options
     $isAccordionEnabled = $attributes['accordion'] || get_option('simpletoc_accordion_enabled') == 1;
+    $isHiddenEnabled = $attributes['hidden'];
 
     // Start and end HTML for accordion, if enabled
-    $accordionStart = $accordionEnd = '';
+    $accordionStart = '';
     if ($isAccordionEnabled) {
         enqueue_accordion_frontend();
         $titleText = esc_html(trim($attributes['title_text'])) ?: __('Table of Contents', 'simpletoc');
         $accordionStart = '<h2 style="margin: 0;"><button type="button" aria-expanded="false" aria-controls="simpletoc-content-container" class="simpletoc-collapsible">' . $titleText . '<span class="simpletoc-icon" aria-hidden="true"></span></button></h2><div id="simpletoc-content-container" class="simpletoc-content">';
-        $accordionEnd = '</div>';
     }
 
     // Add the accordion start HTML to the output
     $html .= $accordionStart;
 
     // Add the table of contents title, if not hidden and not in accordion mode
-    $showTitle = !$attributes['no_title'] && !$isAccordionEnabled;
+    $showTitle = !$attributes['no_title'] && !$isAccordionEnabled && !$isHiddenEnabled;
     if ($showTitle) {
         $titleTag = $attributes['title_level'] > 0 ? "h{$attributes['title_level']}" : 'p';
         $html_class = 'simpletoc-title';
