@@ -1,4 +1,5 @@
 import { __ } from '@wordpress/i18n';
+import { useEffect } from '@wordpress/element';
 import {
 	InspectorControls,
 	BlockControls,
@@ -18,6 +19,7 @@ import {
 	ToolbarButton,
 	ToggleControl,
 	TextControl,
+	RadioControl,
 	Panel,
 	PanelBody,
 	PanelRow,
@@ -30,6 +32,20 @@ import './editor.scss';
 import './../assets/accordion.css';
 
 export default function Edit( { attributes, setAttributes } ) {
+	const { hideTOC, hidden, accordion } = attributes;
+
+	// Effect to adjust hideTOC based on hidden or accordion attributes
+	useEffect( () => {
+		// If hideTOC is already set, no need to adjust
+		if ( hideTOC !== undefined ) return;
+
+		// Determine if we need to activate hideTOC based on hidden or accordion
+		if ( hidden || accordion ) {
+			setAttributes( { hideTOC: true } );
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [] ); // Empty dependency array ensures this runs once on mount
+
 	const blockProps = useBlockProps();
 
 	// Get the autoupdate option from WordPress php.
@@ -60,7 +76,11 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	const controls = (
 		<BlockControls group="block">
-			{ ! ( attributes.no_title || attributes.accordion ) && (
+			{ ! (
+				attributes.no_title ||
+				attributes.accordion ||
+				attributes.hidden
+			) && (
 				<HeadingLevelDropdown
 					selectedLevel={ attributes.title_level }
 					onChange={ ( level ) =>
@@ -291,40 +311,48 @@ export default function Edit( { attributes, setAttributes } ) {
 					</PanelRow>
 					<PanelRow>
 						<ToggleControl
-							label={ __(
-								'Hide in accordion menu',
-								'simpletoc'
-							) }
-							help={ __(
-								'Adds minimal JavaScript and css styles.',
-								'simpletoc'
-							) }
-							checked={ attributes.accordion }
-							onChange={ () =>
+							label={ __( 'Hide SimpleTOC', 'simpletoc' ) }
+							checked={ attributes.hideTOC }
+							onChange={ ( value ) => {
+								// If hideTOC is being checked, set a default behavior.
+								// In this case, ensure hidden is true (and accordion is false) by default.
 								setAttributes( {
-									accordion: ! attributes.accordion,
-								} )
-							}
+									hideTOC: value,
+									hidden: value ? true : false,
+									accordion: value
+										? false
+										: attributes.accordion,
+								} );
+							} }
 						/>
 					</PanelRow>
-					<PanelRow>
-						<ToggleControl
-							label={ __(
-								'Hide SimpleTOC',
-								'simpletoc'
-							) }
-							help={ __(
-								'Use <details> tag to hide SimpleTOC',
-								'simpletoc'
-							) }
-							checked={ attributes.hidden }
-							onChange={ () =>
-								setAttributes( {
-									hidden: ! attributes.hidden,
-								} )
-							}
-						/>
-					</PanelRow>
+
+					{ attributes.hideTOC && (
+						<PanelRow>
+							<RadioControl
+								label={ __( 'Type', 'simpletoc' ) }
+								selected={
+									attributes.hidden ? 'hidden' : 'accordion'
+								}
+								options={ [
+									{
+										label: 'Hide natively in <details> tag',
+										value: 'hidden',
+									},
+									{
+										label: 'Hide in accordion menu. Adds minimal JS and CSS.',
+										value: 'accordion',
+									},
+								] }
+								onChange={ ( value ) => {
+									setAttributes( {
+										hidden: value === 'hidden',
+										accordion: value === 'accordion',
+									} );
+								} }
+							/>
+						</PanelRow>
+					) }
 					<PanelRow>
 						<ToggleControl
 							label={ __(
