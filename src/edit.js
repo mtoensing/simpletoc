@@ -341,11 +341,17 @@ export default function Edit( { attributes, setAttributes } ) {
 								}
 								options={ [
 									{
-										label: 'Hide with a clickable dropdown (using <details> tag).',
+										label: __(
+											'Hide with a clickable dropdown (using <details> tag).',
+											'simpletoc'
+										),
 										value: 'hidden',
 									},
 									{
-										label: 'Hide in accordion menu. Adds minimal JS and CSS.',
+										label: __(
+											'Hide in accordion menu. Adds minimal JS and CSS.',
+											'simpletoc'
+										),
 										value: 'accordion',
 									},
 								] }
