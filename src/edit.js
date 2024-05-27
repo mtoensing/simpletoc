@@ -37,7 +37,9 @@ export default function Edit( { attributes, setAttributes } ) {
 	// Effect to adjust hideTOC based on hidden or accordion attributes
 	useEffect( () => {
 		// If hideTOC is already set, no need to adjust
-		if ( hideTOC !== undefined ) return;
+		if ( hideTOC !== undefined ) {
+			return;
+		}
 
 		// Determine if we need to activate hideTOC based on hidden or accordion
 		if ( hidden || accordion ) {
