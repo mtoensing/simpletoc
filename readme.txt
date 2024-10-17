@@ -3,13 +3,13 @@ Contributors: MarcDK
 Tags: TOC, Table of Contents, Gutenberg, block, FAQ
 Requires at least: 5.9
 Donate link: https://marc.tv/out/donate
-Tested up to: 6.5
-Stable tag: 6.5.0
+Tested up to: 6.6
+Stable tag: 6.5.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-SEO-friendly Table of Contents Gutenberg block. No JavaScript and no CSS means faster loading.
+SEO-friendly Table of Contents block for Gutenberg. Super fast with no added JavaScript or CSS.
 
 == Description ==
 
@@ -51,6 +51,10 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 * Works with popular AMP plugins.
 
 == Changelog ==
+
+= 6.5.1 =
+* Added: Updated dependencies for improved performance and stability.​
+* Added: Testest compatibility with WordPress 6.6
 
 = 6.4.3 =
 * Added: A pointer cursor on hover for the hidden TOC
