@@ -1,4 +1,7 @@
-document.addEventListener( 'DOMContentLoaded', () => {
+/**
+ * SimpleTOC load function.
+ */
+const simpletocLoad = function() {
 	const buttons = document.querySelectorAll( 'button.simpletoc-collapsible' );
 
 	buttons.forEach( ( button ) => {
@@ -17,4 +20,17 @@ document.addEventListener( 'DOMContentLoaded', () => {
 				: '0px';
 		} );
 	} );
-} );
+}
+
+// Allow others to call function if needed.
+window.simpletocLoad = simpletocLoad;
+
+// Check to see if the document is already loaded.
+if ( document.readyState === 'complete' || document.readyState !== 'loading' ) {
+	simpletocLoad();
+} else {
+	// Fallback event if the document is not loaded.
+	document.addEventListener( 'DOMContentLoaded', () => {
+		simpletocLoad();
+	} );
+}
