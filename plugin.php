@@ -624,7 +624,7 @@ function enqueue_accordion_frontend()
         'simpletoc-accordion',
         plugin_dir_url(__FILE__) . 'assets/accordion.js',
         array(),
-        '6.6.0',
+        '6.6.1',
         true
     );
 
@@ -632,7 +632,7 @@ function enqueue_accordion_frontend()
         'simpletoc-accordion',
         plugin_dir_url(__FILE__) . 'assets/accordion.css',
         array(),
-        '6.6.0'
+        '6.6.1'
     );
 }
 
