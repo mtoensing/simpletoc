@@ -1,7 +1,7 @@
 /**
  * SimpleTOC load function.
  */
-const simpletocLoad = function() {
+const simpletocLoad = function () {
 	const buttons = document.querySelectorAll( 'button.simpletoc-collapsible' );
 
 	buttons.forEach( ( button ) => {
@@ -20,7 +20,7 @@ const simpletocLoad = function() {
 				: '0px';
 		} );
 	} );
-}
+};
 
 // Allow others to call function if needed.
 window.simpletocLoad = simpletocLoad;
