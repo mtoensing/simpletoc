@@ -53,7 +53,7 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 == Changelog ==
 
 = 6.6.1 = 
-* Added: Load TOC accordion on load or after document has been loaded. Thanks blronaldhuereca https://github.com/mtoensing/simpletoc/pull/63 
+* Added: Initialize the JavaScript for the TOC accordion on page load or after the document has fully loaded. Thanks blronaldhuereca https://github.com/mtoensing/simpletoc/pull/63 
 
 = 6.6.0 =
 * Added: Testest compatibility with WordPress 6.7
