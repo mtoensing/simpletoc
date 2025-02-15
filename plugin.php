@@ -313,7 +313,23 @@ function filter_headings_recursive($blocks)
                 }
             }
 
-            if (isset($blocks['blockName']) && ($blocks['blockName'] === 'generateblocks/headline') && $innerBlock !== 'core/heading') {
+			$supported_third_party_blocks = array(
+				'generateblocks/headline', /* GenerateBlocks 1.x */
+				'generateblocks/text', /* GenerateBlocks 2.0 */
+			);
+
+			/**
+			 * Filter to add supported third party blocks.
+			 *
+			 * @param array $supported_third_party_blocks The array of supported third party blocks.
+			 * @return array The modified array of supported third party blocks.
+			 */
+			$supported_third_party_blocks = apply_filters(
+				'simpletoc_supported_third_party_blocks',
+				$supported_third_party_blocks
+			);
+
+            if (isset($blocks['blockName']) && in_array($blocks['blockName'], $supported_third_party_blocks) && $innerBlock !== 'core/heading') {
                 // make sure it's a headline.
                 if (preg_match("/(<h1|<h2|<h3|<h4|<h5|<h6)/i", $innerBlock)) {
                     $arr[] = $innerBlock;
@@ -624,7 +640,7 @@ function enqueue_accordion_frontend()
         'simpletoc-accordion',
         plugin_dir_url(__FILE__) . 'assets/accordion.js',
         array(),
-        '6.6.1',
+        '6.6.0',
         true
     );
 
@@ -632,7 +648,7 @@ function enqueue_accordion_frontend()
         'simpletoc-accordion',
         plugin_dir_url(__FILE__) . 'assets/accordion.css',
         array(),
-        '6.6.1'
+        '6.6.0'
     );
 }
 
