@@ -29,12 +29,12 @@
 		"wp-int": "npm install @wordpress/scripts --save-dev --save-exact @wordpress/scripts"
 	},
 	"devDependencies": {
-		"@wordpress/env": "^10.15.0",
-		"@wordpress/scripts": "^30.8.1"
+		"@wordpress/env": "^10.18.0",
+		"@wordpress/scripts": "^30.11.0"
 	},
 	"dependencies": {
-		"@wordpress/i18n": "^5.15.1",
-		"@wordpress/icons": "^10.15.1",
-		"@wordpress/server-side-render": "^5.15.1"
+		"@wordpress/i18n": "^5.18.0",
+		"@wordpress/icons": "^10.18.0",
+		"@wordpress/server-side-render": "^5.18.0"
 	}
 }
