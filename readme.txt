@@ -1,10 +1,10 @@
 === SimpleTOC - Table of Contents Block ===
 Contributors: MarcDK
-Tags: TOC, Table of Contents, Gutenberg, block, FAQ
+Tags: TOC, Table of Contents, Gutenberg, Block, Accessibility
 Requires at least: 5.9
 Donate link: https://marc.tv/out/donate
 Tested up to: 6.7
-Stable tag: 6.7.1
+Stable tag: 6.7.2
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -56,9 +56,9 @@ This plugin is designed & developed for WCAG 2.2 level AA conformance. The plugi
 
 == Changelog ==
 
-= 6.7.1 = 
+= 6.7.2 = 
 * Added: Support for GenerateBlocks 2.0. Thanks @blronaldhuereca 
-* Added: Included an accessibility statement in the plugin description.
+* Added: Included an accessibility statement in the plugin description. Thanks Gen Herres.
 
 = 6.6.1 = 
 * Added: Initialize the JavaScript for the TOC accordion on page load or after the document has fully loaded. Thanks blronaldhuereca https://github.com/mtoensing/simpletoc/pull/63 
