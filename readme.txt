@@ -3,8 +3,8 @@ Contributors: MarcDK
 Tags: TOC, Table of Contents, Gutenberg, Block, Accessibility
 Requires at least: 5.9
 Donate link: https://marc.tv/out/donate
-Tested up to: 6.7
-Stable tag: 6.7.2
+Tested up to: 6.8
+Stable tag: 6.7.3
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -56,6 +56,9 @@ This plugin is designed & developed for WCAG 2.2 level AA conformance. The plugi
 
 == Changelog ==
 
+= 6.7.3 =
+* Added: Tested compatibility with WordPress 6.8
+
 = 6.7.2 = 
 * Added: Support for GenerateBlocks 2.0. Thanks @blronaldhuereca 
 * Added: Included an accessibility statement in the plugin description. Thanks Gen Herres.
@@ -64,13 +67,13 @@ This plugin is designed & developed for WCAG 2.2 level AA conformance. The plugi
 * Added: Initialize the JavaScript for the TOC accordion on page load or after the document has fully loaded. Thanks blronaldhuereca https://github.com/mtoensing/simpletoc/pull/63 
 
 = 6.6.0 =
-* Added: Testest compatibility with WordPress 6.7
+* Added: Tested compatibility with WordPress 6.7
 
 = 6.5.6 =
 * Fixed: All script versions have been updated to prevent caching issues.
 * Fixed: Legacy Accordion was always expanded. Thanks Francesco Palmieri.
 * Added: Updated dependencies for improved performance and stability.​
-* Added: Testest compatibility with WordPress 6.6
+* Added: Tested compatibility with WordPress 6.6
 
 = 6.4.3 =
 * Added: A pointer cursor on hover for the hidden TOC
