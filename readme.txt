@@ -68,13 +68,13 @@ This plugin is designed & developed for WCAG 2.2 level AA conformance. The plugi
 * Added: Initialize the JavaScript for the TOC accordion on page load or after the document has fully loaded. Thanks blronaldhuereca https://github.com/mtoensing/simpletoc/pull/63 
 
 = 6.6.0 =
-* Added: Testest compatibility with WordPress 6.7
+* Added: Tested compatibility with WordPress 6.7
 
 = 6.5.6 =
 * Fixed: All script versions have been updated to prevent caching issues.
 * Fixed: Legacy Accordion was always expanded. Thanks Francesco Palmieri.
 * Added: Updated dependencies for improved performance and stability.​
-* Added: Testest compatibility with WordPress 6.6
+* Added: Tested compatibility with WordPress 6.6
 
 = 6.4.3 =
 * Added: A pointer cursor on hover for the hidden TOC
