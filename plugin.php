@@ -357,6 +357,19 @@ function simpletoc_sanitize_string($string)
     $string_without_accents = remove_accents($html_wo_nbs);
     // Sanitizes a title, replacing whitespace and a few other characters with dashes.
     $sanitized_string = sanitize_title_with_dashes($string_without_accents);
+    // Check if sanitized_string begins with a letter
+    if (preg_match("/^[_a-zA-Z]+$/", $sanitized_string)){
+      // Yes it begins with a letter
+      // Encode for use in an url
+      $urlencoded = urlencode($sanitized_string);
+    } else {
+      // No - it does not begin with a letter
+      $id_prefix = 'simpletoc-header-';
+      // Append prefix
+      $sanitized_string = $id_prefix . $sanitized_string;
+      // Encode for use in an url
+      $urlencoded = urlencode($sanitized_string);
+    }
     // Encode for use in an url
     $urlencoded = urlencode($sanitized_string);
     return $urlencoded;
