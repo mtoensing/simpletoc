@@ -5,7 +5,6 @@ import {
 	BlockControls,
 	useBlockProps,
 } from '@wordpress/block-editor';
-import { store as editorStore } from '@wordpress/editor';
 import ServerSideRender from '@wordpress/server-side-render';
 import {
 	formatListBullets,
@@ -30,6 +29,8 @@ import HeadingLevelDropdown from './heading-level-dropdown';
 import { useSelect } from '@wordpress/data';
 import './editor.scss';
 import './../assets/accordion.css';
+
+const editorStore = wp.data.stores?.['core/editor'];
 
 export default function Edit( { attributes, setAttributes } ) {
 	const { hideTOC, hidden, accordion } = attributes;
@@ -64,6 +65,14 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	const { returnisSaving, returnisSavingNonPostEntityChanges } = useSelect(
 		( select ) => {
+			// Exit soon if the editorStore isn't available
+			if (! select.hasOwnProperty(editorStore)) {
+				return {
+					returnisSaving: false,
+					returnisSavingNonPostEntityChanges: false,
+				};
+			}
+
 			const { isSavingPost, isSavingNonPostEntityChanges } =
 				select( editorStore );
 			return {
