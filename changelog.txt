@@ -1,5 +1,47 @@
 == Changelog ==
 
+= 6.6.1 = 
+* Added: Initialize the JavaScript for the TOC accordion on page load or after the document has fully loaded. Thanks blronaldhuereca https://github.com/mtoensing/simpletoc/pull/63 
+
+= 6.6.0 =
+* Added: Tested compatibility with WordPress 6.7
+
+= 6.5.6 =
+* Fixed: All script versions have been updated to prevent caching issues.
+* Fixed: Legacy Accordion was always expanded. Thanks Francesco Palmieri.
+* Added: Updated dependencies for improved performance and stability.​
+* Added: Tested compatibility with WordPress 6.6
+
+= 6.4.3 =
+* Added: A pointer cursor on hover for the hidden TOC
+
+= 6.4.3 =
+* Added: Utilizes the browser's built-in details tag for a collapsible interface. Thanks @infinitnet
+* Compatibility with WordPress 6.5
+* Fixed: Minor localization problems.   
+
+= 6.3.2 =
+* Fixed: Option for automatic refresh did not work in some instances.
+
+= 6.3.0 =
+* Added: Option for automatic refresh. This can be disabled in the blocks advanced settings.
+* Added: Option to globally disable automatic refresh in the WordPress SimpleTOC settings.
+
+= 6.2.0 =
+* Added: Implemented smooth animation for improved user interaction in the accordion menu.
+* Added: Upgraded styling of the accordion menu for a more visually appealing and modern user experience.
+
+= 6.1.0 =
+* Fixed: Broken markup when tags closed for headers below minimum. Thanks @harmoney !
+
+= 6.0.10 =
+* Added aria-hidden attribute to icon in accordion. Thanks Alex Stine!
+
+= 6.0.9 =
+* Added ARIA accessibility labels for the accordion. Thanks Amber Hinds!
+* Fixed: Caching of accordion JavaScript. Thanks jghitchcock!
+* Added correct ARIA controls attribute.
+
 = 6.0.4 =
 * Fix: specific min/max values for could result in merged headlines.
 
