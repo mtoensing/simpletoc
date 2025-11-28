@@ -178,6 +178,26 @@ function add_ids_to_blocks_recursive($blocks)
  */
 function render_callback_simpletoc($attributes)
 {
+        // Clientseitiges Auto Scope auf Nicht-Singular Seiten
+    if ( ! is_singular() ) {
+        $class  = 'wp-block-simpletoc-toc simpletoc simpletoc-autoscope';
+        if ( ! empty( $attributes['className'] ) ) {
+            $class .= ' ' . sanitize_html_class( $attributes['className'] );
+        }
+        $title  = ! empty( $attributes['title_text'] ) ? esc_html( trim( $attributes['title_text'] ) ) : '';
+        $smooth = ( ! empty( $attributes['add_smooth'] ) || get_option( 'simpletoc_smooth_enabled' ) == 1 ) ? '1' : '0';
+
+        wp_enqueue_script(
+            'simpletoc-autoscope',
+            plugins_url( 'assets/simpletoc-autoscope.js', __FILE__ ),
+            array(),
+            '1.0',
+            true
+        );
+
+        return '<nav class="' . esc_attr( $class ) . '" role="navigation" aria-label="' . esc_attr__( 'Table of contents', 'simpletoc' ) . '" data-simpletoc-autoscope="1" data-simpletoc-title="' . esc_attr( $title ) . '" data-simpletoc-smooth="' . esc_attr( $smooth ) . '"></nav>';
+    }
+
     $is_backend = defined('REST_REQUEST') && REST_REQUEST && 'edit' === filter_input(INPUT_GET, 'context');
     $title_text = $attributes['title_text'] ? esc_html(trim($attributes['title_text'])) : __('Table of Contents', 'simpletoc');
     $alignclass = !empty($attributes['align']) ? 'align' . $attributes['align'] : '';
