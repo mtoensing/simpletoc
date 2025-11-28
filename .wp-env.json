@@ -1,5 +1,5 @@
 {
-  "core": "WordPress/WordPress#6.9",
+  "core": "WordPress/WordPress#6.9-beta1",
   "phpVersion": "8.1",
   "plugins": [ "." ]
 }
