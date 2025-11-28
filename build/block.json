@@ -1,6 +1,6 @@
 {
-  "$schema": "https://json.schemastore.org/block.json",
-  "apiVersion": 2,
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
   "name": "simpletoc/toc",
   "version": "6.6.1",
   "title": "SimpleTOC",
