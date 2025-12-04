@@ -4,7 +4,7 @@
  * Plugin Name:   SimpleTOC - Table of Contents Block
  * Plugin URI:    https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
  * Description:   SEO-friendly Table of Contents Gutenberg block. No JavaScript and no CSS means faster loading.
- * Version:       6.9.2
+ * Version:       6.9.1
  * Author:        Marc Tönsing
  * Author URI:    https://toensing.com
  * Text Domain:   simpletoc
@@ -128,6 +128,68 @@ add_filter('rank_math/researches/toc_plugins', function ($toc_plugins) {
 });
 
 /**
+ * Class to manage headline IDs.
+ *
+ * Ensures a unique anchor for each headline.
+ */
+class SimpleTOC_Headline_Ids {
+	/**
+	 * Array of headlines and their counts.
+	 * @var array
+	 */
+	private $headlines = array();
+
+	/**
+	 * Add a headline to the array
+	 * @param string $headline_slug The slug of the headline
+	 */
+	private function add_headline( $headline_slug ) {
+		if ( empty( $headline_slug ) ) {
+			return;
+		}
+
+		if ( ! isset( $this->headlines[ $headline_slug ] ) ) {
+			$this->headlines[ $headline_slug ] = 1;
+		} else {
+			$this->headlines[ $headline_slug ] = $this->get_headline_count( $headline_slug ) + 1;
+		}
+		if ( $this->headlines[ $headline_slug ] > 1 ) {
+			$new_headline_slug = $headline_slug . '-' . $this->headlines[ $headline_slug ];
+			if ( isset( $this->headlines[ $new_headline_slug ] ) ) {
+				$new_headline_slug = $this->add_headline( $new_headline_slug );
+			}
+			$new_headline_count = $this->get_headline_count( $new_headline_slug );
+			if ( 0 === $new_headline_count ) {
+				$new_headline_count = 1;
+			}
+			$this->headlines[ $new_headline_slug ] = $new_headline_count;
+			return $new_headline_slug;
+		}
+		return $headline_slug;
+	}
+
+	/**
+	 * Get the anchor for a headline
+	 * @param string $headline The headline
+	 * @return string The anchor for the headline
+	 */
+	public function get_headline_anchor( $headline ) {
+		if ( empty( $headline ) ) {
+			return '';
+		}
+
+		$headline_slug = simpletoc_sanitize_string( $headline );
+
+		$headline_slug = $this->add_headline( $headline_slug );
+		return $headline_slug;
+	}
+
+	private function get_headline_count( $headline_slug = '' ) {
+		return $this->headlines[ $headline_slug ] ?? 0;
+	}
+}
+
+/**
 * Adds IDs to the headings of the provided post content using a recursive block structure.
 * @param string $content The content to add IDs to
 * @return string The content with IDs added to its headings
@@ -159,7 +221,7 @@ function add_ids_to_blocks_recursive($blocks)
 		'generateblocks/text',
 		'generateblocks/headline',
 	);
-
+       
 	/**
 	 * Filter to add supported blocks for IDs.
 	 *
@@ -167,10 +229,14 @@ function add_ids_to_blocks_recursive($blocks)
 	 */
 	$supported_blocks = apply_filters( 'simpletoc_supported_blocks_for_ids', $supported_blocks );
 
+	// Need two separate instances so that IDs aren't double coubnted.
+	$inner_html_id_instance = new SimpleTOC_Headline_Ids();
+	$inner_content_id_instance = new SimpleTOC_Headline_Ids();
+
     foreach ($blocks as &$block) {
         if (isset($block['blockName']) && in_array( $block['blockName'], $supported_blocks ) && isset($block['innerHTML']) && isset($block['innerContent']) && isset($block['innerContent'][0])) {
-            $block['innerHTML'] = add_anchor_attribute($block['innerHTML']);
-            $block['innerContent'][0] = add_anchor_attribute($block['innerContent'][0]);
+            $block['innerHTML'] = add_anchor_attribute( $block['innerHTML'], $inner_html_id_instance );
+            $block['innerContent'][0] = add_anchor_attribute( $block['innerContent'][0], $inner_content_id_instance );
         } elseif (isset($block['attrs']['ref'])) {
             // search in reusable blocks (this is not finished because I ran out of ideas.)
             // $reusable_block_id = $block['attrs']['ref'];
@@ -396,9 +462,10 @@ function simpletoc_plugin_meta($links, $file)
 /**
 * Adds an ID attribute to all Heading tags in the provided HTML.
 * @param string $html The HTML content to modify
+* @param SimpleTOC_Headline_Ids $headline_class_instance The instance of the SimpleTOC_Headline_Ids class
 * @return string The modified HTML content with ID attributes added to the Heading tags
 */
-function add_anchor_attribute($html)
+function add_anchor_attribute($html, $headline_class_instance = null)
 {
 
     // remove non-breaking space entites from input HTML
@@ -425,7 +492,7 @@ function add_anchor_attribute($html)
         }
         // Set id attribute
         $heading_text = trim(strip_tags($html));
-        $anchor = simpletoc_sanitize_string($heading_text);
+		$anchor = $headline_class_instance->get_headline_anchor($heading_text);
         $tag->setAttribute("id", $anchor);
     }
 
@@ -456,17 +523,15 @@ function generate_toc($headings, $attributes)
     list($min_depth, $initial_depth) = find_min_depth($headings, $attributes);
 
     $item_count = 0;
-
+    $headline_ids = new SimpleTOC_Headline_Ids();
     foreach ($headings as $line => $headline) {
         $this_depth = (int)$headings[$line][2];
         $next_depth = isset($headings[$line + 1][2]) ? (int)$headings[$line + 1][2] : '';
         $exclude_headline = should_exclude_headline($headline, $attributes, $this_depth);
         $title = trim(strip_tags($headline));
         $customId = extract_id($headline);
-        $link = $customId ? $customId : simpletoc_sanitize_string($title);
-
+        $link = $customId ? $customId : $headline_ids->get_headline_anchor($title );
         if (!$exclude_headline) {
-
             $item_count++;
             open_list($list, $list_type, $min_depth, $this_depth);
             $page = get_page_number_from_headline($headline);
