@@ -4,7 +4,7 @@
  * Plugin Name:   SimpleTOC - Table of Contents Block
  * Plugin URI:    https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
  * Description:   SEO-friendly Table of Contents Gutenberg block. No JavaScript and no CSS means faster loading.
- * Version:       6.9.1
+ * Version:       6.9.2
  * Author:        Marc Tönsing
  * Author URI:    https://toensing.com
  * Text Domain:   simpletoc
@@ -154,8 +154,21 @@ add_filter('the_content', 'simpletoc_add_ids_to_content', 1);
 function add_ids_to_blocks_recursive($blocks)
 {
 
+	$supported_blocks = array(
+		'core/heading',
+		'generateblocks/text',
+		'generateblocks/headline',
+	);
+
+	/**
+	 * Filter to add supported blocks for IDs.
+	 *
+	 * @param array $supported_blocks The array of supported blocks.
+	 */
+	$supported_blocks = apply_filters( 'simpletoc_supported_blocks_for_ids', $supported_blocks );
+
     foreach ($blocks as &$block) {
-        if (isset($block['blockName']) && ($block['blockName'] === 'core/heading' || $block['blockName'] === 'generateblocks/headline') && isset($block['innerHTML']) && isset($block['innerContent']) && isset($block['innerContent'][0])) {
+        if (isset($block['blockName']) && in_array( $block['blockName'], $supported_blocks ) && isset($block['innerHTML']) && isset($block['innerContent']) && isset($block['innerContent'][0])) {
             $block['innerHTML'] = add_anchor_attribute($block['innerHTML']);
             $block['innerContent'][0] = add_anchor_attribute($block['innerContent'][0]);
         } elseif (isset($block['attrs']['ref'])) {
