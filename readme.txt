@@ -3,7 +3,7 @@ Contributors: MarcDK
 Tags: TOC, Table of Contents, Block, Accessibility, Table
 Requires at least: 5.9
 Tested up to: 6.9
-Stable tag: 6.9.3
+Stable tag: 6.9.4
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -56,6 +56,9 @@ This plugin is designed & developed for WCAG 2.2 level AA conformance. The plugi
 * Works with popular AMP plugins.
 
 == Changelog ==
+
+= 6.9.4 =
+* Added: Introduced proper PHP namespaces to avoid class and function name conflicts and improve overall code robustness. Thanks @ronalfy.
 
 = 6.9.3 =
 * Fix: Fix Multiple IDs in Table of Contents Thanks @ronalfy
