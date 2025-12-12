@@ -8,3 +8,13 @@
 .wp-block-simpletoc-toc .components-notice span {
 	padding-left: 5px;
 }
+
+// Visual grouping for the "Hide SimpleTOC" sub-options in the inspector
+.simpletoc-hide-options {
+	margin: 0.75em 0 2em;
+	padding: 0.75em;
+	border-top: 1px solid rgba(0, 0, 0, 0.1);
+	border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+	background: rgba(0, 0, 0, 0.02);
+	border-radius: 4px;
+}
