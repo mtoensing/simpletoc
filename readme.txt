@@ -59,6 +59,7 @@ This plugin is designed & developed for WCAG 2.2 level AA conformance. The plugi
 
 = 6.9.4 =
 * Added: Introduced proper PHP namespaces to avoid class and function name conflicts and improve overall code robustness. Thanks @ronalfy.
+* Added: Improved sidebar sub-menu for the “Hide SimpleTOC” option
 
 = 6.9.3 =
 * Fix: Fix Multiple IDs in Table of Contents Thanks @ronalfy

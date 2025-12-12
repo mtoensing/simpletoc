@@ -336,34 +336,47 @@ export default function Edit( { attributes, setAttributes } ) {
 
 					{ attributes.hideTOC && (
 						<PanelRow>
-							<RadioControl
-								label={ __( 'Type', 'simpletoc' ) }
-								selected={
-									attributes.hidden ? 'hidden' : 'accordion'
-								}
-								options={ [
-									{
-										label: __(
-											'Hide with a clickable dropdown (using <details> tag).',
-											'simpletoc'
-										),
-										value: 'hidden',
-									},
-									{
-										label: __(
-											'Hide in accordion menu. Adds minimal JS and CSS.',
-											'simpletoc'
-										),
-										value: 'accordion',
-									},
-								] }
-								onChange={ ( value ) => {
-									setAttributes( {
-										hidden: value === 'hidden',
-										accordion: value === 'accordion',
-									} );
+							<div
+								style={ {
+									marginBottom: '2em',
+									padding: '0.75em',
+									borderTop: '1px solid rgba(0, 0, 0, 0.1)',
+									borderBottom:
+										'1px solid rgba(0, 0, 0, 0.05)',
+									backgroundColor: '#f8f9fa',
 								} }
-							/>
+							>
+								<RadioControl
+									label={ __( 'Type', 'simpletoc' ) }
+									selected={
+										attributes.hidden
+											? 'hidden'
+											: 'accordion'
+									}
+									options={ [
+										{
+											label: __(
+												'Hide with a clickable dropdown (using <details> tag).',
+												'simpletoc'
+											),
+											value: 'hidden',
+										},
+										{
+											label: __(
+												'Hide in accordion menu. Adds minimal JS and CSS.',
+												'simpletoc'
+											),
+											value: 'accordion',
+										},
+									] }
+									onChange={ ( value ) => {
+										setAttributes( {
+											hidden: value === 'hidden',
+											accordion: value === 'accordion',
+										} );
+									} }
+								/>
+							</div>
 						</PanelRow>
 					) }
 					<PanelRow>
