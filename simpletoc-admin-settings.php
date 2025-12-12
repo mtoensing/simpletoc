@@ -16,7 +16,7 @@ function simpletoc_add_settings_page() {
 		__( 'SimpleTOC', 'simpletoc' ),
 		'manage_options',
 		'simpletoc',
-		'simpletoc_settings_page'
+		__NAMESPACE__ . '\simpletoc_settings_page'
 	);
 }
 add_action( 'admin_menu', __NAMESPACE__ . '\simpletoc_add_settings_page' );
