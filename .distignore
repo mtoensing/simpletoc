@@ -3,6 +3,7 @@
 /.github
 /node_modules
 /src
+phpcs.xml.dist
 .distignore
 .gitignore
 .gitattributes
