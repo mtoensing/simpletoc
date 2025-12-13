@@ -195,7 +195,7 @@ function add_ids_to_blocks_recursive( $blocks ) {
 		if ( isset( $block['blockName'] ) && in_array( $block['blockName'], $supported_blocks, true ) && isset( $block['innerHTML'] ) && isset( $block['innerContent'] ) && isset( $block['innerContent'][0] ) ) {
 			$block['innerHTML']       = add_anchor_attribute( $block['innerHTML'], $inner_html_id_instance );
 			$block['innerContent'][0] = add_anchor_attribute( $block['innerContent'][0], $inner_content_id_instance );
-		} elseif ( isset( $block['attrs']['ref'] ) ) {
+		} elseif ( isset( $block['attrs']['ref'] ) ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedElseif
 			// search in reusable blocks (this is not finished because I ran out of ideas.)
 			// $reusable_block_id = $block['attrs']['ref'];
 			// $reusable_block_content = parse_blocks(get_post($reusable_block_id)->post_content);.
@@ -218,7 +218,7 @@ function render_callback_simpletoc( $attributes ) {
 	$is_backend  = defined( 'REST_REQUEST' ) && REST_REQUEST && 'edit' === filter_input( INPUT_GET, 'context' );
 	$title_text  = $attributes['title_text'] ? esc_html( trim( $attributes['title_text'] ) ) : __( 'Table of Contents', 'simpletoc' );
 	$alignclass  = ! empty( $attributes['align'] ) ? 'align' . $attributes['align'] : '';
-	$class_name  = ! empty( $attributes['className'] ) ? strip_tags( $attributes['className'] ) : '';
+	$class_name  = ! empty( $attributes['className'] ) ? wp_strip_all_tags( $attributes['className'] ) : '';
 	$title_level = $attributes['title_level'];
 
 	$wrapper_enabled = apply_filters( 'simpletoc_wrapper_enabled', false ) || true === (bool) get_option( 'simpletoc_wrapper_enabled', false ) || true === (bool) get_option( 'simpletoc_accordion_enabled', false );
@@ -394,7 +394,7 @@ function simpletoc_sanitize_string( $string_to_sanitize ) {
 	// Sanitizes a title, replacing whitespace and a few other characters with dashes.
 	$sanitized_string = sanitize_title_with_dashes( $string_without_accents );
 	// Encode for use in an url.
-	$urlencoded = urlencode( $sanitized_string );
+	$urlencoded = rawurlencode( $sanitized_string );
 	return $urlencoded;
 }
 
@@ -452,7 +452,7 @@ function add_anchor_attribute( $html, $headline_class_instance = null ) {
 			continue;
 		}
 		// Set id attribute.
-		$heading_text = trim( strip_tags( $html ) );
+		$heading_text = trim( wp_strip_all_tags( $html ) );
 		$anchor       = $headline_class_instance->get_headline_anchor( $heading_text );
 		$tag->setAttribute( 'id', $anchor );
 	}
@@ -489,7 +489,7 @@ function generate_toc( $headings, $attributes ) {
 		$this_depth       = (int) $headings[ $line ][2];
 		$next_depth       = isset( $headings[ $line + 1 ][2] ) ? (int) $headings[ $line + 1 ][2] : '';
 		$exclude_headline = should_exclude_headline( $headline, $attributes, $this_depth );
-		$title            = trim( strip_tags( $headline ) );
+		$title            = trim( wp_strip_all_tags( $headline ) );
 		$custom_id        = extract_id( $headline );
 		$link             = $custom_id ? $custom_id : $headline_ids->get_headline_anchor( $title );
 		if ( ! $exclude_headline ) {
@@ -526,7 +526,7 @@ function generate_toc( $headings, $attributes ) {
 	$html = add_hidden_markup_end( $html, $attributes );
 
 	// return an emtpy string if stripped result is empty.
-	if ( empty( trim( strip_tags( $html ) ) ) ) {
+	if ( empty( trim( wp_strip_all_tags( $html ) ) ) ) {
 		$html = '';
 	}
 
@@ -622,25 +622,25 @@ function close_list( &$list_to_append_to, $list_type, &$min_depth, $min_level, $
 				for ( $min_depth; $min_depth > $next_depth; $min_depth-- ) {
 					$list_to_append_to .= "</li>\n</" . $list_type . ">\n";
 				}
-			} else {
+			} else { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedElse
 				// SKIP CLOSING! Next heading won't be included in the ToC at all.
 			}
 		} elseif ( $next_depth === $this_depth ) {
 			// Next heading is exactly as deep. Not going shallower or deeper in the ToC hierarchy.
 			// E.g. this is h3, next is h3.
-			if ( $next_depth < $min_level ) {
+			if ( $next_depth < $min_level ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedIf
 				// E.g. this is h3, next is h3, min is h2
 				// This heading didn't open a ToC item. Nothing to close.
 			} else {
 				// SKIP CLOSING! Next heading will open a new sub-list in the ToC.
 				$list_to_append_to .= "</li>\n";
 			}
-		} else {
+		} else { // phpcs:ignore.
 			// Next heading is deeper in the ToC.
-			if ( $next_depth <= $max_level ) {
+			if ( $next_depth <= $max_level ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedIf
 				// Next deeper heading is within bounds and will open a new sub-list. Leave this one open.
 				// E.g. this is h3, next is h4, min is h2, max is h5.
-			} else {
+			} else { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedElse
 				// Next heading is too deep and will be ignored. We'll close out coming up or finishing the ToC.
 				// E.g. this is h3, next is h4, max is h3.
 			}
@@ -697,7 +697,7 @@ function enqueue_accordion_frontend() {
  * @param int    $itemcount The number of items in the table of contents.
  * @param string $alignclass The alignment class for the table of contents block.
  */
-function add_hidden_markup_start( $html, $attributes, $itemcount, $alignclass ) {
+function add_hidden_markup_start( $html, $attributes, $itemcount, $alignclass ) { // phpcs:ignore.
 	$is_hidden_enabled = $attributes['hidden'];
 
 	if ( $is_hidden_enabled ) {
