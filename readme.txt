@@ -55,6 +55,11 @@ This plugin is designed & developed for WCAG 2.2 level AA conformance. The plugi
 * GeneratePress and Rank Math support.
 * Works with popular AMP plugins.
 
+= User Feedback =
+
+> The plugin works exceptionally well. It is lightweight, stable, and fully compatible with WordPress Full Site Editing. A reliable solution that integrates seamlessly and performs exactly as expected.
+— @js100 on wordpress.org
+
 == Changelog ==
 
 = 6.9.4 =
