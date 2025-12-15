@@ -9,6 +9,8 @@
 	</rule>
 
 	<rule ref="WordPress-Docs"></rule>
+	<rule ref="WordPress-Extra"></rule>
+	<rule ref="WordPress-Core"></rule>
 
 	<exclude-pattern>/node_modules/</exclude-pattern>
 	<exclude-pattern>/vendor/</exclude-pattern>
