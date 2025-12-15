@@ -17,9 +17,18 @@ Add a Table of Contents block to your posts and pages. The TOC is a nested list 
 
 The maximum depth of the toc can be configured in in the blocks' sidebar among many other options. There can hide the headline "Table of Contents" and add your own by using a normal heading block.  
 
-SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoensing/SimpleTOC). If you find a bug or have an idea for a feature please feel free to contribute and create a pull request. 
-
 [Spin up](https://demo.tastewp.com/simpletoc) a new WordPress instance with the SimpleTOC plugin already installed.
+
+= User Feedback =
+
+> It is lightweight, stable, and fully compatible with WordPress Full Site Editing. A reliable solution that integrates seamlessly and performs exactly as expected.
+— [@js100 on wordpress.org](https://wordpress.org/support/topic/good-job-1889/)
+
+> Does the job perfectly, and adds no bloat.
+— [@clicknathan on wordpress.org](https://wordpress.org/support/topic/does-the-job-perfectly-and-adds-no-bloat/)
+
+> Simple yet powerful. Great plugin that does exactly what you need.
+— [@mixey on wordpress.org](https://wordpress.org/support/topic/simple-yet-powerful-106/)
 
 = Accessibility =
 
@@ -55,13 +64,9 @@ This plugin is designed & developed for WCAG 2.2 level AA conformance. The plugi
 * GeneratePress and Rank Math support.
 * Works with popular AMP plugins.
 
-= User Feedback =
+= How to contribute = 
 
-> It is lightweight, stable, and fully compatible with WordPress Full Site Editing. A reliable solution that integrates seamlessly and performs exactly as expected.
-— [@js100 on wordpress.org](https://wordpress.org/support/topic/good-job-1889/)
-
-> Does the job perfectly, and adds no bloat.
-— [@clicknathan on wordpress.org](https://wordpress.org/support/topic/does-the-job-perfectly-and-adds-no-bloat/)
+SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoensing/SimpleTOC). If you find a bug or have an idea for a feature please feel free to contribute and create a pull request. 
 
 == Changelog ==
 
