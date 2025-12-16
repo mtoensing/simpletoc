@@ -3,7 +3,7 @@ Contributors: MarcDK
 Tags: TOC, Table of Contents, Block, Accessibility, Table
 Requires at least: 5.9
 Tested up to: 6.9
-Stable tag: 6.9.4
+Stable tag: 6.9.5
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -69,6 +69,9 @@ This plugin is designed & developed for WCAG 2.2 level AA conformance. The plugi
 SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoensing/SimpleTOC). If you find a bug or have an idea for a feature please feel free to contribute and create a pull request. 
 
 == Changelog ==
+
+= 6.9.5 =
+* Added: Coding standards cleanup with improved rules, cleaner code, safer output, and consistent naming. Thanks @ronalfy
 
 = 6.9.4 =
 * Added: Introduced proper PHP namespaces to avoid class and function name conflicts and improve overall code robustness. Thanks @ronalfy.
