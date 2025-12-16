@@ -4,7 +4,7 @@ Tags: TOC, Table of Contents, Block, Accessibility, Table
 Requires at least: 5.9
 Tested up to: 6.9
 Stable tag: 6.9.5
-Requires PHP: 7.0
+Requires PHP: 7.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://marc.tv/out/donate
