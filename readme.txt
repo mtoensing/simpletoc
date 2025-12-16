@@ -21,13 +21,13 @@ The maximum depth of the toc can be configured in in the blocks' sidebar among m
 
 = User Feedback =
 
-> It is lightweight, stable, and fully compatible with WordPress Full Site Editing. A reliable solution that integrates seamlessly and performs exactly as expected.
+> "It is lightweight, stable, and fully compatible with WordPress Full Site Editing. A reliable solution that integrates seamlessly and performs exactly as expected."
 — [@js100 on wordpress.org](https://wordpress.org/support/topic/good-job-1889/)
 
-> Does the job perfectly, and adds no bloat.
+> "Does the job perfectly, and adds no bloat."
 — [@clicknathan on wordpress.org](https://wordpress.org/support/topic/does-the-job-perfectly-and-adds-no-bloat/)
 
-> Simple yet powerful. Great plugin that does exactly what you need.
+> "Simple yet powerful. Great plugin that does exactly what you need."
 — [@mixey on wordpress.org](https://wordpress.org/support/topic/simple-yet-powerful-106/)
 
 = Accessibility =
@@ -162,5 +162,7 @@ I don’t see an easy solution at the moment. SimpleTOC is only a block that can
 This plugin is forked from [pdewouters](https://github.com/pdewouters/gutentoc) and uses code from [Easy-Table-of-Contents](https://github.com/shazahm1/Easy-Table-of-Contents)
 
 Many thanks to [Tom J Nowell](https://tomjn.com) and and Sally CJ who both helped me a lot with my questions over at wordpress.stackexchange.com
+
+And many more thanks to all the [developers on GitHub](https://github.com/mtoensing/simpletoc/graphs/contributors) who helped me making SimpleTOC what it is today!
 
 Thanks to Quintus Valerius Soranus for inventing the Table of Contents around 100 BC. 
