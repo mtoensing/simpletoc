@@ -32,7 +32,7 @@ The maximum depth of the toc can be configured in in the blocks' sidebar among m
 
 = Accessibility =
 
-This plugin is designed & developed for WCAG 2.2 level AA conformance. The plugin is tested with assistive technology and intended to be accessible, however some third party plugins or themes may affect the individual accessibility on a given website. If you find an accessibility issue, please let us know and we'll try to address it promptly.
+This plugin is designed & developed for WCAG 2.2 level AA conformance. The plugin is tested with assistive technology and intended to be accessible, however some third party plugins or themes may affect the individual accessibility on a given website. If you find an accessibility issue, please [let us know](https://github.com/mtoensing/simpletoc/issues) and we'll try to address it promptly.
 
 = Features =
 
