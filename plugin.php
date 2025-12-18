@@ -17,6 +17,7 @@ namespace MToensing\SimpleTOC;
 
 require_once __DIR__ . '/simpletoc-admin-settings.php';
 require_once __DIR__ . '/simpletoc-class-headline-ids.php';
+require_once __DIR__ . '/simpletoc-class-headline-ids-wrapper.php';
 
 /**
  * Prevents direct execution of the plugin file.
@@ -166,6 +167,8 @@ function simpletoc_add_ids_to_content( $content ) {
 
 add_filter( 'the_content', __NAMESPACE__ . '\simpletoc_add_ids_to_content', 1 );
 
+
+
 /**
  * Recursively adds IDs to the headings of a nested block structure.
  *
@@ -187,9 +190,9 @@ function add_ids_to_blocks_recursive( $blocks ) {
 	 */
 	$supported_blocks = apply_filters( 'simpletoc_supported_blocks_for_ids', $supported_blocks );
 
-	// Need two separate instances so that IDs aren't double coubnted.
-	$inner_html_id_instance    = new SimpleTOC_Headline_Ids();
-	$inner_content_id_instance = new SimpleTOC_Headline_Ids();
+	// Need two separate instances so that IDs aren't double counted.
+	$inner_html_id_instance    = SimpleTOC_Headline_Ids_Wrapper::get_inner_html_id_instance();
+	$inner_content_id_instance = SimpleTOC_Headline_Ids_Wrapper::get_inner_content_id_instance();
 
 	foreach ( $blocks as &$block ) {
 		if ( isset( $block['blockName'] ) && in_array( $block['blockName'], $supported_blocks, true ) && isset( $block['innerHTML'] ) && isset( $block['innerContent'] ) && isset( $block['innerContent'][0] ) ) {
