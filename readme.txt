@@ -3,8 +3,8 @@ Contributors: MarcDK
 Tags: TOC, Table of Contents, Block, Accessibility, Table
 Requires at least: 5.9
 Tested up to: 6.9
-Stable tag: 6.9.4
-Requires PHP: 7.0
+Stable tag: 6.9.6
+Requires PHP: 7.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://marc.tv/out/donate
@@ -17,13 +17,22 @@ Add a Table of Contents block to your posts and pages. The TOC is a nested list 
 
 The maximum depth of the toc can be configured in in the blocks' sidebar among many other options. There can hide the headline "Table of Contents" and add your own by using a normal heading block.  
 
-SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoensing/SimpleTOC). If you find a bug or have an idea for a feature please feel free to contribute and create a pull request. 
-
 [Spin up](https://demo.tastewp.com/simpletoc) a new WordPress instance with the SimpleTOC plugin already installed.
+
+= User Feedback =
+
+> "It is lightweight, stable, and fully compatible with WordPress Full Site Editing. A reliable solution that integrates seamlessly and performs exactly as expected."
+— [@js100 on wordpress.org](https://wordpress.org/support/topic/good-job-1889/)
+
+> "Does the job perfectly, and adds no bloat."
+— [@clicknathan on wordpress.org](https://wordpress.org/support/topic/does-the-job-perfectly-and-adds-no-bloat/)
+
+> "Simple yet powerful. Great plugin that does exactly what you need."
+— [@mixey on wordpress.org](https://wordpress.org/support/topic/simple-yet-powerful-106/)
 
 = Accessibility =
 
-This plugin is designed & developed for WCAG 2.2 level AA conformance. The plugin is tested with assistive technology and intended to be accessible, however some third party plugins or themes may affect the individual accessibility on a given website. If you find an accessibility issue, please let us know and we'll try to address it promptly.
+This plugin is designed & developed for WCAG 2.2 level AA conformance. The plugin is tested with assistive technology and intended to be accessible, however some third party plugins or themes may affect the individual accessibility on a given website. If you find an accessibility issue, please [let us know](https://github.com/mtoensing/simpletoc/issues) and we'll try to address it promptly.
 
 = Features =
 
@@ -55,7 +64,15 @@ This plugin is designed & developed for WCAG 2.2 level AA conformance. The plugi
 * GeneratePress and Rank Math support.
 * Works with popular AMP plugins.
 
+= How to contribute = 
+
+SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoensing/SimpleTOC). If you find a bug or have an idea for a feature please feel free to contribute and create a pull request. 
+
 == Changelog ==
+
+= 6.9.6 =
+* Added: Coding standards cleanup with improved rules, cleaner code, safer output, and consistent naming. Thanks @ronalfy
+* Added: Minimum PHP version requirement set to 7.3
 
 = 6.9.4 =
 * Added: Introduced proper PHP namespaces to avoid class and function name conflicts and improve overall code robustness. Thanks @ronalfy.
@@ -146,5 +163,7 @@ I don’t see an easy solution at the moment. SimpleTOC is only a block that can
 This plugin is forked from [pdewouters](https://github.com/pdewouters/gutentoc) and uses code from [Easy-Table-of-Contents](https://github.com/shazahm1/Easy-Table-of-Contents)
 
 Many thanks to [Tom J Nowell](https://tomjn.com) and and Sally CJ who both helped me a lot with my questions over at wordpress.stackexchange.com
+
+And many more thanks to all the [developers on GitHub](https://github.com/mtoensing/simpletoc/graphs/contributors) who helped me making SimpleTOC what it is today!
 
 Thanks to Quintus Valerius Soranus for inventing the Table of Contents around 100 BC. 

@@ -314,7 +314,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					<PanelRow>
 						<ToggleControl
 							label={ __( 'Hide SimpleTOC', 'simpletoc' ) }
-							checked={ attributes.hideTOC }
+							checked={ hideTOC }
 							onChange={ ( value ) => {
 								if ( ! value ) {
 									// When turning off the "Hide SimpleTOC", reset both 'hidden' and 'accordion'
@@ -334,18 +334,9 @@ export default function Edit( { attributes, setAttributes } ) {
 						/>
 					</PanelRow>
 
-					{ attributes.hideTOC && (
+					{ hideTOC && (
 						<PanelRow>
-							<div
-								style={ {
-									marginBottom: '2em',
-									padding: '0.75em',
-									borderTop: '1px solid rgba(0, 0, 0, 0.1)',
-									borderBottom:
-										'1px solid rgba(0, 0, 0, 0.05)',
-									backgroundColor: '#f8f9fa',
-								} }
-							>
+							<div className="simpletoc-hide-options">
 								<RadioControl
 									label={ __( 'Type', 'simpletoc' ) }
 									selected={
