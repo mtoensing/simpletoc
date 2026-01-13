@@ -164,7 +164,7 @@ function simpletoc_add_ids_to_content( $content ) {
 	return $content;
 }
 
-add_filter( 'the_content', __NAMESPACE__ . '\simpletoc_add_ids_to_content', 999 );
+add_filter( 'the_content', __NAMESPACE__ . '\simpletoc_add_ids_to_content', 999 ); 
 
 /**
  * Recursively adds IDs to the headings of a nested block structure.

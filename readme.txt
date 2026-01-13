@@ -70,7 +70,7 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 
 == Changelog ==
 
-= 6.9.7 =
+= 6.9.7 = 
 * Fixed: GeneratePress Dynamic Tags work again - hopefully. If not, please report here https://github.com/mtoensing/simpletoc/issues/79#issuecomment-3745650464 Thanks @jhanten
 
 = 6.9.6 =
