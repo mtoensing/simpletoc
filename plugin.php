@@ -165,9 +165,74 @@ function simpletoc_add_ids_to_content( $content ) {
 	return $content;
 }
 
-add_filter( 'the_content', __NAMESPACE__ . '\simpletoc_add_ids_to_content', 1 ); 
+add_filter( 'the_content', __NAMESPACE__ . '\simpletoc_add_ids_to_content', 100 );
 
+add_filter( 'the_content', __NAMESPACE__ . '\simpletoc_render_toc', 101 );
 
+/**
+ * Renders the Table of Contents block.
+ *
+ * @param string $content The content to render the Table of Contents block for.
+ * @return string The rendered Table of Contents block.
+ */
+function simpletoc_render_toc( $content ) {
+	// Try to get the [simpletoc] block attributes.
+	$maybe_shortcode_result = preg_match( '/\[simpletoc ([^\]]*)\]/m', $content, $matches );
+
+	if ( ! $maybe_shortcode_result ) {
+		return $content;
+	}
+
+	// Decode HTML entities and convert curly quotes to straight quotes for valid JSON.
+	$json_string = html_entity_decode( $matches[1], ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+	// Convert curly quotes (left and right) back to straight quotes for valid JSON.
+	$json_string = str_replace( array( "\u{201C}", "\u{201D}", "\u{2018}", "\u{2019}" ), array( '"', '"', "'", "'" ), $json_string );
+
+	$attributes = json_decode( $json_string, true );
+
+	if ( null === $attributes ) {
+		return $content;
+	}
+
+	$is_backend  = defined( 'REST_REQUEST' ) && REST_REQUEST && 'edit' === filter_input( INPUT_GET, 'context' );
+	$title_text  = $attributes['title_text'] ? esc_html( trim( $attributes['title_text'] ) ) : __( 'Table of Contents', 'simpletoc' );
+	$alignclass  = ! empty( $attributes['align'] ) ? 'align' . $attributes['align'] : '';
+	$class_name  = ! empty( $attributes['className'] ) ? wp_strip_all_tags( $attributes['className'] ) : '';
+	$title_level = $attributes['title_level'];
+
+	$wrapper_enabled = apply_filters( 'simpletoc_wrapper_enabled', false ) || true === (bool) get_option( 'simpletoc_wrapper_enabled', false ) || true === (bool) get_option( 'simpletoc_accordion_enabled', false );
+
+	$wrapper_attrs = get_block_wrapper_attributes( array( 'class' => 'simpletoc' ) );
+	$pre_html      = ( ! empty( $class_name ) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper'] ) ? '<div role="navigation" aria-label="' . __( 'Table of Contents', 'simpletoc' ) . '" ' . $wrapper_attrs . '>' : '';
+	$post_html     = ( ! empty( $class_name ) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper'] ) ? '</div>' : '';
+
+	$post   = get_post();
+	$blocks = ! is_null( $post ) && ! is_null( $post->post_content ) ? parse_blocks( $post->post_content ) : '';
+
+	$headings       = array_reverse( filter_headings_recursive( $blocks ) );
+	$headings       = simpletoc_add_pagenumber( $blocks, $headings );
+	$headings_clean = array_map( 'trim', $headings );
+	$toc_html       = generate_toc( $headings_clean, $attributes );
+
+	if ( empty( $blocks ) ) {
+		$toc_html .= get_empty_blocks_message( $is_backend, $attributes, $title_level, $alignclass, $title_text, __( 'No blocks found.', 'simpletoc' ), __( 'Save or update post first.', 'simpletoc' ) );
+	}
+
+	if ( empty( $headings_clean ) ) {
+		$toc_html .= get_empty_blocks_message( $is_backend, $attributes, $title_level, $alignclass, $title_text, __( 'No headings found.', 'simpletoc' ), __( 'Save or update post first.', 'simpletoc' ) );
+	}
+
+	if ( empty( $toc_html ) ) {
+		$toc_html .= get_empty_blocks_message( $is_backend, $attributes, $title_level, $alignclass, $title_text, __( 'No headings found.', 'simpletoc' ), __( 'Check minimal and maximum level block settings.', 'simpletoc' ) );
+	}
+
+	$toc_html = $pre_html . $toc_html . $post_html;
+
+	// Replace the [simpletoc] block with the rendered Table of Contents block.
+	$content = str_replace( $matches[0], $toc_html, $content );
+
+	return $content;
+}
 
 /**
  * Recursively adds IDs to the headings of a nested block structure.
@@ -218,39 +283,12 @@ function add_ids_to_blocks_recursive( $blocks ) {
  * @return string The HTML output for the Table of Contents block
  */
 function render_callback_simpletoc( $attributes ) {
-	$is_backend  = defined( 'REST_REQUEST' ) && REST_REQUEST && 'edit' === filter_input( INPUT_GET, 'context' );
-	$title_text  = $attributes['title_text'] ? esc_html( trim( $attributes['title_text'] ) ) : __( 'Table of Contents', 'simpletoc' );
-	$alignclass  = ! empty( $attributes['align'] ) ? 'align' . $attributes['align'] : '';
-	$class_name  = ! empty( $attributes['className'] ) ? wp_strip_all_tags( $attributes['className'] ) : '';
-	$title_level = $attributes['title_level'];
-
-	$wrapper_enabled = apply_filters( 'simpletoc_wrapper_enabled', false ) || true === (bool) get_option( 'simpletoc_wrapper_enabled', false ) || true === (bool) get_option( 'simpletoc_accordion_enabled', false );
-
-	$wrapper_attrs = get_block_wrapper_attributes( array( 'class' => 'simpletoc' ) );
-	$pre_html      = ( ! empty( $class_name ) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper'] ) ? '<div role="navigation" aria-label="' . __( 'Table of Contents', 'simpletoc' ) . '" ' . $wrapper_attrs . '>' : '';
-	$post_html     = ( ! empty( $class_name ) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper'] ) ? '</div>' : '';
-
-	$post   = get_post();
-	$blocks = ! is_null( $post ) && ! is_null( $post->post_content ) ? parse_blocks( $post->post_content ) : '';
-
-	$headings       = array_reverse( filter_headings_recursive( $blocks ) );
-	$headings       = simpletoc_add_pagenumber( $blocks, $headings );
-	$headings_clean = array_map( 'trim', $headings );
-	$toc_html       = generate_toc( $headings_clean, $attributes );
-
-	if ( empty( $blocks ) ) {
-		return get_empty_blocks_message( $is_backend, $attributes, $title_level, $alignclass, $title_text, __( 'No blocks found.', 'simpletoc' ), __( 'Save or update post first.', 'simpletoc' ) );
+	$return = sprintf( '[simpletoc %s]', wp_json_encode( $attributes ) );
+	if ( defined( 'REST_REQUEST' ) && REST_REQUEST && 'edit' === filter_input( INPUT_GET, 'context' ) ) {
+		// This ensures simple TOC is rendered in the editor.
+		$return = apply_filters( 'the_content', $return );
 	}
-
-	if ( empty( $headings_clean ) ) {
-		return get_empty_blocks_message( $is_backend, $attributes, $title_level, $alignclass, $title_text, __( 'No headings found.', 'simpletoc' ), __( 'Save or update post first.', 'simpletoc' ) );
-	}
-
-	if ( empty( $toc_html ) ) {
-		return get_empty_blocks_message( $is_backend, $attributes, $title_level, $alignclass, $title_text, __( 'No headings found.', 'simpletoc' ), __( 'Check minimal and maximum level block settings.', 'simpletoc' ) );
-	}
-
-	return $pre_html . $toc_html . $post_html;
+	return $return;
 }
 
 /**
