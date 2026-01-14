@@ -271,6 +271,10 @@ function add_ids_to_blocks( $content ) {
 		 * @return bool The filtered value.
 		 */
 		$skip_in_wrapper = apply_filters( 'simpletoc_skip_in_wrapper', true );
+		if ( strpos( $tag_classes, 'simpletoc-include' ) !== false ) {
+			// If someone has added the simpletoc-include class, then don't skip it, regardless of wrapper.
+			$skip_in_wrapper = false;
+		}
 		if ( $skip_in_wrapper ) {
 			// Try to get parent tag.
 			$parent_tag = $tag->parentNode;
@@ -430,6 +434,10 @@ function filter_headings( $content ) {
 		 * @return bool The filtered value.
 		 */
 		$skip_in_wrapper = apply_filters( 'simpletoc_skip_in_wrapper', true );
+		if ( strpos( $tag_classes, 'simpletoc-include' ) !== false ) {
+			// If someone has added the simpletoc-include class, then don't skip it, regardless of wrapper.
+			$skip_in_wrapper = false;
+		}
 		if ( $skip_in_wrapper ) {
 			// Try to get parent tag.
 			$parent_tag = $tag->parentNode;
