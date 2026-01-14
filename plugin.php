@@ -19,7 +19,6 @@ use WP_HTML_Token;
 
 require_once __DIR__ . '/simpletoc-admin-settings.php';
 require_once __DIR__ . '/simpletoc-class-headline-ids.php';
-require_once __DIR__ . '/simpletoc-class-headline-ids-wrapper.php';
 
 /**
  * Prevents direct execution of the plugin file.
@@ -158,15 +157,12 @@ add_filter(
  */
 function simpletoc_add_ids_to_content( $content ) {
 
-	$blocks = parse_blocks( $content );
-
-	$blocks = add_ids_to_blocks_recursive( $blocks );
-
-	$content = serialize_blocks( $blocks );
+	$content = add_ids_to_blocks( $content );
 
 	return $content;
 }
 
+// Run late, but before toc is rendered as to be able to track and add IDs to the headings.
 add_filter( 'the_content', __NAMESPACE__ . '\simpletoc_add_ids_to_content', 100 );
 
 add_filter( 'the_content', __NAMESPACE__ . '\simpletoc_render_toc', 101 );
@@ -175,24 +171,25 @@ add_filter( 'the_content', __NAMESPACE__ . '\simpletoc_render_toc', 101 );
  * Renders the Table of Contents block.
  *
  * @param string $content The content to render the Table of Contents block for.
+ * @param bool   $return_toc_html Whether to return the TOC HTML only, without the content included.
+ * @param array  $attributes The attributes of the Table of Contents block.
  * @return string The rendered Table of Contents block.
  */
-function simpletoc_render_toc( $content ) {
-	// Try to get the [simpletoc] block attributes.
-	$maybe_shortcode_result = preg_match( '/\[simpletoc ([^\]]*)\]/m', $content, $matches );
+function simpletoc_render_toc( $content, $return_toc_html = false, $attributes = array() ) {
+	if ( ! $return_toc_html ) {
+		$maybe_shortcode_result = preg_match( '/\[simpletoc ([^\]]*)\]/m', $content, $matches );
 
-	if ( ! $maybe_shortcode_result ) {
-		return $content;
+		// Decode HTML entities and convert curly quotes to straight quotes for valid JSON.
+		$json_string = html_entity_decode( $matches[1], ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+		// Convert curly quotes (left and right) back to straight quotes for valid JSON.
+		$json_string = str_replace( array( "\u{201C}", "\u{201D}", "\u{2018}", "\u{2019}" ), array( '"', '"', "'", "'" ), $json_string );
+
+		$attributes = json_decode( $json_string, true );
+	} else {
+		$attributes = $attributes;
 	}
 
-	// Decode HTML entities and convert curly quotes to straight quotes for valid JSON.
-	$json_string = html_entity_decode( $matches[1], ENT_QUOTES | ENT_HTML5, 'UTF-8' );
-	// Convert curly quotes (left and right) back to straight quotes for valid JSON.
-	$json_string = str_replace( array( "\u{201C}", "\u{201D}", "\u{2018}", "\u{2019}" ), array( '"', '"', "'", "'" ), $json_string );
-
-	$attributes = json_decode( $json_string, true );
-
-	if ( null === $attributes ) {
+	if ( empty( $attributes ) ) {
 		return $content;
 	}
 
@@ -208,13 +205,7 @@ function simpletoc_render_toc( $content ) {
 	$pre_html      = ( ! empty( $class_name ) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper'] ) ? '<div role="navigation" aria-label="' . __( 'Table of Contents', 'simpletoc' ) . '" ' . $wrapper_attrs . '>' : '';
 	$post_html     = ( ! empty( $class_name ) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper'] ) ? '</div>' : '';
 
-	$post = get_post();
-	if ( ! $post ) {
-		return $content;
-	}
-
-	$post_content = $post->post_content;
-	$headings     = filter_headings( $post_content );
+	$headings = filter_headings( $content );
 	// $headings       = simpletoc_add_pagenumber( $blocks, $headings );
 	$toc_html = generate_toc( $headings, $attributes );
 
@@ -228,6 +219,10 @@ function simpletoc_render_toc( $content ) {
 
 	$toc_html = $pre_html . $toc_html . $post_html;
 
+	if ( $return_toc_html ) {
+		return $toc_html;
+	}
+
 	// Replace the [simpletoc] block with the rendered Table of Contents block.
 	$content = str_replace( $matches[0], $toc_html, $content );
 
@@ -237,43 +232,57 @@ function simpletoc_render_toc( $content ) {
 /**
  * Recursively adds IDs to the headings of a nested block structure.
  *
- * @param array $blocks The blocks to add IDs to.
+ * @param string $content The content to add IDs to.
  * @return array The blocks with IDs added to their headings
  */
-function add_ids_to_blocks_recursive( $blocks ) {
+function add_ids_to_blocks( $content ) {
 
-	$supported_blocks = array(
-		'core/heading',
-		'generateblocks/text',
-		'generateblocks/headline',
-	);
+	$dom = new \DOMDocument();
+	try {
+		@$dom->loadHTML( '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . $content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
+	} catch ( \Exception $e ) {
+		return $content;
+	}
 
-	/**
-	 * Filter to add supported blocks for IDs.
-	 *
-	 * @param array $supported_blocks The array of supported blocks.
-	 */
-	$supported_blocks = apply_filters( 'simpletoc_supported_blocks_for_ids', $supported_blocks );
+	// use xpath to select the Heading html tags.
+	$xpath = new \DOMXPath( $dom );
+	$tags  = $xpath->evaluate( '//*[self::h1 or self::h2 or self::h3 or self::h4 or self::h5 or self::h6]' );
 
-	// Need two separate instances so that IDs aren't double counted.
-	$inner_html_id_instance    = SimpleTOC_Headline_Ids_Wrapper::get_inner_html_id_instance();
-	$inner_content_id_instance = SimpleTOC_Headline_Ids_Wrapper::get_inner_content_id_instance();
+	foreach ( $tags as $tag ) {
+		// check if the heading has the SimpleTOC excluded class.
+		$tag_classes = $tag->getAttribute( 'class' );
+		if ( $tag_classes ) {
+			if ( strpos( $tag_classes, 'simpletoc-excluded' ) !== false ) {
+				continue;
+			}
+		}
 
-	foreach ( $blocks as &$block ) {
-		if ( isset( $block['blockName'] ) && in_array( $block['blockName'], $supported_blocks, true ) && isset( $block['innerHTML'] ) && isset( $block['innerContent'] ) && isset( $block['innerContent'][0] ) ) {
-			$block['innerHTML']       = add_anchor_attribute( $block['innerHTML'], $inner_html_id_instance );
-			$block['innerContent'][0] = add_anchor_attribute( $block['innerContent'][0], $inner_content_id_instance );
-		} elseif ( isset( $block['attrs']['ref'] ) ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedElseif
-			// search in reusable blocks (this is not finished because I ran out of ideas.)
-			// $reusable_block_id = $block['attrs']['ref'];
-			// $reusable_block_content = parse_blocks(get_post($reusable_block_id)->post_content);.
-		} elseif ( ! empty( $block['innerBlocks'] ) ) {
-			// search in groups.
-			$block['innerBlocks'] = add_ids_to_blocks_recursive( $block['innerBlocks'] );
+		/**
+		 * Filter to skip headings inside container blocks.
+		 *
+		 * @param bool $skip_in_wrapper Whether to skip headings inside container blocks.
+		 * @return bool The filtered value.
+		 */
+		$skip_in_wrapper = apply_filters( 'simpletoc_skip_in_wrapper', true );
+		if ( $skip_in_wrapper ) {
+			// Try to get parent tag.
+			$parent_tag = $tag->parentNode;
+			if ( $parent_tag && isset( $parent_tag->tagName ) ) {
+				if ( in_array( strtolower( strtolower( $parent_tag->tagName ) ), array( 'div', 'section', 'article', 'main', 'header', 'footer' ), true ) ) {
+					continue;
+				}
+			}
+		}
+
+		// Set the ID attribute of the headline anchor if it doesn't exist.
+		$tag_id          = $tag->getAttribute( 'id' );
+		$headline_anchor = SimpleTOC_Headline_Ids::get_headline_anchor( $tag->ownerDocument->saveHTML( $tag ), true );
+		if ( empty( $tag_id ) ) {
+			$tag->setAttribute( 'id', $headline_anchor );
 		}
 	}
 
-	return $blocks;
+	return $dom->saveHTML();
 }
 
 /**
@@ -285,8 +294,23 @@ function add_ids_to_blocks_recursive( $blocks ) {
 function render_callback_simpletoc( $attributes ) {
 	$return = sprintf( '[simpletoc %s]', wp_json_encode( $attributes ) );
 	if ( defined( 'REST_REQUEST' ) && REST_REQUEST && 'edit' === filter_input( INPUT_GET, 'context' ) ) {
-		// This ensures simple TOC is rendered in the editor.
-		$return = simpletoc_render_toc( $return );
+		// Strip out the simple toc block from the content.
+		$post = get_post();
+		if ( ! $post ) {
+			return $return;
+		}
+		$post_content = $post->post_content;
+
+		// <!-- wp:simpletoc
+		$simple_toc_regex = '/(<!-- wp:simpletoc[^>]*>)/m';
+		$post_content     = preg_replace( $simple_toc_regex, '', $post_content );
+
+		// This processes post content and stores the toc content for later rendering.
+		$post_content = do_blocks( $post_content );
+		$post_content = simpletoc_add_ids_to_content( $post_content );
+
+		// Now get the toc html.
+		$return = simpletoc_render_toc( $post_content, true, $attributes );
 	}
 	return $return;
 }
@@ -392,12 +416,12 @@ function filter_headings( $content ) {
 		 * @param bool $skip_in_wrapper Whether to skip headings inside container blocks.
 		 * @return bool The filtered value.
 		 */
-		$skip_in_wrapper = apply_filters( 'simpletoc_skip_in_wrapper', false );
+		$skip_in_wrapper = apply_filters( 'simpletoc_skip_in_wrapper', true );
 		if ( $skip_in_wrapper ) {
 			// Try to get parent tag.
 			$parent_tag = $tag->parentNode;
 			if ( $parent_tag && isset( $parent_tag->tagName ) ) {
-				if ( in_array( strtolower( $parent_tag->tag_name ), array( 'div', 'section', 'article', 'main', 'header', 'footer' ), true ) ) {
+				if ( in_array( strtolower( strtolower( $parent_tag->tagName ) ), array( 'div', 'section', 'article', 'main', 'header', 'footer' ), true ) ) {
 					continue;
 				}
 			}
@@ -485,7 +509,7 @@ function add_anchor_attribute( $html, $headline_class_instance = null ) {
 		}
 		// Set id attribute.
 		$heading_text = trim( wp_strip_all_tags( $html ) );
-		$anchor       = $headline_class_instance->get_headline_anchor( $heading_text );
+		$anchor       = $headline_class_instance->get_headline_anchor( $heading_text, false );
 		$tag->setAttribute( 'id', $anchor );
 	}
 
@@ -515,15 +539,17 @@ function generate_toc( $headings, $attributes ) {
 
 	list($min_depth, $initial_depth) = find_min_depth( $headings, $attributes );
 
-	$item_count   = 0;
-	$headline_ids = new SimpleTOC_Headline_Ids();
+	$item_count = 0;
 	foreach ( $headings as $line => $headline ) {
 		$this_depth       = (int) $headings[ $line ][2];
 		$next_depth       = isset( $headings[ $line + 1 ][2] ) ? (int) $headings[ $line + 1 ][2] : '';
 		$exclude_headline = should_exclude_headline( $headline, $attributes, $this_depth );
 		$title            = trim( wp_strip_all_tags( $headline ) );
 		$custom_id        = extract_id( $headline );
-		$link             = $custom_id ? $custom_id : $headline_ids->get_headline_anchor( $title );
+		if ( empty( $custom_id ) ) {
+			continue;
+		}
+		$link = $custom_id;
 		if ( ! $exclude_headline ) {
 			++$item_count;
 			open_list( $list, $list_type, $min_depth, $this_depth );

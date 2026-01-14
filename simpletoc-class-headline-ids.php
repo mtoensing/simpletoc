@@ -26,34 +26,34 @@ class SimpleTOC_Headline_Ids {
 	 *
 	 * @var array
 	 */
-	private $headlines = array();
+	public static $headlines = array();
 
 	/**
 	 * Add a headline to the array
 	 *
 	 * @param string $headline_slug The slug of the headline.
 	 */
-	private function add_headline( $headline_slug ) {
+	protected static function add_headline( $headline_slug ) {
 		if ( empty( $headline_slug ) ) {
 			return;
 		}
 
-		if ( ! isset( $this->headlines[ $headline_slug ] ) ) {
-			$this->headlines[ $headline_slug ] = 1;
+		if ( ! isset( self::$headlines[ $headline_slug ] ) ) {
+			self::$headlines[ $headline_slug ] = 1;
 		} else {
-			$this->headlines[ $headline_slug ] = $this->get_headline_count( $headline_slug ) + 1;
+			self::$headlines[ $headline_slug ] = self::get_headline_count( $headline_slug ) + 1;
 		}
-		if ( $this->headlines[ $headline_slug ] > 1 ) {
-			$new_headline_slug = $headline_slug . '-' . $this->headlines[ $headline_slug ];
-			if ( isset( $this->headlines[ $new_headline_slug ] ) ) {
-				$new_headline_slug = $this->add_headline( $new_headline_slug );
+		if ( self::$headlines[ $headline_slug ] > 1 ) {
+			$new_headline_slug = $headline_slug . '-' . self::$headlines[ $headline_slug ];
+			if ( isset( self::$headlines[ $new_headline_slug ] ) ) {
+				$new_headline_slug = self::add_headline( $new_headline_slug );
 			}
-			$new_headline_count = $this->get_headline_count( $new_headline_slug );
+			$new_headline_count = self::get_headline_count( $new_headline_slug );
 			if ( 0 === $new_headline_count ) {
 				$new_headline_count = 1;
 			}
-			$this->headlines[ $new_headline_slug ] = $new_headline_count;
-			return $new_headline_slug;
+			self::$headlines[ $new_headline_slug ] = $new_headline_count;
+			$headline_slug                         = $new_headline_slug;
 		}
 		return $headline_slug;
 	}
@@ -62,16 +62,19 @@ class SimpleTOC_Headline_Ids {
 	 * Get the anchor for a headline
 	 *
 	 * @param string $headline The headline.
+	 * @param bool   $add_headline Whether to add the headline to the array.
 	 * @return string The anchor for the headline
 	 */
-	public function get_headline_anchor( $headline ) {
+	public static function get_headline_anchor( $headline, $add_headline = false ) {
 		if ( empty( $headline ) ) {
 			return '';
 		}
 
 		$headline_slug = simpletoc_sanitize_string( $headline );
 
-		$headline_slug = $this->add_headline( $headline_slug );
+		if ( $add_headline ) {
+			$headline_slug = self::add_headline( $headline_slug );
+		}
 		return $headline_slug;
 	}
 
@@ -81,7 +84,7 @@ class SimpleTOC_Headline_Ids {
 	 * @param string $headline_slug The slug of the headline.
 	 * @return mixed The count of the headline slug.
 	 */
-	private function get_headline_count( $headline_slug = '' ) {
-		return $this->headlines[ $headline_slug ] ?? 0;
+	private static function get_headline_count( $headline_slug = '' ) {
+		return self::$headlines[ $headline_slug ] ?? 0;
 	}
 }
