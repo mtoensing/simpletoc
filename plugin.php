@@ -173,20 +173,28 @@ add_filter( 'the_content', __NAMESPACE__ . '\simpletoc_render_toc', 101 );
  * @param string $content The content to render the Table of Contents block for.
  * @param bool   $return_toc_html Whether to return the TOC HTML only, without the content included.
  * @param array  $attributes The attributes of the Table of Contents block.
+ * @param array  $wrapper_attrs The wrapper attributes of the Table of Contents block.
  * @return string The rendered Table of Contents block.
  */
-function simpletoc_render_toc( $content, $return_toc_html = false, $attributes = array() ) {
+function simpletoc_render_toc( $content, $return_toc_html = false, $attributes = array(), $wrapper_attrs = array() ) {
 	if ( ! $return_toc_html ) {
 		$maybe_shortcode_result = preg_match( '/\[simpletoc ([^\]]*)\]/m', $content, $matches );
+
+		if ( ! $maybe_shortcode_result ) {
+			return $content;
+		}
 
 		// Decode HTML entities and convert curly quotes to straight quotes for valid JSON.
 		$json_string = html_entity_decode( $matches[1], ENT_QUOTES | ENT_HTML5, 'UTF-8' );
 		// Convert curly quotes (left and right) back to straight quotes for valid JSON.
 		$json_string = str_replace( array( "\u{201C}", "\u{201D}", "\u{2018}", "\u{2019}" ), array( '"', '"', "'", "'" ), $json_string );
 
-		$attributes = json_decode( $json_string, true );
-	} else {
-		$attributes = $attributes;
+		// Extract out attributes and wrapper attributes from the shortcode.
+		preg_match( '/attributes=\'([^\']*)\'/', $json_string, $attributes_match );
+		preg_match( '/wrapper_attrs=\'([^\']*)\'/', $json_string, $wrapper_attrs_match );
+
+		$attributes    = json_decode( $attributes_match[1], true );
+		$wrapper_attrs = json_decode( $wrapper_attrs_match[1], true );
 	}
 
 	if ( empty( $attributes ) ) {
@@ -201,9 +209,8 @@ function simpletoc_render_toc( $content, $return_toc_html = false, $attributes =
 
 	$wrapper_enabled = apply_filters( 'simpletoc_wrapper_enabled', false ) || true === (bool) get_option( 'simpletoc_wrapper_enabled', false ) || true === (bool) get_option( 'simpletoc_accordion_enabled', false );
 
-	$wrapper_attrs = get_block_wrapper_attributes( array( 'class' => 'simpletoc' ) );
-	$pre_html      = ( ! empty( $class_name ) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper'] ) ? '<div role="navigation" aria-label="' . __( 'Table of Contents', 'simpletoc' ) . '" ' . $wrapper_attrs . '>' : '';
-	$post_html     = ( ! empty( $class_name ) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper'] ) ? '</div>' : '';
+	$pre_html  = ( ! empty( $class_name ) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper'] ) ? '<div role="navigation" aria-label="' . __( 'Table of Contents', 'simpletoc' ) . '" ' . $wrapper_attrs . '>' : '';
+	$post_html = ( ! empty( $class_name ) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper'] ) ? '</div>' : '';
 
 	$headings = filter_headings( $content );
 	// $headings       = simpletoc_add_pagenumber( $blocks, $headings );
@@ -292,8 +299,14 @@ function add_ids_to_blocks( $content ) {
  * @return string The HTML output for the Table of Contents block
  */
 function render_callback_simpletoc( $attributes ) {
-	$return = sprintf( '[simpletoc %s]', wp_json_encode( $attributes ) );
+	$wrapper_attrs = get_block_wrapper_attributes( array( 'class' => 'simpletoc' ) );
+	$return        = sprintf(
+		'[simpletoc attributes=\'%s\' wrapper_attrs=\'%s\']',
+		wp_json_encode( $attributes ),
+		wp_json_encode( $wrapper_attrs )
+	); // Placeholder to be replaced in `the_content` filters later.
 	if ( defined( 'REST_REQUEST' ) && REST_REQUEST && 'edit' === filter_input( INPUT_GET, 'context' ) ) {
+		// We're in the block editor rendering a server-side preview.
 		// Strip out the simple toc block from the content.
 		$post = get_post();
 		if ( ! $post ) {
@@ -305,12 +318,12 @@ function render_callback_simpletoc( $attributes ) {
 		$simple_toc_regex = '/(<!-- wp:simpletoc[^>]*>)/m';
 		$post_content     = preg_replace( $simple_toc_regex, '', $post_content );
 
-		// This processes post content and stores the toc content for later rendering.
+		// This processes post content and stores the toc headlines for later rendering. Very simple content processing and fast. The placeholder is skipped.
 		$post_content = do_blocks( $post_content );
 		$post_content = simpletoc_add_ids_to_content( $post_content );
 
-		// Now get the toc html.
-		$return = simpletoc_render_toc( $post_content, true, $attributes );
+		// Now get the toc html only.
+		$return = simpletoc_render_toc( $post_content, true, $attributes, $wrapper_attrs );
 	}
 	return $return;
 }
