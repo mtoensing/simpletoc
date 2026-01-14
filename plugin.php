@@ -15,6 +15,8 @@
 
 namespace MToensing\SimpleTOC;
 
+use WP_HTML_Token;
+
 require_once __DIR__ . '/simpletoc-admin-settings.php';
 require_once __DIR__ . '/simpletoc-class-headline-ids.php';
 require_once __DIR__ . '/simpletoc-class-headline-ids-wrapper.php';
@@ -206,20 +208,18 @@ function simpletoc_render_toc( $content ) {
 	$pre_html      = ( ! empty( $class_name ) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper'] ) ? '<div role="navigation" aria-label="' . __( 'Table of Contents', 'simpletoc' ) . '" ' . $wrapper_attrs . '>' : '';
 	$post_html     = ( ! empty( $class_name ) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper'] ) ? '</div>' : '';
 
-	$post   = get_post();
-	$blocks = ! is_null( $post ) && ! is_null( $post->post_content ) ? parse_blocks( $post->post_content ) : '';
-
-	$headings       = array_reverse( filter_headings_recursive( $blocks ) );
-	$headings       = simpletoc_add_pagenumber( $blocks, $headings );
-	$headings_clean = array_map( 'trim', $headings );
-	$toc_html       = generate_toc( $headings_clean, $attributes );
-
-	if ( empty( $blocks ) ) {
-		$toc_html .= get_empty_blocks_message( $is_backend, $attributes, $title_level, $alignclass, $title_text, __( 'No blocks found.', 'simpletoc' ), __( 'Save or update post first.', 'simpletoc' ) );
+	$post = get_post();
+	if ( ! $post ) {
+		return $content;
 	}
 
-	if ( empty( $headings_clean ) ) {
-		$toc_html .= get_empty_blocks_message( $is_backend, $attributes, $title_level, $alignclass, $title_text, __( 'No headings found.', 'simpletoc' ), __( 'Save or update post first.', 'simpletoc' ) );
+	$post_content = $post->post_content;
+	$headings     = filter_headings( $post_content );
+	// $headings       = simpletoc_add_pagenumber( $blocks, $headings );
+	$toc_html = generate_toc( $headings, $attributes );
+
+	if ( empty( $headings ) ) {
+		$toc_html .= get_empty_blocks_message( $is_backend, $attributes, $title_level, $alignclass, $title_text, __( 'No headings found. Please save your post and ensure headings are present.', 'simpletoc' ), __( 'Save or update post first.', 'simpletoc' ) );
 	}
 
 	if ( empty( $toc_html ) ) {
@@ -286,7 +286,7 @@ function render_callback_simpletoc( $attributes ) {
 	$return = sprintf( '[simpletoc %s]', wp_json_encode( $attributes ) );
 	if ( defined( 'REST_REQUEST' ) && REST_REQUEST && 'edit' === filter_input( INPUT_GET, 'context' ) ) {
 		// This ensures simple TOC is rendered in the editor.
-		$return = apply_filters( 'the_content', $return );
+		$return = simpletoc_render_toc( $return );
 	}
 	return $return;
 }
@@ -348,71 +348,62 @@ function simpletoc_add_pagenumber( $blocks, $headings ) {
 }
 
 /**
- * Return all headings with a recursive walk through all blocks.
- * This includes groups and reusable block with groups within reusable blocks.
+ * Filter through all headings. Only return headings that have IDs, do not have SimpleTOC excluded class. Optional filter for ignoring headings inside container blocks..
  *
- * @param array[] $blocks The blocks to filter headings from.
- * @return array[]
+ * @param string $content The content to filter headings from.
+ * @return array[] - Array of headings with HTML tags.
  */
-function filter_headings_recursive( $blocks ) {
+function filter_headings( $content ) {
+
 	$arr = array();
 
-	if ( ! is_array( $blocks ) ) {
+	if ( empty( $content ) ) {
 		return $arr;
 	}
 
-	// allow developers to ignore specific blocks.
-	$ignored_blocks = apply_filters( 'simpletoc_excluded_blocks', array() );
+	$dom = new \DOMDocument();
+	try {
+		$dom->loadHTML( '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . $content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
+	} catch ( \Exception $e ) {
+		return $arr;
+	}
 
-	foreach ( $blocks as $inner_block ) {
-		if ( is_array( $inner_block ) ) {
-			// if block is ignored, skip.
-			if ( isset( $inner_block['blockName'] ) && in_array( $inner_block['blockName'], $ignored_blocks, true ) ) {
+	// use xpath to select the Heading html tags.
+	$xpath = new \DOMXPath( $dom );
+	$tags  = $xpath->evaluate( '//*[self::h1 or self::h2 or self::h3 or self::h4 or self::h5 or self::h6]' );
+
+	foreach ( $tags as $tag ) {
+		$tag_id = 'simple-toc'; // $tag->getAttribute( 'id' );
+		if ( ! $tag_id ) {
+			continue;
+		}
+
+		// check if the heading has the SimpleTOC excluded class.
+		$tag_classes = $tag->getAttribute( 'class' );
+		if ( $tag_classes ) {
+			if ( strpos( $tag_classes, 'simpletoc-excluded' ) !== false ) {
 				continue;
 			}
+		}
 
-			if ( isset( $inner_block['attrs']['ref'] ) ) {
-				// search in reusable blocks.
-				$post = get_post( $inner_block['attrs']['ref'] );
-				if ( $post ) {
-					$e_arr = parse_blocks( $post->post_content );
-					$arr   = array_merge( filter_headings_recursive( $e_arr ), $arr );
-				}
-			} else {
-				// search in groups.
-				$arr = array_merge( filter_headings_recursive( $inner_block ), $arr );
-			}
-		} else {
-			if ( isset( $blocks['blockName'] ) && ( 'core/heading' === $blocks['blockName'] ) && 'core/heading' !== $inner_block ) {
-				// make sure it's a headline.
-				if ( preg_match( '/(<h1|<h2|<h3|<h4|<h5|<h6)/i', $inner_block ) ) {
-					$arr[] = $inner_block;
-				}
-			}
-
-			$supported_third_party_blocks = array(
-				'generateblocks/headline', /* GenerateBlocks 1.x */
-				'generateblocks/text', /* GenerateBlocks 2.0 */
-			);
-
-			/**
-			 * Filter to add supported third party blocks.
-			 *
-			 * @param array $supported_third_party_blocks The array of supported third party blocks.
-			 * @return array The modified array of supported third party blocks.
-			 */
-			$supported_third_party_blocks = apply_filters(
-				'simpletoc_supported_third_party_blocks',
-				$supported_third_party_blocks
-			);
-
-			if ( isset( $blocks['blockName'] ) && in_array( $blocks['blockName'], $supported_third_party_blocks, true ) && 'core/heading' !== $inner_block ) {
-				// make sure it's a headline.
-				if ( preg_match( '/(<h1|<h2|<h3|<h4|<h5|<h6)/i', $inner_block ) ) {
-					$arr[] = $inner_block;
+		/**
+		 * Filter to skip headings inside container blocks.
+		 *
+		 * @param bool $skip_in_wrapper Whether to skip headings inside container blocks.
+		 * @return bool The filtered value.
+		 */
+		$skip_in_wrapper = apply_filters( 'simpletoc_skip_in_wrapper', false );
+		if ( $skip_in_wrapper ) {
+			// Try to get parent tag.
+			$parent_tag = $tag->parentNode;
+			if ( $parent_tag && isset( $parent_tag->tagName ) ) {
+				if ( in_array( strtolower( $parent_tag->tag_name ), array( 'div', 'section', 'article', 'main', 'header', 'footer' ), true ) ) {
+					continue;
 				}
 			}
 		}
+
+		$arr[] = $tag->ownerDocument->saveHTML( $tag ); // This gets the full HTML of the heading tag.
 	}
 
 	return $arr;
