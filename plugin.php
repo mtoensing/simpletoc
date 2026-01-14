@@ -159,13 +159,13 @@ function simpletoc_add_ids_to_content( $content ) {
 
 	$content = add_ids_to_blocks( $content );
 
+	$content = simpletoc_render_toc( $content );
+
 	return $content;
 }
 
 // Run late, but before toc is rendered as to be able to track and add IDs to the headings.
 add_filter( 'the_content', __NAMESPACE__ . '\simpletoc_add_ids_to_content', 100 );
-
-add_filter( 'the_content', __NAMESPACE__ . '\simpletoc_render_toc', 101 );
 
 /**
  * Renders the Table of Contents block.
