@@ -400,7 +400,7 @@ function filter_headings( $content ) {
 
 	$dom = new \DOMDocument();
 	try {
-		$dom->loadHTML( '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . $content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
+		@$dom->loadHTML( '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . $content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
 	} catch ( \Exception $e ) {
 		return $arr;
 	}
