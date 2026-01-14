@@ -397,7 +397,7 @@ function filter_headings( $content ) {
 	$tags  = $xpath->evaluate( '//*[self::h1 or self::h2 or self::h3 or self::h4 or self::h5 or self::h6]' );
 
 	foreach ( $tags as $tag ) {
-		$tag_id = 'simple-toc'; // $tag->getAttribute( 'id' );
+		$tag_id = $tag->getAttribute( 'id' );
 		if ( ! $tag_id ) {
 			continue;
 		}
