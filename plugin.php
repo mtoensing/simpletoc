@@ -157,8 +157,16 @@ add_filter(
  */
 function simpletoc_add_ids_to_content( $content ) {
 
+	// Return early if the content does not contain a simpletoc shortcode.
+	$maybe_shortcode_result = preg_match( '/\[simpletoc ([^\]]*)\]/m', $content, $matches );
+	if ( ! $maybe_shortcode_result ) {
+		return $content;
+	}
+
+	// Add IDs to the headings of the content.
 	$content = add_ids_to_blocks( $content );
 
+	// Render the Table of Contents block.
 	$content = simpletoc_render_toc( $content );
 
 	return $content;
