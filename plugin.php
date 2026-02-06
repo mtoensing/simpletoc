@@ -3,7 +3,7 @@
  * Plugin Name:   SimpleTOC - Table of Contents Block
  * Plugin URI:    https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
  * Description:   SEO-friendly Table of Contents Gutenberg block. No JavaScript and no CSS means faster loading.
- * Version:       6.9.7
+ * Version:       7.0.0
  * Author:        Marc Tönsing
  * Author URI:    https://toensing.com
  * Text Domain:   simpletoc
@@ -14,6 +14,8 @@
  */
 
 namespace MToensing\SimpleTOC;
+
+use WP_HTML_Token;
 
 require_once __DIR__ . '/simpletoc-admin-settings.php';
 require_once __DIR__ . '/simpletoc-class-headline-ids.php';
@@ -151,61 +153,171 @@ add_filter(
  * Adds IDs to the headings of the provided post content using a recursive block structure.
  *
  * @param string $content The content to add IDs to.
+ * @param string $skip_regex The regex to skip the content from being processed.
  * @return string The content with IDs added to its headings
  */
-function simpletoc_add_ids_to_content( $content ) {
+function simpletoc_add_ids_to_content( $content, $skip_regex = false ) {
 
-	$blocks = parse_blocks( $content );
+	// Return early if the content does not contain a simpletoc shortcode.
+	$maybe_shortcode_result = preg_match( '/\[simpletoc ([^\]]*)\]/m', $content, $matches );
+	if ( ! $maybe_shortcode_result && ! $skip_regex ) {
+		return $content;
+	}
 
-	$blocks = add_ids_to_blocks_recursive( $blocks );
+	// Add IDs to the headings of the content.
+	$content = add_ids_to_blocks( $content );
 
-	$content = serialize_blocks( $blocks );
+	// Render the Table of Contents block.
+	$content = simpletoc_render_toc( $content );
 
 	return $content;
 }
 
-add_filter( 'the_content', __NAMESPACE__ . '\simpletoc_add_ids_to_content', 1 ); 
+// Run late, but before toc is rendered as to be able to track and add IDs to the headings.
+add_filter( 'the_content', __NAMESPACE__ . '\simpletoc_add_ids_to_content', 100 );
+
+/**
+ * Renders the Table of Contents block.
+ *
+ * @param string $content The content to render the Table of Contents block for.
+ * @param bool   $return_toc_html Whether to return the TOC HTML only, without the content included.
+ * @param array  $attributes The attributes of the Table of Contents block.
+ * @param array  $wrapper_attrs The wrapper attributes of the Table of Contents block.
+ * @return string The rendered Table of Contents block.
+ */
+function simpletoc_render_toc( $content, $return_toc_html = false, $attributes = array(), $wrapper_attrs = array() ) {
+	if ( ! $return_toc_html ) {
+		$maybe_shortcode_result = preg_match( '/\[simpletoc ([^\]]*)\]/m', $content, $matches );
+
+		if ( ! $maybe_shortcode_result ) {
+			return $content;
+		}
+
+		// Decode HTML entities and convert curly quotes to straight quotes for valid JSON.
+		$json_string = html_entity_decode( $matches[1], ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+		// Convert curly quotes (left and right) back to straight quotes for valid JSON.
+		$json_string = str_replace( array( "\u{201C}", "\u{201D}", "\u{2018}", "\u{2019}" ), array( '"', '"', "'", "'" ), $json_string );
+
+		// Extract out attributes and wrapper attributes from the shortcode.
+		preg_match( '/attributes=\'([^\']*)\'/', $json_string, $attributes_match );
+		preg_match( '/wrapper_attrs=\'([^\']*)\'/', $json_string, $wrapper_attrs_match );
+
+		$attributes    = json_decode( $attributes_match[1], true );
+		$wrapper_attrs = json_decode( $wrapper_attrs_match[1], true );
+	}
+
+	if ( empty( $attributes ) ) {
+		return $content;
+	}
+
+	$is_backend  = defined( 'REST_REQUEST' ) && REST_REQUEST && 'edit' === filter_input( INPUT_GET, 'context' );
+	$title_text  = $attributes['title_text'] ? esc_html( trim( $attributes['title_text'] ) ) : __( 'Table of Contents', 'simpletoc' );
+	$alignclass  = ! empty( $attributes['align'] ) ? 'align' . $attributes['align'] : '';
+	$class_name  = ! empty( $attributes['className'] ) ? wp_strip_all_tags( $attributes['className'] ) : '';
+	$title_level = $attributes['title_level'];
+
+	$wrapper_enabled = apply_filters( 'simpletoc_wrapper_enabled', false ) || true === (bool) get_option( 'simpletoc_wrapper_enabled', false ) || true === (bool) get_option( 'simpletoc_accordion_enabled', false );
+
+	$pre_html  = ( ! empty( $class_name ) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper'] ) ? '<div role="navigation" aria-label="' . __( 'Table of Contents', 'simpletoc' ) . '" ' . $wrapper_attrs . '>' : '';
+	$post_html = ( ! empty( $class_name ) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper'] ) ? '</div>' : '';
+
+	$headings = filter_headings( $content );
+	// $headings       = simpletoc_add_pagenumber( $blocks, $headings );
+	$toc_html = generate_toc( $headings, $attributes );
+
+	if ( empty( $headings ) ) {
+		$toc_html .= get_empty_blocks_message( $is_backend, $attributes, $title_level, $alignclass, $title_text, __( 'No headings found. Please save your post and ensure headings are present.', 'simpletoc' ), __( 'Save or update post first.', 'simpletoc' ) );
+	}
+
+	if ( empty( $toc_html ) ) {
+		$toc_html .= get_empty_blocks_message( $is_backend, $attributes, $title_level, $alignclass, $title_text, __( 'No headings found.', 'simpletoc' ), __( 'Check minimal and maximum level block settings.', 'simpletoc' ) );
+	}
+
+	$toc_html = $pre_html . $toc_html . $post_html;
+
+	if ( $return_toc_html ) {
+		return $toc_html;
+	}
+
+	// Replace the [simpletoc] block with the rendered Table of Contents block.
+	$content = str_replace( $matches[0], $toc_html, $content );
+
+	return $content;
+}
 
 /**
  * Recursively adds IDs to the headings of a nested block structure.
  *
- * @param array $blocks The blocks to add IDs to.
+ * @param string $content The content to add IDs to.
  * @return array The blocks with IDs added to their headings
  */
-function add_ids_to_blocks_recursive( $blocks ) {
+function add_ids_to_blocks( $content ) {
 
-	$supported_blocks = array(
-		'core/heading',
-		'generateblocks/text',
-		'generateblocks/headline',
-	);
+	$dom = new \DOMDocument();
+	try {
+		@$dom->loadHTML( '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . $content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
+	} catch ( \Exception $e ) {
+		return $content;
+	}
 
-	/**
-	 * Filter to add supported blocks for IDs.
-	 *
-	 * @param array $supported_blocks The array of supported blocks.
-	 */
-	$supported_blocks = apply_filters( 'simpletoc_supported_blocks_for_ids', $supported_blocks );
+	// use xpath to select the Heading html tags.
+	$xpath = new \DOMXPath( $dom );
+	$tags  = $xpath->evaluate( '//*[self::h1 or self::h2 or self::h3 or self::h4 or self::h5 or self::h6]' );
 
-	// Need two separate instances so that IDs aren't double coubnted.
-	$inner_html_id_instance    = new SimpleTOC_Headline_Ids();
-	$inner_content_id_instance = new SimpleTOC_Headline_Ids();
+	foreach ( $tags as $tag ) {
+		// check if the heading has the SimpleTOC excluded class.
+		$tag_classes = $tag->getAttribute( 'class' );
+		if ( $tag_classes ) {
+			if ( strpos( $tag_classes, 'simpletoc-excluded' ) !== false ) {
+				continue;
+			}
+		}
 
-	foreach ( $blocks as &$block ) {
-		if ( isset( $block['blockName'] ) && in_array( $block['blockName'], $supported_blocks, true ) && isset( $block['innerHTML'] ) && isset( $block['innerContent'] ) && isset( $block['innerContent'][0] ) ) {
-			$block['innerHTML']       = add_anchor_attribute( $block['innerHTML'], $inner_html_id_instance );
-			$block['innerContent'][0] = add_anchor_attribute( $block['innerContent'][0], $inner_content_id_instance );
-		} elseif ( isset( $block['attrs']['ref'] ) ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedElseif
-			// search in reusable blocks (this is not finished because I ran out of ideas.)
-			// $reusable_block_id = $block['attrs']['ref'];
-			// $reusable_block_content = parse_blocks(get_post($reusable_block_id)->post_content);.
-		} elseif ( ! empty( $block['innerBlocks'] ) ) {
-			// search in groups.
-			$block['innerBlocks'] = add_ids_to_blocks_recursive( $block['innerBlocks'] );
+		// If tag has a parent with 'simpletoc-excluded' class, then skip it.
+		// Check if any parent has the 'simpletoc-excluded' class (similar to JS .closest).
+		$parent = $tag->parentNode; // phpcs:ignore.
+		while ( $parent ) {
+			$parent_classes = isset( $parent->className ) ? $parent->className : ''; // phpcs:ignore.
+			if ( $parent_classes && strpos( $parent_classes, 'simpletoc-excluded' ) !== false ) {
+				continue 2; // Skip this tag, jump out of both while and foreach.
+			}
+			$parent = $parent->parentNode ?? null; // phpcs:ignore.
+			if ( ! $parent ) {
+				continue;
+			}
+		}
+
+		/**
+		 * Filter to skip headings inside container blocks.
+		 *
+		 * @param bool $skip_in_wrapper Whether to skip headings inside container blocks.
+		 * @return bool The filtered value.
+		 * @since 7.0.0
+		 */
+		$skip_in_wrapper = apply_filters( 'simpletoc_skip_in_wrapper', false );
+		if ( strpos( $tag_classes, 'simpletoc-include' ) !== false ) {
+			// If someone has added the simpletoc-include class, then don't skip it, regardless of wrapper.
+			$skip_in_wrapper = false;
+		}
+		if ( $skip_in_wrapper ) {
+			// Try to get parent tag.
+			$parent_tag = $tag->parentNode; // phpcs:ignore.
+			if ( $parent_tag && isset( $parent_tag->tagName ) ) { // phpcs:ignore.
+				if ( in_array( strtolower( strtolower( $parent_tag->tagName ) ), array( 'div', 'section', 'article', 'main', 'header', 'footer' ), true ) ) { // phpcs:ignore.
+					continue;
+				}
+			}
+		}
+
+		// Set the ID attribute of the headline anchor if it doesn't exist.
+		$tag_id          = $tag->getAttribute( 'id' );
+		$headline_anchor = SimpleTOC_Headline_Ids::get_headline_anchor( $tag->ownerDocument->saveHTML( $tag ), true ); // phpcs:ignore.
+		if ( empty( $tag_id ) ) {
+			$tag->setAttribute( 'id', $headline_anchor );
 		}
 	}
 
-	return $blocks;
+	return $dom->saveHTML();
 }
 
 /**
@@ -215,39 +327,33 @@ function add_ids_to_blocks_recursive( $blocks ) {
  * @return string The HTML output for the Table of Contents block
  */
 function render_callback_simpletoc( $attributes ) {
-	$is_backend  = defined( 'REST_REQUEST' ) && REST_REQUEST && 'edit' === filter_input( INPUT_GET, 'context' );
-	$title_text  = $attributes['title_text'] ? esc_html( trim( $attributes['title_text'] ) ) : __( 'Table of Contents', 'simpletoc' );
-	$alignclass  = ! empty( $attributes['align'] ) ? 'align' . $attributes['align'] : '';
-	$class_name  = ! empty( $attributes['className'] ) ? wp_strip_all_tags( $attributes['className'] ) : '';
-	$title_level = $attributes['title_level'];
-
-	$wrapper_enabled = apply_filters( 'simpletoc_wrapper_enabled', false ) || true === (bool) get_option( 'simpletoc_wrapper_enabled', false ) || true === (bool) get_option( 'simpletoc_accordion_enabled', false );
-
 	$wrapper_attrs = get_block_wrapper_attributes( array( 'class' => 'simpletoc' ) );
-	$pre_html      = ( ! empty( $class_name ) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper'] ) ? '<div role="navigation" aria-label="' . __( 'Table of Contents', 'simpletoc' ) . '" ' . $wrapper_attrs . '>' : '';
-	$post_html     = ( ! empty( $class_name ) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper'] ) ? '</div>' : '';
+	$return        = sprintf(
+		'[simpletoc attributes=\'%s\' wrapper_attrs=\'%s\']',
+		wp_json_encode( $attributes ),
+		wp_json_encode( $wrapper_attrs )
+	); // Placeholder to be replaced in `the_content` filters later.
+	if ( defined( 'REST_REQUEST' ) && REST_REQUEST && 'edit' === filter_input( INPUT_GET, 'context' ) ) {
+		// We're in the block editor rendering a server-side preview.
+		// Strip out the simple toc block from the content.
+		$post = get_post();
+		if ( ! $post ) {
+			return $return;
+		}
+		$post_content = $post->post_content;
 
-	$post   = get_post();
-	$blocks = ! is_null( $post ) && ! is_null( $post->post_content ) ? parse_blocks( $post->post_content ) : '';
+		// <!-- wp:simpletoc
+		$simple_toc_regex = '/(<!-- wp:simpletoc[^>]*>)/m';
+		$post_content     = preg_replace( $simple_toc_regex, '', $post_content );
 
-	$headings       = array_reverse( filter_headings_recursive( $blocks ) );
-	$headings       = simpletoc_add_pagenumber( $blocks, $headings );
-	$headings_clean = array_map( 'trim', $headings );
-	$toc_html       = generate_toc( $headings_clean, $attributes );
+		// This processes post content and stores the toc headlines for later rendering. Very simple content processing and fast. The placeholder is skipped.
+		$post_content = do_blocks( $post_content );
+		$post_content = simpletoc_add_ids_to_content( $post_content, true );
 
-	if ( empty( $blocks ) ) {
-		return get_empty_blocks_message( $is_backend, $attributes, $title_level, $alignclass, $title_text, __( 'No blocks found.', 'simpletoc' ), __( 'Save or update post first.', 'simpletoc' ) );
+		// Now get the toc html only.
+		$return = simpletoc_render_toc( $post_content, true, $attributes, $wrapper_attrs );
 	}
-
-	if ( empty( $headings_clean ) ) {
-		return get_empty_blocks_message( $is_backend, $attributes, $title_level, $alignclass, $title_text, __( 'No headings found.', 'simpletoc' ), __( 'Save or update post first.', 'simpletoc' ) );
-	}
-
-	if ( empty( $toc_html ) ) {
-		return get_empty_blocks_message( $is_backend, $attributes, $title_level, $alignclass, $title_text, __( 'No headings found.', 'simpletoc' ), __( 'Check minimal and maximum level block settings.', 'simpletoc' ) );
-	}
-
-	return $pre_html . $toc_html . $post_html;
+	return $return;
 }
 
 /**
@@ -307,71 +413,77 @@ function simpletoc_add_pagenumber( $blocks, $headings ) {
 }
 
 /**
- * Return all headings with a recursive walk through all blocks.
- * This includes groups and reusable block with groups within reusable blocks.
+ * Filter through all headings. Only return headings that have IDs, do not have SimpleTOC excluded class. Optional filter for ignoring headings inside container blocks..
  *
- * @param array[] $blocks The blocks to filter headings from.
- * @return array[]
+ * @param string $content The content to filter headings from.
+ * @return array[] - Array of headings with HTML tags.
  */
-function filter_headings_recursive( $blocks ) {
+function filter_headings( $content ) {
+
 	$arr = array();
 
-	if ( ! is_array( $blocks ) ) {
+	if ( empty( $content ) ) {
 		return $arr;
 	}
 
-	// allow developers to ignore specific blocks.
-	$ignored_blocks = apply_filters( 'simpletoc_excluded_blocks', array() );
+	$dom = new \DOMDocument();
+	try {
+		@$dom->loadHTML( '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . $content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
+	} catch ( \Exception $e ) {
+		return $arr;
+	}
 
-	foreach ( $blocks as $inner_block ) {
-		if ( is_array( $inner_block ) ) {
-			// if block is ignored, skip.
-			if ( isset( $inner_block['blockName'] ) && in_array( $inner_block['blockName'], $ignored_blocks, true ) ) {
+	// use xpath to select the Heading html tags.
+	$xpath = new \DOMXPath( $dom );
+	$tags  = $xpath->evaluate( '//*[self::h1 or self::h2 or self::h3 or self::h4 or self::h5 or self::h6]' );
+
+	foreach ( $tags as $tag ) {
+		$tag_id = $tag->getAttribute( 'id' );
+		if ( ! $tag_id ) {
+			continue;
+		}
+
+		// check if the heading has the SimpleTOC excluded class.
+		$tag_classes = $tag->getAttribute( 'class' );
+		if ( $tag_classes ) {
+			if ( strpos( $tag_classes, 'simpletoc-excluded' ) !== false ) {
 				continue;
 			}
-
-			if ( isset( $inner_block['attrs']['ref'] ) ) {
-				// search in reusable blocks.
-				$post = get_post( $inner_block['attrs']['ref'] );
-				if ( $post ) {
-					$e_arr = parse_blocks( $post->post_content );
-					$arr   = array_merge( filter_headings_recursive( $e_arr ), $arr );
-				}
-			} else {
-				// search in groups.
-				$arr = array_merge( filter_headings_recursive( $inner_block ), $arr );
+		}
+		// If tag has a parent with 'simpletoc-excluded' class, then skip it.
+		// Check if any parent has the 'simpletoc-excluded' class (similar to JS .closest).
+		$parent = $tag->parentNode; // phpcs:ignore.
+		while ( $parent && isset( $parent->getAttribute ) ) { // phpcs:ignore.
+			$parent_classes = $parent->getAttribute( 'class' );
+			if ( $parent_classes && strpos( $parent_classes, 'simpletoc-excluded' ) !== false ) {
+				continue 2; // Skip this tag, jump out of both while and foreach.
 			}
-		} else {
-			if ( isset( $blocks['blockName'] ) && ( 'core/heading' === $blocks['blockName'] ) && 'core/heading' !== $inner_block ) {
-				// make sure it's a headline.
-				if ( preg_match( '/(<h1|<h2|<h3|<h4|<h5|<h6)/i', $inner_block ) ) {
-					$arr[] = $inner_block;
-				}
-			}
+			$parent = $parent->parentNode; // phpcs:ignore.
+		}
 
-			$supported_third_party_blocks = array(
-				'generateblocks/headline', /* GenerateBlocks 1.x */
-				'generateblocks/text', /* GenerateBlocks 2.0 */
-			);
-
-			/**
-			 * Filter to add supported third party blocks.
-			 *
-			 * @param array $supported_third_party_blocks The array of supported third party blocks.
-			 * @return array The modified array of supported third party blocks.
-			 */
-			$supported_third_party_blocks = apply_filters(
-				'simpletoc_supported_third_party_blocks',
-				$supported_third_party_blocks
-			);
-
-			if ( isset( $blocks['blockName'] ) && in_array( $blocks['blockName'], $supported_third_party_blocks, true ) && 'core/heading' !== $inner_block ) {
-				// make sure it's a headline.
-				if ( preg_match( '/(<h1|<h2|<h3|<h4|<h5|<h6)/i', $inner_block ) ) {
-					$arr[] = $inner_block;
+		/**
+		 * Filter to skip headings inside container blocks.
+		 *
+		 * @param bool $skip_in_wrapper Whether to skip headings inside container blocks.
+		 * @return bool The filtered value.
+		 * @since 7.0.0
+		 */
+		$skip_in_wrapper = apply_filters( 'simpletoc_skip_in_wrapper', false );
+		if ( strpos( $tag_classes, 'simpletoc-include' ) !== false ) {
+			// If someone has added the simpletoc-include class, then don't skip it, regardless of wrapper.
+			$skip_in_wrapper = false;
+		}
+		if ( $skip_in_wrapper ) {
+			// Try to get parent tag.
+			$parent_tag = $tag->parentNode; // phpcs:ignore.
+			if ( $parent_tag && isset( $parent_tag->tagName ) ) { // phpcs:ignore.
+				if ( in_array( strtolower( strtolower( $parent_tag->tagName ) ), array( 'div', 'section', 'article', 'main', 'header', 'footer' ), true ) ) { // phpcs:ignore.
+					continue;
 				}
 			}
 		}
+
+		$arr[] = $tag->ownerDocument->saveHTML( $tag ); // phpcs:ignore.
 	}
 
 	return $arr;
@@ -390,9 +502,11 @@ function simpletoc_sanitize_string( $string_to_sanitize ) {
 	// remove non-breaking spaces.
 	$html_wo_nbs = str_replace( '&nbsp;', ' ', $zero_punctuation );
 	// remove umlauts and accents.
-	$string_without_accents = remove_accents( $html_wo_nbs );
+	$string_without_accents = remove_accents( wp_strip_all_tags( $html_wo_nbs ) );
+	// Remove special html characters.
+	$string_without_special_chars = html_entity_decode( $string_without_accents );
 	// Sanitizes a title, replacing whitespace and a few other characters with dashes.
-	$sanitized_string = sanitize_title_with_dashes( $string_without_accents );
+	$sanitized_string = sanitize_title_with_dashes( $string_without_special_chars );
 	// Encode for use in an url.
 	$urlencoded = rawurlencode( $sanitized_string );
 	return $urlencoded;
@@ -453,7 +567,7 @@ function add_anchor_attribute( $html, $headline_class_instance = null ) {
 		}
 		// Set id attribute.
 		$heading_text = trim( wp_strip_all_tags( $html ) );
-		$anchor       = $headline_class_instance->get_headline_anchor( $heading_text );
+		$anchor       = $headline_class_instance->get_headline_anchor( $heading_text, false );
 		$tag->setAttribute( 'id', $anchor );
 	}
 
@@ -481,25 +595,30 @@ function generate_toc( $headings, $attributes ) {
 	$global_absolut_urls_enabled = get_option( 'simpletoc_absolute_urls_enabled', false );
 	$absolute_url                = $attributes['use_absolute_urls'] || $global_absolut_urls_enabled ? get_permalink() : '';
 
-	list($min_depth, $initial_depth) = find_min_depth( $headings, $attributes );
+	list( $min_depth, $initial_depth ) = find_min_depth( $headings, $attributes );
 
-	$item_count   = 0;
-	$headline_ids = new SimpleTOC_Headline_Ids();
+	$depth_stack = array();
+	$item_count  = 0;
+	$last_line   = count( $headings ) - 1;
+
 	foreach ( $headings as $line => $headline ) {
-		$this_depth       = (int) $headings[ $line ][2];
-		$next_depth       = isset( $headings[ $line + 1 ][2] ) ? (int) $headings[ $line + 1 ][2] : '';
+		$this_depth       = get_heading_depth( $headline );
+		$next_depth       = get_next_included_heading_depth( $headings, $line, $attributes );
 		$exclude_headline = should_exclude_headline( $headline, $attributes, $this_depth );
 		$title            = trim( wp_strip_all_tags( $headline ) );
 		$custom_id        = extract_id( $headline );
-		$link             = $custom_id ? $custom_id : $headline_ids->get_headline_anchor( $title );
+		if ( empty( $custom_id ) ) {
+			continue;
+		}
+		$link = $custom_id;
 		if ( ! $exclude_headline ) {
 			++$item_count;
-			open_list( $list, $list_type, $min_depth, $this_depth );
+			open_list( $list, $list_type, $depth_stack, $this_depth );
 			$page  = get_page_number_from_headline( $headline );
 			$list .= '<a href="' . $absolute_url . $page . '#' . $link . '">' . $title . '</a>' . PHP_EOL;
 
 		}
-		close_list( $list, $list_type, $min_depth, $attributes['min_level'], $attributes['max_level'], $next_depth, $line, count( $headings ) - 1, $initial_depth, $this_depth );
+		close_list( $list, $list_type, $depth_stack, $attributes['min_level'], $attributes['max_level'], $next_depth, $line, $last_line, $this_depth );
 
 	}
 
@@ -534,6 +653,46 @@ function generate_toc( $headings, $attributes ) {
 }
 
 /**
+ * Extracts the heading level (1-6) from a heading HTML string.
+ *
+ * Parses the tag name (e.g. h1, h2) instead of relying on string position,
+ * so hierarchy is correct regardless of attribute order or formatting.
+ *
+ * @param string $headline Heading HTML (e.g. '<h2 id="foo">Title</h2>').
+ * @return int Heading level 1-6, or 6 as fallback if not detected.
+ */
+function get_heading_depth( $headline ) {
+	if ( preg_match( '/<h([1-6])[\s>]/i', $headline, $matches ) ) {
+		return (int) $matches[1];
+	}
+	return 6;
+}
+
+/**
+ * Gets the depth of the next heading that would be included in the TOC.
+ *
+ * Skips excluded headings (hidden, or outside min/max level) so list
+ * open/close logic matches the visible hierarchy.
+ *
+ * @param array $headings   Array of heading HTML strings.
+ * @param int   $from_index Index after which to look.
+ * @param array $attributes TOC attributes (min_level, max_level, etc.).
+ * @return int|null Depth 1-6 of the next included heading, or null if none.
+ */
+function get_next_included_heading_depth( $headings, $from_index, $attributes ) {
+	$max_index = count( $headings ) - 1;
+	for ( $i = $from_index + 1; $i <= $max_index; $i++ ) {
+		$headline = $headings[ $i ];
+		$depth    = get_heading_depth( $headline );
+		$excluded = should_exclude_headline( $headline, $attributes, $depth );
+		if ( ! $excluded && ! empty( extract_id( $headline ) ) ) {
+			return $depth;
+		}
+	}
+	return null;
+}
+
+/**
  * Finds the minimum depth level of headings in the provided array and adjusts it based on the provided attributes
  *
  * @param array $headings An array of headings to search through.
@@ -545,9 +704,10 @@ function find_min_depth( $headings, $attributes ) {
 	$initial_depth = 6;
 
 	foreach ( $headings as $line => $headline ) {
-		if ( $min_depth > $headings[ $line ][2] ) {
-			$min_depth     = (int) $headings[ $line ][2];
-			$initial_depth = $min_depth;
+		$depth = get_heading_depth( $headline );
+		if ( $min_depth > $depth ) {
+			$min_depth     = $depth;
+			$initial_depth = $depth;
 		}
 	}
 
@@ -578,77 +738,83 @@ function should_exclude_headline( $headline, $attributes, $this_depth ) {
 }
 
 /**
- * The open_list function appends a new list item to the global $list variable, adding necessary opening tags if needed to maintain the correct nesting of the list.
+ * Appends a new list item and opens at most one nested list level so that heading gaps (e.g. H2 then H6) do not create empty nesting.
  *
- * @param string &$list_to_append_to The global list variable to append the new list item to.
- * @param string $list_type The type of list to be created, either "ul" (unordered list) or "ol" (ordered list).
- * @param int    &$min_depth The minimum depth of headings that should be included in the table of contents.
- * @param int    $this_depth The depth of the current heading being processed.
- * @return void The function modifies the input $list_to_append_to variable directly.
+ * @param string &$list_to_append_to The list string to append to.
+ * @param string $list_type         The list tag, "ul" or "ol".
+ * @param array  &$depth_stack       Stack of heading depths (1–6) for the current path; modified by reference.
+ * @param int    $this_depth         The depth of the current heading (1–6).
+ * @return void
  */
-function open_list( &$list_to_append_to, $list_type, &$min_depth, $this_depth ) {
-	if ( $this_depth === $min_depth ) {
-		$list_to_append_to .= '<li>';
-	} else {
-		for ( $min_depth; $min_depth < $this_depth; $min_depth++ ) {
+function open_list( &$list_to_append_to, $list_type, &$depth_stack, $this_depth ) {
+	// Pop until we are at or above this depth (e.g. from [1,2,6] and this_depth=2 we get [1,2]).
+	$stack_len = count( $depth_stack );
+	while ( ! empty( $depth_stack ) && $depth_stack[ $stack_len - 1 ] > $this_depth ) {
+		array_pop( $depth_stack );
+		$stack_len = count( $depth_stack );
+	}
+	// Push and open one level only when going deeper (avoids multiple empty levels for H2→H6).
+	$stack_top = count( $depth_stack ) - 1;
+	if ( empty( $depth_stack ) || $this_depth > $depth_stack[ $stack_top ] ) {
+		$depth_stack[] = $this_depth;
+		$stack_size    = count( $depth_stack );
+		if ( $stack_size > 1 ) {
 			$list_to_append_to .= "\n<" . $list_type . "><li>\n";
+		} else {
+			$list_to_append_to .= '<li>';
 		}
+	} else {
+		// Same depth (e.g. second H2 after first H2); close_list already added </li>, so open sibling <li>.
+		$list_to_append_to .= '<li>';
 	}
 }
 
 /**
- * Closes an HTML list tag and updates the list string and minimum depth variable as necessary.
+ * Closes list items and nested list levels using the depth stack so nesting matches the visible hierarchy.
  *
  * @param string   $list_to_append_to A reference to the list string being built.
- * @param string   $list_type The type of list tag being used (ul or ol).
- * @param int      $min_depth A reference to the minimum depth variable.
- * @param int      $min_level The minimum depth level of the headings.
- * @param int      $max_level Maximum depth setting, which is a high number like 6.
- * @param int|null $next_depth The depth of the next list item, or null if this is the last item.
- * @param int      $line The index of the current list item.
- * @param int      $last_line The index of the last list item.
- * @param int      $initial_depth The initial depth of the list.
- * @param int      $this_depth The depth of the current list item.
+ * @param string   $list_type         The type of list tag being used (ul or ol).
+ * @param array    &$depth_stack       Stack of heading depths; modified when closing levels.
+ * @param int      $min_level          Minimum depth level of the headings.
+ * @param int      $max_level          Maximum depth setting (e.g. 6).
+ * @param int|null $next_depth         Depth of the next included list item, or null if last.
+ * @param int      $line               The index of the current list item.
+ * @param int      $last_line          The index of the last list item.
+ * @param int      $this_depth         The depth of the current list item.
  * @return void
  */
-function close_list( &$list_to_append_to, $list_type, &$min_depth, $min_level, $max_level, $next_depth, $line, $last_line, $initial_depth, $this_depth ) {
+function close_list( &$list_to_append_to, $list_type, &$depth_stack, $min_level, $max_level, $next_depth, $line, $last_line, $this_depth ) {
+	// No next included heading: close out the list like we're at the end.
+	if ( null === $next_depth ) {
+		$next_depth = $this_depth;
+		$line       = $last_line;
+	}
 	if ( $line !== $last_line ) {
 		$list_to_append_to .= PHP_EOL;
 		if ( $next_depth < $this_depth ) {
-			// Next heading goes back shallower in the ToC!
+			// Next heading goes back shallower; pop stack and close one </li></ul> per level.
 			if ( $next_depth >= $min_level ) {
-				// Next heading is within min depth bounds and WILL get ToC'd
-				// Close this item and step back shallower in the ToC.
-				for ( $min_depth; $min_depth > $next_depth; $min_depth-- ) {
+				$stack_count = count( $depth_stack );
+				while ( $stack_count > 1 && $depth_stack[ $stack_count - 1 ] > $next_depth ) {
+					array_pop( $depth_stack );
 					$list_to_append_to .= "</li>\n</" . $list_type . ">\n";
+					$stack_count        = count( $depth_stack );
 				}
-			} else { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedElse
-				// SKIP CLOSING! Next heading won't be included in the ToC at all.
+				// If next item is at the same depth as the level we landed on, close that <li> too.
+				$stack_count = count( $depth_stack );
+				if ( ! empty( $depth_stack ) && $depth_stack[ $stack_count - 1 ] === $next_depth ) {
+					$list_to_append_to .= "</li>\n";
+				}
 			}
 		} elseif ( $next_depth === $this_depth ) {
-			// Next heading is exactly as deep. Not going shallower or deeper in the ToC hierarchy.
-			// E.g. this is h3, next is h3.
-			if ( $next_depth < $min_level ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedIf
-				// E.g. this is h3, next is h3, min is h2
-				// This heading didn't open a ToC item. Nothing to close.
-			} else {
-				// SKIP CLOSING! Next heading will open a new sub-list in the ToC.
+			if ( $next_depth >= $min_level ) {
 				$list_to_append_to .= "</li>\n";
 			}
-		} else { // phpcs:ignore.
-			// Next heading is deeper in the ToC.
-			if ( $next_depth <= $max_level ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedIf
-				// Next deeper heading is within bounds and will open a new sub-list. Leave this one open.
-				// E.g. this is h3, next is h4, min is h2, max is h5.
-			} else { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedElse
-				// Next heading is too deep and will be ignored. We'll close out coming up or finishing the ToC.
-				// E.g. this is h3, next is h4, max is h3.
-			}
 		}
+		// When next_depth > this_depth, next item will open one level in open_list; nothing to close.
 	} else {
-		// This is the last line of the ToC. Close out the whole thing.
-		// IMPORTANT NOTE: The overall ToC list will be wrapped in a list element and closed out.
-		for ( $initial_depth; $initial_depth < $this_depth; $initial_depth++ ) {
+		// Last line: close all nested levels (stack size - 1 times "</li></ul>").
+		for ( $n = count( $depth_stack ) - 1; $n > 0; $n-- ) {
 			$list_to_append_to .= "</li>\n</" . $list_type . ">\n";
 		}
 	}
