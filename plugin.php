@@ -502,9 +502,11 @@ function simpletoc_sanitize_string( $string_to_sanitize ) {
 	// remove non-breaking spaces.
 	$html_wo_nbs = str_replace( '&nbsp;', ' ', $zero_punctuation );
 	// remove umlauts and accents.
-	$string_without_accents = remove_accents( $html_wo_nbs );
+	$string_without_accents = remove_accents( wp_strip_all_tags( $html_wo_nbs ) );
+	// Remove special html characters.
+	$string_without_special_chars = html_entity_decode( $string_without_accents );
 	// Sanitizes a title, replacing whitespace and a few other characters with dashes.
-	$sanitized_string = sanitize_title_with_dashes( $string_without_accents );
+	$sanitized_string = sanitize_title_with_dashes( $string_without_special_chars );
 	// Encode for use in an url.
 	$urlencoded = rawurlencode( $sanitized_string );
 	return $urlencoded;
@@ -593,12 +595,15 @@ function generate_toc( $headings, $attributes ) {
 	$global_absolut_urls_enabled = get_option( 'simpletoc_absolute_urls_enabled', false );
 	$absolute_url                = $attributes['use_absolute_urls'] || $global_absolut_urls_enabled ? get_permalink() : '';
 
-	list($min_depth, $initial_depth) = find_min_depth( $headings, $attributes );
+	list( $min_depth, $initial_depth ) = find_min_depth( $headings, $attributes );
 
-	$item_count = 0;
+	$depth_stack = array();
+	$item_count  = 0;
+	$last_line   = count( $headings ) - 1;
+
 	foreach ( $headings as $line => $headline ) {
-		$this_depth       = (int) $headings[ $line ][2];
-		$next_depth       = isset( $headings[ $line + 1 ][2] ) ? (int) $headings[ $line + 1 ][2] : '';
+		$this_depth       = get_heading_depth( $headline );
+		$next_depth       = get_next_included_heading_depth( $headings, $line, $attributes );
 		$exclude_headline = should_exclude_headline( $headline, $attributes, $this_depth );
 		$title            = trim( wp_strip_all_tags( $headline ) );
 		$custom_id        = extract_id( $headline );
@@ -608,12 +613,12 @@ function generate_toc( $headings, $attributes ) {
 		$link = $custom_id;
 		if ( ! $exclude_headline ) {
 			++$item_count;
-			open_list( $list, $list_type, $min_depth, $this_depth );
+			open_list( $list, $list_type, $depth_stack, $this_depth );
 			$page  = get_page_number_from_headline( $headline );
 			$list .= '<a href="' . $absolute_url . $page . '#' . $link . '">' . $title . '</a>' . PHP_EOL;
 
 		}
-		close_list( $list, $list_type, $min_depth, $attributes['min_level'], $attributes['max_level'], $next_depth, $line, count( $headings ) - 1, $initial_depth, $this_depth );
+		close_list( $list, $list_type, $depth_stack, $attributes['min_level'], $attributes['max_level'], $next_depth, $line, $last_line, $this_depth );
 
 	}
 
@@ -648,6 +653,46 @@ function generate_toc( $headings, $attributes ) {
 }
 
 /**
+ * Extracts the heading level (1-6) from a heading HTML string.
+ *
+ * Parses the tag name (e.g. h1, h2) instead of relying on string position,
+ * so hierarchy is correct regardless of attribute order or formatting.
+ *
+ * @param string $headline Heading HTML (e.g. '<h2 id="foo">Title</h2>').
+ * @return int Heading level 1-6, or 6 as fallback if not detected.
+ */
+function get_heading_depth( $headline ) {
+	if ( preg_match( '/<h([1-6])[\s>]/i', $headline, $matches ) ) {
+		return (int) $matches[1];
+	}
+	return 6;
+}
+
+/**
+ * Gets the depth of the next heading that would be included in the TOC.
+ *
+ * Skips excluded headings (hidden, or outside min/max level) so list
+ * open/close logic matches the visible hierarchy.
+ *
+ * @param array $headings   Array of heading HTML strings.
+ * @param int   $from_index Index after which to look.
+ * @param array $attributes TOC attributes (min_level, max_level, etc.).
+ * @return int|null Depth 1-6 of the next included heading, or null if none.
+ */
+function get_next_included_heading_depth( $headings, $from_index, $attributes ) {
+	$max_index = count( $headings ) - 1;
+	for ( $i = $from_index + 1; $i <= $max_index; $i++ ) {
+		$headline = $headings[ $i ];
+		$depth    = get_heading_depth( $headline );
+		$excluded = should_exclude_headline( $headline, $attributes, $depth );
+		if ( ! $excluded && ! empty( extract_id( $headline ) ) ) {
+			return $depth;
+		}
+	}
+	return null;
+}
+
+/**
  * Finds the minimum depth level of headings in the provided array and adjusts it based on the provided attributes
  *
  * @param array $headings An array of headings to search through.
@@ -659,9 +704,10 @@ function find_min_depth( $headings, $attributes ) {
 	$initial_depth = 6;
 
 	foreach ( $headings as $line => $headline ) {
-		if ( $min_depth > $headings[ $line ][2] ) {
-			$min_depth     = (int) $headings[ $line ][2];
-			$initial_depth = $min_depth;
+		$depth = get_heading_depth( $headline );
+		if ( $min_depth > $depth ) {
+			$min_depth     = $depth;
+			$initial_depth = $depth;
 		}
 	}
 
@@ -692,77 +738,83 @@ function should_exclude_headline( $headline, $attributes, $this_depth ) {
 }
 
 /**
- * The open_list function appends a new list item to the global $list variable, adding necessary opening tags if needed to maintain the correct nesting of the list.
+ * Appends a new list item and opens at most one nested list level so that heading gaps (e.g. H2 then H6) do not create empty nesting.
  *
- * @param string &$list_to_append_to The global list variable to append the new list item to.
- * @param string $list_type The type of list to be created, either "ul" (unordered list) or "ol" (ordered list).
- * @param int    &$min_depth The minimum depth of headings that should be included in the table of contents.
- * @param int    $this_depth The depth of the current heading being processed.
- * @return void The function modifies the input $list_to_append_to variable directly.
+ * @param string &$list_to_append_to The list string to append to.
+ * @param string $list_type         The list tag, "ul" or "ol".
+ * @param array  &$depth_stack       Stack of heading depths (1–6) for the current path; modified by reference.
+ * @param int    $this_depth         The depth of the current heading (1–6).
+ * @return void
  */
-function open_list( &$list_to_append_to, $list_type, &$min_depth, $this_depth ) {
-	if ( $this_depth === $min_depth ) {
-		$list_to_append_to .= '<li>';
-	} else {
-		for ( $min_depth; $min_depth < $this_depth; $min_depth++ ) {
+function open_list( &$list_to_append_to, $list_type, &$depth_stack, $this_depth ) {
+	// Pop until we are at or above this depth (e.g. from [1,2,6] and this_depth=2 we get [1,2]).
+	$stack_len = count( $depth_stack );
+	while ( ! empty( $depth_stack ) && $depth_stack[ $stack_len - 1 ] > $this_depth ) {
+		array_pop( $depth_stack );
+		$stack_len = count( $depth_stack );
+	}
+	// Push and open one level only when going deeper (avoids multiple empty levels for H2→H6).
+	$stack_top = count( $depth_stack ) - 1;
+	if ( empty( $depth_stack ) || $this_depth > $depth_stack[ $stack_top ] ) {
+		$depth_stack[] = $this_depth;
+		$stack_size    = count( $depth_stack );
+		if ( $stack_size > 1 ) {
 			$list_to_append_to .= "\n<" . $list_type . "><li>\n";
+		} else {
+			$list_to_append_to .= '<li>';
 		}
+	} else {
+		// Same depth (e.g. second H2 after first H2); close_list already added </li>, so open sibling <li>.
+		$list_to_append_to .= '<li>';
 	}
 }
 
 /**
- * Closes an HTML list tag and updates the list string and minimum depth variable as necessary.
+ * Closes list items and nested list levels using the depth stack so nesting matches the visible hierarchy.
  *
  * @param string   $list_to_append_to A reference to the list string being built.
- * @param string   $list_type The type of list tag being used (ul or ol).
- * @param int      $min_depth A reference to the minimum depth variable.
- * @param int      $min_level The minimum depth level of the headings.
- * @param int      $max_level Maximum depth setting, which is a high number like 6.
- * @param int|null $next_depth The depth of the next list item, or null if this is the last item.
- * @param int      $line The index of the current list item.
- * @param int      $last_line The index of the last list item.
- * @param int      $initial_depth The initial depth of the list.
- * @param int      $this_depth The depth of the current list item.
+ * @param string   $list_type         The type of list tag being used (ul or ol).
+ * @param array    &$depth_stack       Stack of heading depths; modified when closing levels.
+ * @param int      $min_level          Minimum depth level of the headings.
+ * @param int      $max_level          Maximum depth setting (e.g. 6).
+ * @param int|null $next_depth         Depth of the next included list item, or null if last.
+ * @param int      $line               The index of the current list item.
+ * @param int      $last_line          The index of the last list item.
+ * @param int      $this_depth         The depth of the current list item.
  * @return void
  */
-function close_list( &$list_to_append_to, $list_type, &$min_depth, $min_level, $max_level, $next_depth, $line, $last_line, $initial_depth, $this_depth ) {
+function close_list( &$list_to_append_to, $list_type, &$depth_stack, $min_level, $max_level, $next_depth, $line, $last_line, $this_depth ) {
+	// No next included heading: close out the list like we're at the end.
+	if ( null === $next_depth ) {
+		$next_depth = $this_depth;
+		$line       = $last_line;
+	}
 	if ( $line !== $last_line ) {
 		$list_to_append_to .= PHP_EOL;
 		if ( $next_depth < $this_depth ) {
-			// Next heading goes back shallower in the ToC!
+			// Next heading goes back shallower; pop stack and close one </li></ul> per level.
 			if ( $next_depth >= $min_level ) {
-				// Next heading is within min depth bounds and WILL get ToC'd
-				// Close this item and step back shallower in the ToC.
-				for ( $min_depth; $min_depth > $next_depth; $min_depth-- ) {
+				$stack_count = count( $depth_stack );
+				while ( $stack_count > 1 && $depth_stack[ $stack_count - 1 ] > $next_depth ) {
+					array_pop( $depth_stack );
 					$list_to_append_to .= "</li>\n</" . $list_type . ">\n";
+					$stack_count        = count( $depth_stack );
 				}
-			} else { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedElse
-				// SKIP CLOSING! Next heading won't be included in the ToC at all.
+				// If next item is at the same depth as the level we landed on, close that <li> too.
+				$stack_count = count( $depth_stack );
+				if ( ! empty( $depth_stack ) && $depth_stack[ $stack_count - 1 ] === $next_depth ) {
+					$list_to_append_to .= "</li>\n";
+				}
 			}
 		} elseif ( $next_depth === $this_depth ) {
-			// Next heading is exactly as deep. Not going shallower or deeper in the ToC hierarchy.
-			// E.g. this is h3, next is h3.
-			if ( $next_depth < $min_level ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedIf
-				// E.g. this is h3, next is h3, min is h2
-				// This heading didn't open a ToC item. Nothing to close.
-			} else {
-				// SKIP CLOSING! Next heading will open a new sub-list in the ToC.
+			if ( $next_depth >= $min_level ) {
 				$list_to_append_to .= "</li>\n";
 			}
-		} else { // phpcs:ignore.
-			// Next heading is deeper in the ToC.
-			if ( $next_depth <= $max_level ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedIf
-				// Next deeper heading is within bounds and will open a new sub-list. Leave this one open.
-				// E.g. this is h3, next is h4, min is h2, max is h5.
-			} else { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedElse
-				// Next heading is too deep and will be ignored. We'll close out coming up or finishing the ToC.
-				// E.g. this is h3, next is h4, max is h3.
-			}
 		}
+		// When next_depth > this_depth, next item will open one level in open_list; nothing to close.
 	} else {
-		// This is the last line of the ToC. Close out the whole thing.
-		// IMPORTANT NOTE: The overall ToC list will be wrapped in a list element and closed out.
-		for ( $initial_depth; $initial_depth < $this_depth; $initial_depth++ ) {
+		// Last line: close all nested levels (stack size - 1 times "</li></ul>").
+		for ( $n = count( $depth_stack ) - 1; $n > 0; $n-- ) {
 			$list_to_append_to .= "</li>\n</" . $list_type . ">\n";
 		}
 	}
