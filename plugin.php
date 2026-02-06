@@ -3,7 +3,7 @@
  * Plugin Name:   SimpleTOC - Table of Contents Block
  * Plugin URI:    https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
  * Description:   SEO-friendly Table of Contents Gutenberg block. No JavaScript and no CSS means faster loading.
- * Version:       6.9.7
+ * Version:       7.0.0
  * Author:        Marc Tönsing
  * Author URI:    https://toensing.com
  * Text Domain:   simpletoc
@@ -153,13 +153,14 @@ add_filter(
  * Adds IDs to the headings of the provided post content using a recursive block structure.
  *
  * @param string $content The content to add IDs to.
+ * @param string $skip_regex The regex to skip the content from being processed.
  * @return string The content with IDs added to its headings
  */
-function simpletoc_add_ids_to_content( $content ) {
+function simpletoc_add_ids_to_content( $content, $skip_regex = false ) {
 
 	// Return early if the content does not contain a simpletoc shortcode.
 	$maybe_shortcode_result = preg_match( '/\[simpletoc ([^\]]*)\]/m', $content, $matches );
-	if ( ! $maybe_shortcode_result ) {
+	if ( ! $maybe_shortcode_result && ! $skip_regex ) {
 		return $content;
 	}
 
@@ -272,22 +273,37 @@ function add_ids_to_blocks( $content ) {
 			}
 		}
 
+		// If tag has a parent with 'simpletoc-excluded' class, then skip it.
+		// Check if any parent has the 'simpletoc-excluded' class (similar to JS .closest).
+		$parent = $tag->parentNode; // phpcs:ignore.
+		while ( $parent ) {
+			$parent_classes = isset( $parent->className ) ? $parent->className : ''; // phpcs:ignore.
+			if ( $parent_classes && strpos( $parent_classes, 'simpletoc-excluded' ) !== false ) {
+				continue 2; // Skip this tag, jump out of both while and foreach.
+			}
+			$parent = $parent->parentNode ?? null; // phpcs:ignore.
+			if ( ! $parent ) {
+				continue;
+			}
+		}
+
 		/**
 		 * Filter to skip headings inside container blocks.
 		 *
 		 * @param bool $skip_in_wrapper Whether to skip headings inside container blocks.
 		 * @return bool The filtered value.
+		 * @since 7.0.0
 		 */
-		$skip_in_wrapper = apply_filters( 'simpletoc_skip_in_wrapper', true );
+		$skip_in_wrapper = apply_filters( 'simpletoc_skip_in_wrapper', false );
 		if ( strpos( $tag_classes, 'simpletoc-include' ) !== false ) {
 			// If someone has added the simpletoc-include class, then don't skip it, regardless of wrapper.
 			$skip_in_wrapper = false;
 		}
 		if ( $skip_in_wrapper ) {
 			// Try to get parent tag.
-			$parent_tag = $tag->parentNode;
-			if ( $parent_tag && isset( $parent_tag->tagName ) ) {
-				if ( in_array( strtolower( strtolower( $parent_tag->tagName ) ), array( 'div', 'section', 'article', 'main', 'header', 'footer' ), true ) ) {
+			$parent_tag = $tag->parentNode; // phpcs:ignore.
+			if ( $parent_tag && isset( $parent_tag->tagName ) ) { // phpcs:ignore.
+				if ( in_array( strtolower( strtolower( $parent_tag->tagName ) ), array( 'div', 'section', 'article', 'main', 'header', 'footer' ), true ) ) { // phpcs:ignore.
 					continue;
 				}
 			}
@@ -295,7 +311,7 @@ function add_ids_to_blocks( $content ) {
 
 		// Set the ID attribute of the headline anchor if it doesn't exist.
 		$tag_id          = $tag->getAttribute( 'id' );
-		$headline_anchor = SimpleTOC_Headline_Ids::get_headline_anchor( $tag->ownerDocument->saveHTML( $tag ), true );
+		$headline_anchor = SimpleTOC_Headline_Ids::get_headline_anchor( $tag->ownerDocument->saveHTML( $tag ), true ); // phpcs:ignore.
 		if ( empty( $tag_id ) ) {
 			$tag->setAttribute( 'id', $headline_anchor );
 		}
@@ -332,7 +348,7 @@ function render_callback_simpletoc( $attributes ) {
 
 		// This processes post content and stores the toc headlines for later rendering. Very simple content processing and fast. The placeholder is skipped.
 		$post_content = do_blocks( $post_content );
-		$post_content = simpletoc_add_ids_to_content( $post_content );
+		$post_content = simpletoc_add_ids_to_content( $post_content, true );
 
 		// Now get the toc html only.
 		$return = simpletoc_render_toc( $post_content, true, $attributes, $wrapper_attrs );
@@ -434,29 +450,40 @@ function filter_headings( $content ) {
 				continue;
 			}
 		}
+		// If tag has a parent with 'simpletoc-excluded' class, then skip it.
+		// Check if any parent has the 'simpletoc-excluded' class (similar to JS .closest).
+		$parent = $tag->parentNode; // phpcs:ignore.
+		while ( $parent && isset( $parent->getAttribute ) ) { // phpcs:ignore.
+			$parent_classes = $parent->getAttribute( 'class' );
+			if ( $parent_classes && strpos( $parent_classes, 'simpletoc-excluded' ) !== false ) {
+				continue 2; // Skip this tag, jump out of both while and foreach.
+			}
+			$parent = $parent->parentNode; // phpcs:ignore.
+		}
 
 		/**
 		 * Filter to skip headings inside container blocks.
 		 *
 		 * @param bool $skip_in_wrapper Whether to skip headings inside container blocks.
 		 * @return bool The filtered value.
+		 * @since 7.0.0
 		 */
-		$skip_in_wrapper = apply_filters( 'simpletoc_skip_in_wrapper', true );
+		$skip_in_wrapper = apply_filters( 'simpletoc_skip_in_wrapper', false );
 		if ( strpos( $tag_classes, 'simpletoc-include' ) !== false ) {
 			// If someone has added the simpletoc-include class, then don't skip it, regardless of wrapper.
 			$skip_in_wrapper = false;
 		}
 		if ( $skip_in_wrapper ) {
 			// Try to get parent tag.
-			$parent_tag = $tag->parentNode;
-			if ( $parent_tag && isset( $parent_tag->tagName ) ) {
-				if ( in_array( strtolower( strtolower( $parent_tag->tagName ) ), array( 'div', 'section', 'article', 'main', 'header', 'footer' ), true ) ) {
+			$parent_tag = $tag->parentNode; // phpcs:ignore.
+			if ( $parent_tag && isset( $parent_tag->tagName ) ) { // phpcs:ignore.
+				if ( in_array( strtolower( strtolower( $parent_tag->tagName ) ), array( 'div', 'section', 'article', 'main', 'header', 'footer' ), true ) ) { // phpcs:ignore.
 					continue;
 				}
 			}
 		}
 
-		$arr[] = $tag->ownerDocument->saveHTML( $tag ); // This gets the full HTML of the heading tag.
+		$arr[] = $tag->ownerDocument->saveHTML( $tag ); // phpcs:ignore.
 	}
 
 	return $arr;
