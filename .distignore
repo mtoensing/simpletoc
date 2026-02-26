@@ -3,6 +3,8 @@
 /.github
 /node_modules
 /src
+package.json
+package-lock.json
 phpcs.xml.dist
 .distignore
 .gitignore
