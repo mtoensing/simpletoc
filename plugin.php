@@ -756,6 +756,11 @@ function open_list( &$list_to_append_to, $list_type, &$depth_stack, $this_depth 
 	// Push and open one level only when going deeper (avoids multiple empty levels for H2→H6).
 	$stack_top = count( $depth_stack ) - 1;
 	if ( empty( $depth_stack ) || $this_depth > $depth_stack[ $stack_top ] ) {
+		// Cap at one nested level: if we already have root + one nested level, add as sibling instead of opening another level.
+		if ( count( $depth_stack ) >= 2 ) {
+			$list_to_append_to .= "</li>\n<li>";
+			return;
+		}
 		$depth_stack[] = $this_depth;
 		$stack_size    = count( $depth_stack );
 		if ( $stack_size > 1 ) {
