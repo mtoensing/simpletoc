@@ -3,7 +3,7 @@ Contributors: MarcDK
 Tags: TOC, Table of Contents, Block, Accessibility, Table
 Requires at least: 5.9
 Tested up to: 6.9
-Stable tag: 6.9.7
+Stable tag: 6.9.8
 Requires PHP: 7.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -69,6 +69,10 @@ This plugin is designed & developed for WCAG 2.2 level AA conformance. The plugi
 SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoensing/SimpleTOC). If you find a bug or have an idea for a feature please feel free to contribute and create a pull request. 
 
 == Changelog ==
+
+= 6.9.8 = 
+* Updated: Dependencies and house-keeping. 
+* Fix: corrected dependency declarations.
 
 = 6.9.7 = 
 * Fixed: GeneratePress Dynamic Tags work again - hopefully. If not, please report here https://github.com/mtoensing/simpletoc/issues/79#issuecomment-3745650464 Thanks @jhanten
@@ -169,4 +173,4 @@ Many thanks to [Tom J Nowell](https://tomjn.com) and and Sally CJ who both helpe
 
 And many more thanks to all the [developers on GitHub](https://github.com/mtoensing/simpletoc/graphs/contributors) who helped me making SimpleTOC what it is today!
 
-Thanks to Quintus Valerius Soranus for inventing the Table of Contents around 100 BC. 
+Thanks to Quintus Valerius Soranus for inventing the Table of Contents around 100 BC.
