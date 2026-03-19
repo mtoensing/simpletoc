@@ -4,14 +4,28 @@ on:
   push:
     branches:
       - master
-    paths-ignore:
-      - '**.md'
+    paths:
+      - '.github/workflows/codingstandard.yml'
+      - 'build/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'src/**'
 
   pull_request:
     branches:
       - master
+    paths:
+      - '.github/workflows/codingstandard.yml'
+      - 'build/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'src/**'
 
   workflow_dispatch:
+
+concurrency:
+  group: coding-standards-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   lint:
@@ -20,16 +34,25 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 20
           cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Restore node_modules
+        id: node-modules-cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-20-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Install dependencies
-        run: npm ci
+        if: steps.node-modules-cache.outputs.cache-hit != 'true'
+        run: npm ci --prefer-offline --no-audit --no-fund
 
       - name: Lint JS
         run: npx wp-scripts lint-js
