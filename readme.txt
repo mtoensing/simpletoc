@@ -58,7 +58,6 @@ This plugin is designed & developed for WCAG 2.2 level AA conformance. The plugi
 * Control the maximum depth of the headings.
 * Choose between an ordered, bullet HTML list. Or indent the list.
 * Enable a box style and choose a box color directly in the block sidebar.
-* Open the global SimpleTOC settings directly from the Advanced Features sidebar in the editor.
 * Select a heading level or turn it into a paragraph.
 * Disable the h2 heading of the TOC block and add your own.
 
