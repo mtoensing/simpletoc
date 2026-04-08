@@ -66,10 +66,16 @@ export default function Edit( { attributes, setAttributes } ) {
 	}, [] );
 
 	const { autoupdate } = attributes;
-	const boxColors = useSelect( ( select ) => {
-		return select( blockEditorStore ).getSettings()?.colors || [];
+	const editorSettings = useSelect( ( select ) => {
+		return select( blockEditorStore ).getSettings() || {};
 	}, [] );
+	const boxColors = editorSettings.colors || [];
 	const selectedBoxColor = attributes.box_color;
+	const wrapperEnabled = attributes.wrapper || attributes.box_style;
+	const settingsUrl =
+		editorSettings.simpletocSettingsUrl ||
+		window.simpletocEditorSettings?.settingsUrl ||
+		'';
 
 	const { returnisSaving, returnisSavingNonPostEntityChanges } = useSelect(
 		( select ) => {
@@ -459,11 +465,19 @@ export default function Edit( { attributes, setAttributes } ) {
 					<PanelRow>
 						<ToggleControl
 							label={ __( 'Wrapper div', 'simpletoc' ) }
-							help={ __(
-								'Additionally adds the role "navigation" and ARIA attributes.',
-								'simpletoc'
-							) }
-							checked={ attributes.wrapper }
+							help={
+								attributes.box_style
+									? __(
+											'Enabled automatically while box style is active.',
+											'simpletoc'
+									  )
+									: __(
+											'Additionally adds the role "navigation" and ARIA attributes.',
+											'simpletoc'
+									  )
+							}
+							checked={ wrapperEnabled }
+							disabled={ attributes.box_style }
 							onChange={ () =>
 								setAttributes( {
 									wrapper: ! attributes.wrapper,
@@ -486,6 +500,24 @@ export default function Edit( { attributes, setAttributes } ) {
 							}
 						/>
 					</PanelRow>
+					{ settingsUrl && (
+						<PanelRow>
+							<BaseControl
+								id="simpletoc-global-settings-link"
+								help={ __(
+									'Global SimpleTOC settings can enforce these options for all blocks.',
+									'simpletoc'
+								) }
+							>
+								<ExternalLink href={ settingsUrl }>
+									{ __(
+										'Open global SimpleTOC settings',
+										'simpletoc'
+									) }
+								</ExternalLink>
+							</BaseControl>
+						</PanelRow>
+					) }
 				</PanelBody>
 			</Panel>
 		</InspectorControls>
