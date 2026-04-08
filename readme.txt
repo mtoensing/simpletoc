@@ -3,13 +3,13 @@ Contributors: MarcDK
 Tags: TOC, Table of Contents, Block, Accessibility, Table
 Requires at least: 5.9
 Tested up to: 6.9
-Stable tag: 6.9.8
+Stable tag: 7.0.0
 Requires PHP: 7.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://marc.tv/out/donate
 
-SEO-friendly Table of Contents Gutenberg block. No JavaScript and no CSS means faster loading.
+SEO-friendly Table of Contents Gutenberg block. No JavaScript or CSS by default.
 
 == Description ==
 
@@ -40,7 +40,8 @@ This plugin is designed & developed for WCAG 2.2 level AA conformance. The plugi
 * Zero configuration: Add the SimpleTOC block to your post and that's it. 
 * Minimal and valid HTML output.
 * Utilizes the browser's built-in details tag for a collapsible interface.
-* No JavaScript or CSS added. Unless you activate the accordion menu.
+* No JavaScript or CSS by default. Optional features such as the accordion menu, smooth scrolling, or box style add minimal assets only when enabled.
+* Optional box style for the TOC with a default gray background.
 * Style SimpleTOC with Gutenberg's native group styling options.
 * Inherits the style of your theme.
 * Smooth scrolling effect using CSS. 
@@ -56,6 +57,7 @@ This plugin is designed & developed for WCAG 2.2 level AA conformance. The plugi
 * Native block support for wide and full width.
 * Control the maximum depth of the headings.
 * Choose between an ordered, bullet HTML list. Or indent the list.
+* Enable a box style and choose a box color directly in the block sidebar.
 * Select a heading level or turn it into a paragraph.
 * Disable the h2 heading of the TOC block and add your own.
 
@@ -69,6 +71,11 @@ This plugin is designed & developed for WCAG 2.2 level AA conformance. The plugi
 SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoensing/SimpleTOC). If you find a bug or have an idea for a feature please feel free to contribute and create a pull request. 
 
 == Changelog ==
+
+= 7.0.0 =
+* Added: Box style option in the block sidebar with a color picker and default gray background.
+* Added: Global setting to force the default gray box style for all SimpleTOC blocks.
+* Added: Frontend box-style CSS registered through block metadata.
 
 = 6.9.8 = 
 * Updated: Dependencies and house-keeping. 

@@ -53,6 +53,7 @@ function simpletoc_register_settings() {
 	$smooth_enabled_filter        = apply_filters( 'simpletoc_smooth_enabled', null );
 	$absolute_urls_enabled_filter = apply_filters( 'simpletoc_absolute_urls_enabled', null );
 	$autoupdate_enabled_filter    = apply_filters( 'simpletoc_autoupdate_enabled', null );
+	$box_style_enabled_filter     = apply_filters( 'simpletoc_box_style_enabled', null );
 
 	if ( null === $wrapper_enabled_filter ) {
 		register_setting( 'simpletoc_settings', 'simpletoc_wrapper_enabled' );
@@ -72,6 +73,10 @@ function simpletoc_register_settings() {
 
 	if ( null === $autoupdate_enabled_filter ) {
 		register_setting( 'simpletoc_settings', 'simpletoc_autoupdate_enabled', array( 'show_in_rest' => true ) );
+	}
+
+	if ( null === $box_style_enabled_filter ) {
+		register_setting( 'simpletoc_settings', 'simpletoc_box_style_enabled' );
 	}
 
 	// Add settings sections and fields.
@@ -119,6 +124,14 @@ function simpletoc_register_settings() {
 		'simpletoc_autoupdate_enabled',
 		esc_html__( 'Force no auto refresh', 'simpletoc' ),
 		__NAMESPACE__ . '\simpletoc_autoupdate_enabled_callback',
+		'simpletoc',
+		'simpletoc_wrapper_section'
+	);
+
+	add_settings_field(
+		'simpletoc_box_style_enabled',
+		esc_html__( 'Force box style', 'simpletoc' ),
+		__NAMESPACE__ . '\simpletoc_box_style_enabled_callback',
 		'simpletoc',
 		'simpletoc_wrapper_section'
 	);
@@ -191,4 +204,19 @@ function simpletoc_autoupdate_enabled_callback() {
 	$autoupdate_enabled = get_option( 'simpletoc_autoupdate_enabled', false );
 	echo '<input type="checkbox" name="simpletoc_autoupdate_enabled" id="simpletoc_autoupdate_enabled" value="1" ' . checked( 1, $autoupdate_enabled, false ) . ' />';
 	echo '<label for="simpletoc_autoupdate_enabled" class="description">' . esc_html__( 'Deactivate the automatic table of contents refresh feature.', 'simpletoc' ) . '</label>';
+}
+
+/**
+ * SimpleTOC box style enabled callback.
+ */
+function simpletoc_box_style_enabled_callback() {
+	$box_style_enabled = get_option( 'simpletoc_box_style_enabled', false );
+
+	if ( has_filter( 'simpletoc_box_style_enabled' ) ) {
+		echo '<input type="checkbox" name="simpletoc_box_style_enabled" id="simpletoc_box_style_enabled" value="1" checked="checked" disabled="disabled" />';
+		echo '<label for="simpletoc_box_style_enabled" class="description">' . esc_html__( 'Setting controlled by "simpletoc_box_style_enabled" filter. Remove filter to adjust setting.', 'simpletoc' ) . '</label>';
+	} else {
+		echo '<input type="checkbox" name="simpletoc_box_style_enabled" id="simpletoc_box_style_enabled" value="1" ' . checked( 1, $box_style_enabled, false ) . ' />';
+		echo '<label for="simpletoc_box_style_enabled" class="description">' . esc_html__( 'Enables the box style for all SimpleTOC blocks with the default gray background. Wrapper markup is added automatically.', 'simpletoc' ) . '</label>';
+	}
 }

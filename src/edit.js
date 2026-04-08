@@ -4,6 +4,7 @@ import {
 	InspectorControls,
 	BlockControls,
 	useBlockProps,
+	store as blockEditorStore,
 } from '@wordpress/block-editor';
 import { store as editorStore } from '@wordpress/editor';
 import ServerSideRender from '@wordpress/server-side-render';
@@ -15,6 +16,8 @@ import {
 	formatListNumbered,
 } from '@wordpress/icons';
 import {
+	BaseControl,
+	ColorPalette,
 	SelectControl,
 	ToolbarButton,
 	ToggleControl,
@@ -30,6 +33,8 @@ import HeadingLevelDropdown from './heading-level-dropdown';
 import { useSelect } from '@wordpress/data';
 import './editor.scss';
 import './../assets/accordion.css';
+
+const DEFAULT_BOX_COLOR = '#ebebeb';
 
 export default function Edit( { attributes, setAttributes } ) {
 	const { hideTOC, hidden, accordion } = attributes;
@@ -61,6 +66,10 @@ export default function Edit( { attributes, setAttributes } ) {
 	}, [] );
 
 	const { autoupdate } = attributes;
+	const boxColors = useSelect( ( select ) => {
+		return select( blockEditorStore ).getSettings()?.colors || [];
+	}, [] );
+	const selectedBoxColor = attributes.box_color;
 
 	const { returnisSaving, returnisSavingNonPostEntityChanges } = useSelect(
 		( select ) => {
@@ -404,6 +413,49 @@ export default function Edit( { attributes, setAttributes } ) {
 							}
 						/>
 					</PanelRow>
+					<PanelRow>
+						<ToggleControl
+							label={ __( 'Box style', 'simpletoc' ) }
+							help={ __(
+								'Adds box spacing and title styling. Enables the wrapper markup automatically.',
+								'simpletoc'
+							) }
+							checked={ attributes.box_style }
+							onChange={ () =>
+								setAttributes( {
+									box_style: ! attributes.box_style,
+									box_color:
+										! attributes.box_style &&
+										! attributes.box_color
+											? DEFAULT_BOX_COLOR
+											: attributes.box_color,
+								} )
+							}
+						/>
+					</PanelRow>
+					{ attributes.box_style && boxColors.length > 0 && (
+						<PanelRow>
+							<BaseControl
+								id="simpletoc-box-color"
+								label={ __( 'Box color', 'simpletoc' ) }
+								help={ __(
+									'Uses the active editor color palette.',
+									'simpletoc'
+								) }
+							>
+								<ColorPalette
+									colors={ boxColors }
+									value={ selectedBoxColor }
+									onChange={ ( colorValue ) =>
+										setAttributes( {
+											box_color: colorValue || '',
+										} )
+									}
+									clearable={ false }
+								/>
+							</BaseControl>
+						</PanelRow>
+					) }
 					<PanelRow>
 						<ToggleControl
 							label={ __( 'Wrapper div', 'simpletoc' ) }
