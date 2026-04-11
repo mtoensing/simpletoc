@@ -2,8 +2,8 @@
 /**
  * Plugin Name:   SimpleTOC - Table of Contents Block
  * Plugin URI:    https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
- * Description:   SEO-friendly Table of Contents Gutenberg block. No JavaScript and no CSS means faster loading.
- * Version:       7.0.0
+ * Description:   SEO-friendly Table of Contents Gutenberg block. No JavaScript or CSS by default.
+ * Version:       7.0.1
  * Author:        Marc Tönsing
  * Author URI:    https://toensing.com
  * Text Domain:   simpletoc
@@ -19,6 +19,8 @@ use WP_HTML_Token;
 
 require_once __DIR__ . '/simpletoc-admin-settings.php';
 require_once __DIR__ . '/simpletoc-class-headline-ids.php';
+
+const DEFAULT_BOX_COLOR = '#ebebeb';
 
 /**
  * Prevents direct execution of the plugin file.
@@ -50,9 +52,35 @@ function register_simpletoc_block() {
 			'render_callback' => __NAMESPACE__ . '\render_callback_simpletoc',
 		)
 	);
+
+	wp_add_inline_script(
+		'simpletoc-toc-editor-script',
+		'window.simpletocEditorSettings = ' . wp_json_encode(
+			array(
+				'settingsUrl' => admin_url( 'options-general.php?page=simpletoc' ),
+			)
+		) . ';',
+		'before'
+	);
 }
 
 add_action( 'init', __NAMESPACE__ . '\register_simpletoc_block' );
+
+/**
+ * Adds SimpleTOC-specific block editor settings.
+ *
+ * @param array                    $editor_settings Default editor settings.
+ * @param \WP_Block_Editor_Context $editor_context  Editor context.
+ *
+ * @return array
+ */
+function add_simpletoc_block_editor_settings( $editor_settings, $editor_context ) {
+	$editor_settings['simpletocSettingsUrl'] = admin_url( 'options-general.php?page=simpletoc' );
+
+	return $editor_settings;
+}
+
+add_filter( 'block_editor_settings_all', __NAMESPACE__ . '\add_simpletoc_block_editor_settings', 10, 2 );
 
 /**
  * Inject potentially missing translations into the block-editor i18n
@@ -215,8 +243,36 @@ function simpletoc_render_toc( $content, $return_toc_html = false, $attributes =
 	$alignclass  = ! empty( $attributes['align'] ) ? 'align' . $attributes['align'] : '';
 	$class_name  = ! empty( $attributes['className'] ) ? wp_strip_all_tags( $attributes['className'] ) : '';
 	$title_level = $attributes['title_level'];
+	$global_box_style_enabled = apply_filters( 'simpletoc_box_style_enabled', false ) || true === (bool) get_option( 'simpletoc_box_style_enabled', false );
+	$box_style_enabled        = $global_box_style_enabled || ! empty( $attributes['box_style'] );
+	$wrapper_classes   = array( 'simpletoc' );
+	$wrapper_style     = '';
+
+	if ( $box_style_enabled ) {
+		$wrapper_classes[] = 'has-simpletoc-box-style';
+
+		if ( $global_box_style_enabled ) {
+			$wrapper_classes[] = 'has-background';
+			$wrapper_style = safecss_filter_attr( 'background-color:' . DEFAULT_BOX_COLOR . ';' );
+		} elseif ( ! empty( $attributes['box_color'] ) ) {
+			$wrapper_classes[] = 'has-background';
+			$wrapper_style     = safecss_filter_attr( 'background-color:' . $attributes['box_color'] . ';' );
+		} else {
+			$wrapper_classes[] = 'has-background';
+			$wrapper_style     = safecss_filter_attr( 'background-color:' . DEFAULT_BOX_COLOR . ';' );
+		}
+	}
 
 	$wrapper_enabled = apply_filters( 'simpletoc_wrapper_enabled', false ) || true === (bool) get_option( 'simpletoc_wrapper_enabled', false ) || true === (bool) get_option( 'simpletoc_accordion_enabled', false );
+	$wrapper_attrs   = get_block_wrapper_attributes(
+		array(
+			'class' => implode( ' ', $wrapper_classes ),
+			'style' => $wrapper_style,
+		)
+	);
+	$has_wrapper     = ! empty( $class_name ) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper'] || $box_style_enabled;
+	$pre_html        = $has_wrapper ? '<div role="navigation" aria-label="' . __( 'Table of Contents', 'simpletoc' ) . '" ' . $wrapper_attrs . '>' : '';
+	$post_html       = $has_wrapper ? '</div>' : '';
 
 	$pre_html  = ( ! empty( $class_name ) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper'] ) ? '<div role="navigation" aria-label="' . __( 'Table of Contents', 'simpletoc' ) . '" ' . $wrapper_attrs . '>' : '';
 	$post_html = ( ! empty( $class_name ) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper'] ) ? '</div>' : '';
@@ -366,15 +422,25 @@ function render_callback_simpletoc( $attributes ) {
  * @param string $title_text    The text for the Table of Contents title.
  * @param string $warning_text1 The first part of the warning message to be displayed.
  * @param string $warning_text2 The second part of the warning message to be displayed.
+ * @param string $wrapper_attrs Wrapper attributes for the optional block wrapper.
+ * @param bool   $has_wrapper   Indicates if the wrapper should be rendered.
  *
  * @return string The HTML output for the empty blocks message.
  */
-function get_empty_blocks_message( $is_backend, $attributes, $title_level, $alignclass, $title_text, $warning_text1, $warning_text2 ) {
+function get_empty_blocks_message( $is_backend, $attributes, $title_level, $alignclass, $title_text, $warning_text1, $warning_text2, $wrapper_attrs = '', $has_wrapper = false ) {
 	$html = '';
 
 	if ( $is_backend ) {
-		$html .= sprintf( '<h%d class="simpletoc-title %s">%s</h%d>', $title_level, $alignclass, $title_text, $title_level );
+		if ( $has_wrapper ) {
+			$html .= '<div role="navigation" aria-label="' . esc_attr__( 'Table of Contents', 'simpletoc' ) . '" ' . $wrapper_attrs . '>';
+		}
+
+		$html .= sprintf( '<h%d class="%s">%s</h%d>', $title_level, esc_attr( trim( 'simpletoc-title ' . $alignclass ) ), $title_text, $title_level );
 		$html .= sprintf( '<p class="components-notice is-warning %s">%s %s</p>', $alignclass, $warning_text1, $warning_text2 );
+
+		if ( $has_wrapper ) {
+			$html .= '</div>';
+		}
 	}
 
 	return $html;
@@ -915,12 +981,12 @@ function add_accordion_start( $html, $attributes, $itemcount, $alignclass ) {
 	// Check if accordion is enabled either through the function arguments or the options.
 	$is_accordion_enabled = $attributes['accordion'] || true === (bool) get_option( 'simpletoc_accordion_enabled', false );
 	$is_hidden_enabled    = $attributes['hidden'];
+	$title_text           = $attributes['title_text'] ? esc_html( trim( $attributes['title_text'] ) ) : esc_html__( 'Table of Contents', 'simpletoc' );
 
 	// Start and end HTML for accordion, if enabled.
 	$accordion_start = '';
 	if ( $is_accordion_enabled ) {
 		enqueue_accordion_frontend();
-		$title_text      = $attributes['title_text'] ? esc_html( trim( $attributes['title_text'] ) ) : esc_html__( 'Table of Contents', 'simpletoc' );
 		$accordion_start = '<h2 style="margin: 0;"><button type="button" aria-expanded="false" aria-controls="simpletoc-content-container" class="simpletoc-collapsible">' . $title_text . '<span class="simpletoc-icon" aria-hidden="true"></span></button></h2><div id="simpletoc-content-container" class="simpletoc-content">';
 	}
 
@@ -938,7 +1004,7 @@ function add_accordion_start( $html, $attributes, $itemcount, $alignclass ) {
 			$html_class .= " $alignclass";
 		}
 
-		$html = "<$title_tag class=\"$html_class\">{$attributes["title_text"]}</$title_tag>\n";
+		$html = "<$title_tag class=\"$html_class\">$title_text</$title_tag>\n";
 	}
 
 	// If there are no items in the table of contents, return an empty string.
