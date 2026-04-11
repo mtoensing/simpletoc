@@ -238,22 +238,22 @@ function simpletoc_render_toc( $content, $return_toc_html = false, $attributes =
 		return $content;
 	}
 
-	$is_backend  = defined( 'REST_REQUEST' ) && REST_REQUEST && 'edit' === filter_input( INPUT_GET, 'context' );
-	$title_text  = $attributes['title_text'] ? esc_html( trim( $attributes['title_text'] ) ) : __( 'Table of Contents', 'simpletoc' );
-	$alignclass  = ! empty( $attributes['align'] ) ? 'align' . $attributes['align'] : '';
-	$class_name  = ! empty( $attributes['className'] ) ? wp_strip_all_tags( $attributes['className'] ) : '';
-	$title_level = $attributes['title_level'];
+	$is_backend               = defined( 'REST_REQUEST' ) && REST_REQUEST && 'edit' === filter_input( INPUT_GET, 'context' );
+	$title_text               = $attributes['title_text'] ? esc_html( trim( $attributes['title_text'] ) ) : __( 'Table of Contents', 'simpletoc' );
+	$alignclass               = ! empty( $attributes['align'] ) ? 'align' . $attributes['align'] : '';
+	$class_name               = ! empty( $attributes['className'] ) ? wp_strip_all_tags( $attributes['className'] ) : '';
+	$title_level              = $attributes['title_level'];
 	$global_box_style_enabled = apply_filters( 'simpletoc_box_style_enabled', false ) || true === (bool) get_option( 'simpletoc_box_style_enabled', false );
 	$box_style_enabled        = $global_box_style_enabled || ! empty( $attributes['box_style'] );
-	$wrapper_classes   = array( 'simpletoc' );
-	$wrapper_style     = '';
+	$wrapper_classes          = array( 'simpletoc' );
+	$wrapper_style            = '';
 
 	if ( $box_style_enabled ) {
 		$wrapper_classes[] = 'has-simpletoc-box-style';
 
 		if ( $global_box_style_enabled ) {
 			$wrapper_classes[] = 'has-background';
-			$wrapper_style = safecss_filter_attr( 'background-color:' . DEFAULT_BOX_COLOR . ';' );
+			$wrapper_style     = safecss_filter_attr( 'background-color:' . DEFAULT_BOX_COLOR . ';' );
 		} elseif ( ! empty( $attributes['box_color'] ) ) {
 			$wrapper_classes[] = 'has-background';
 			$wrapper_style     = safecss_filter_attr( 'background-color:' . $attributes['box_color'] . ';' );
@@ -264,15 +264,15 @@ function simpletoc_render_toc( $content, $return_toc_html = false, $attributes =
 	}
 
 	$wrapper_enabled = apply_filters( 'simpletoc_wrapper_enabled', false ) || true === (bool) get_option( 'simpletoc_wrapper_enabled', false ) || true === (bool) get_option( 'simpletoc_accordion_enabled', false );
-	$wrapper_attrs   = get_block_wrapper_attributes(
-		array(
-			'class' => implode( ' ', $wrapper_classes ),
-			'style' => $wrapper_style,
-		)
-	);
-	$has_wrapper     = ! empty( $class_name ) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper'] || $box_style_enabled;
-	$pre_html        = $has_wrapper ? '<div role="navigation" aria-label="' . __( 'Table of Contents', 'simpletoc' ) . '" ' . $wrapper_attrs . '>' : '';
-	$post_html       = $has_wrapper ? '</div>' : '';
+
+	// $wrapper_attrs might have class="myblockclass" syntax. So we need to add wrapper_classes to it.
+	$wrapper_attrs = preg_replace( '/class="([^"]*)"/', 'class="$1 ' . esc_attr( implode( ' ', $wrapper_classes ) ) . '"', $wrapper_attrs );
+	// Now add style attribute to the wrapper_attrs.
+	$wrapper_attrs .= ' style="' . esc_attr( $wrapper_style ) . '"';
+
+	$has_wrapper = ! empty( $class_name ) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper'] || $box_style_enabled;
+	$pre_html    = $has_wrapper ? '<div role="navigation" aria-label="' . __( 'Table of Contents', 'simpletoc' ) . '" ' . $wrapper_attrs . '>' : '';
+	$post_html   = $has_wrapper ? '</div>' : '';
 
 	$pre_html  = ( ! empty( $class_name ) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper'] ) ? '<div role="navigation" aria-label="' . __( 'Table of Contents', 'simpletoc' ) . '" ' . $wrapper_attrs . '>' : '';
 	$post_html = ( ! empty( $class_name ) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper'] ) ? '</div>' : '';
