@@ -1,5 +1,6 @@
 import { registerBlockType } from '@wordpress/blocks';
 import metadata from './block.json';
+import './style.scss';
 
 const simpletocicon = (
 	<svg
