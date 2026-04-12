@@ -3,7 +3,7 @@
  * Plugin Name:   SimpleTOC - Table of Contents Block
  * Plugin URI:    https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
  * Description:   SEO-friendly Table of Contents Gutenberg block. No JavaScript or CSS by default.
- * Version:       7.0.1
+ * Version:       7.0.2
  * Author:        Marc Tönsing
  * Author URI:    https://toensing.com
  * Text Domain:   simpletoc
@@ -764,7 +764,7 @@ function add_hidden_markup_start( $html, $attributes, $itemcount, $alignclass ) 
 
 	if ( $is_hidden_enabled ) {
 		$title_text   = $attributes['title_text'] ? esc_html( trim( $attributes['title_text'] ) ) : esc_html__( 'Table of Contents', 'simpletoc' );
-		$hidden_start = '<details id="simpletoc-details" class="simpletoc" aria-labelledby="simpletoc-title">
+		$hidden_start = '<details class="simpletoc">
         <summary style="cursor: pointer;">' . $title_text . '</summary>';
 		$html        .= $hidden_start;
 	}

@@ -1,5 +1,8 @@
 == Changelog ==
 
+= 7.0.2 =
+* Fixed: Removed an invalid `aria-labelledby` reference from hidden TOC `<details>` markup and now rely on native `<summary>` labeling.
+
 = 6.6.1 = 
 * Added: Initialize the JavaScript for the TOC accordion on page load or after the document has fully loaded. Thanks blronaldhuereca https://github.com/mtoensing/simpletoc/pull/63 
 
