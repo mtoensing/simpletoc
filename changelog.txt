@@ -1,5 +1,8 @@
 == Changelog ==
 
+= 7.0.3 =
+* Fixed: Removed an invalid `aria-labelledby` reference from hidden TOC `<details>` markup and now rely on native `<summary>` labeling.
+
 = 7.0.2 =
 * Fixed: Removed an invalid `aria-labelledby` reference from hidden TOC `<details>` markup and now rely on native `<summary>` labeling.
 
