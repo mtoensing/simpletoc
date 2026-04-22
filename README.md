@@ -1,4 +1,4 @@
-=== SimpleTOC - Table of Contents Block ===
+# SimpleTOC - Table of Contents Block 
 Contributors: MarcDK
 Tags: TOC, Table of Contents, Block, Accessibility, Table
 Requires at least: 5.9
