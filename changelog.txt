@@ -1,5 +1,10 @@
 == Changelog ==
 
+= 7.0.5 =
+* Fixed: GenerateBlocks dynamic tags in heading links keep working when SimpleTOC adds heading IDs.
+* Fixed: GenerateBlocks dynamic heading text is resolved consistently in the TOC and matching heading anchors.
+* Maintenance: Added automated GitHub README generation from the WordPress.org `readme.txt`.
+
 = 7.0.4 =
 * Fixed: GenerateBlocks dynamic tags in heading links keep working when SimpleTOC adds heading IDs.
 * Fixed: GenerateBlocks dynamic heading text is resolved consistently in the TOC and matching heading anchors.
