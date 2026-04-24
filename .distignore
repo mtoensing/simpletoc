@@ -11,3 +11,4 @@ phpcs.xml.dist
 .gitattributes
 .editorconfig
 .wp-env.json
+README.md

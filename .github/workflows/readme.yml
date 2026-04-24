@@ -1,0 +1,48 @@
+name: Update README
+
+on:
+  push:
+    branches:
+      - '**'
+    paths-ignore:
+      - 'README.md'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: readme-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  readme:
+    name: Convert WordPress readme to Markdown
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 20
+
+      - name: Generate README.md
+        run: npx --yes wp-readme-to-markdown@1.0.1
+
+      - name: Commit README.md
+        run: |
+          if [ -z "$(git status --porcelain -- README.md)" ]; then
+            echo "README.md is already up to date."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git commit -m "Update README.md from readme.txt"
+          git push origin HEAD:${GITHUB_REF_NAME}
