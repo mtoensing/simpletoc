@@ -1,5 +1,9 @@
 == Changelog ==
 
+= 7.0.4 =
+* Fixed: GenerateBlocks dynamic tags in heading links keep working when SimpleTOC adds heading IDs.
+* Fixed: GenerateBlocks dynamic heading text is resolved consistently in the TOC and matching heading anchors.
+
 = 7.0.3 =
 * Fixed: Removed an invalid `aria-labelledby` reference from hidden TOC `<details>` markup and now rely on native `<summary>` labeling.
 

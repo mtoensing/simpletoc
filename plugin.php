@@ -3,7 +3,7 @@
  * Plugin Name:   SimpleTOC - Table of Contents Block
  * Plugin URI:    https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
  * Description:   SEO-friendly Table of Contents Gutenberg block. No JavaScript or CSS by default.
- * Version:       7.0.3
+ * Version:       7.0.4
  * Author:        Marc Tönsing
  * Author URI:    https://toensing.com
  * Text Domain:   simpletoc
@@ -221,8 +221,8 @@ function add_ids_to_blocks_recursive( $blocks ) {
 
 	foreach ( $blocks as &$block ) {
 		if ( isset( $block['blockName'] ) && in_array( $block['blockName'], $supported_blocks, true ) && isset( $block['innerHTML'] ) && isset( $block['innerContent'] ) && isset( $block['innerContent'][0] ) ) {
-			$block['innerHTML']       = add_anchor_attribute( $block['innerHTML'], $inner_html_id_instance );
-			$block['innerContent'][0] = add_anchor_attribute( $block['innerContent'][0], $inner_content_id_instance );
+			$block['innerHTML']       = add_anchor_attribute( $block['innerHTML'], $inner_html_id_instance, $block );
+			$block['innerContent'][0] = add_anchor_attribute( $block['innerContent'][0], $inner_content_id_instance, $block );
 		} elseif ( isset( $block['attrs']['ref'] ) ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedElseif
 			// search in reusable blocks (this is not finished because I ran out of ideas.)
 			// $reusable_block_id = $block['attrs']['ref'];
@@ -430,6 +430,7 @@ function filter_headings_recursive( $blocks ) {
 			if ( isset( $blocks['blockName'] ) && in_array( $blocks['blockName'], $supported_third_party_blocks, true ) && 'core/heading' !== $inner_block ) {
 				// make sure it's a headline.
 				if ( preg_match( '/(<h1|<h2|<h3|<h4|<h5|<h6)/i', $inner_block ) ) {
+					$inner_block = simpletoc_maybe_replace_generateblocks_dynamic_tags( $inner_block, $blocks );
 					$arr[] = $inner_block;
 				}
 			}
@@ -437,6 +438,38 @@ function filter_headings_recursive( $blocks ) {
 	}
 
 	return $arr;
+}
+
+/**
+ * Replaces GenerateBlocks dynamic tags in heading HTML before SimpleTOC uses it in the TOC.
+ *
+ * @param string $html  The heading HTML.
+ * @param array  $block The parsed block data.
+ * @return string The heading HTML with GenerateBlocks dynamic tags resolved when available.
+ */
+function simpletoc_maybe_replace_generateblocks_dynamic_tags( $html, $block ) {
+	if ( ! class_exists( '\GenerateBlocks_Register_Dynamic_Tag' ) || false === strpos( $html, '{{' ) ) {
+		return $html;
+	}
+
+	return \GenerateBlocks_Register_Dynamic_Tag::replace_tags( $html, $block, null );
+}
+
+/**
+ * Gets heading HTML used for anchor generation.
+ *
+ * @param string $html  The original heading HTML.
+ * @param array  $block The parsed block data.
+ * @return string The heading HTML to use for anchor generation.
+ */
+function simpletoc_get_heading_html_for_anchor( $html, $block ) {
+	$heading_html = simpletoc_maybe_replace_generateblocks_dynamic_tags( $html, $block );
+
+	if ( '' === trim( wp_strip_all_tags( $heading_html ) ) ) {
+		return $html;
+	}
+
+	return $heading_html;
 }
 
 /**
@@ -483,9 +516,10 @@ function simpletoc_plugin_meta( $links, $file ) {
  *
  * @param string                 $html The HTML content to modify.
  * @param SimpleTOC_Headline_Ids $headline_class_instance The instance of the SimpleTOC_Headline_Ids class.
+ * @param array                  $block The parsed block data.
  * @return string The modified HTML content with ID attributes added to the Heading tags
  */
-function add_anchor_attribute( $html, $headline_class_instance = null ) {
+function add_anchor_attribute( $html, $headline_class_instance = null, $block = array() ) {
 
 	// remove non-breaking space entites from input HTML.
 	$html_wo_nbs = str_replace( '&nbsp;', ' ', $html );
@@ -493,6 +527,36 @@ function add_anchor_attribute( $html, $headline_class_instance = null ) {
 	// Thank you Nick Diego.
 	if ( ! $html_wo_nbs ) {
 		return $html;
+	}
+
+	if ( ! class_exists( '\WP_HTML_Tag_Processor' ) && defined( 'ABSPATH' ) && defined( 'WPINC' ) ) {
+		$html_tag_processor_file = ABSPATH . WPINC . '/html-api/class-wp-html-tag-processor.php';
+
+		if ( file_exists( $html_tag_processor_file ) ) {
+			require_once $html_tag_processor_file;
+		}
+	}
+
+	if ( class_exists( '\WP_HTML_Tag_Processor' ) ) {
+		$processor = new \WP_HTML_Tag_Processor( $html_wo_nbs );
+
+		while ( $processor->next_tag() ) {
+			if ( ! in_array( $processor->get_tag(), array( 'H1', 'H2', 'H3', 'H4', 'H5', 'H6' ), true ) ) {
+				continue;
+			}
+
+			// If tag already has an attribute "id" defined, no need for creating a new one.
+			if ( ! empty( $processor->get_attribute( 'id' ) ) ) {
+				continue;
+			}
+
+			$heading_html = simpletoc_get_heading_html_for_anchor( $html, $block );
+			$heading_text = trim( wp_strip_all_tags( $heading_html ) );
+			$anchor       = $headline_class_instance->get_headline_anchor( $heading_text );
+			$processor->set_attribute( 'id', $anchor );
+		}
+
+		return $processor->get_updated_html();
 	}
 
 	libxml_use_internal_errors( true );
@@ -514,7 +578,8 @@ function add_anchor_attribute( $html, $headline_class_instance = null ) {
 			continue;
 		}
 		// Set id attribute.
-		$heading_text = trim( wp_strip_all_tags( $html ) );
+		$heading_html = simpletoc_get_heading_html_for_anchor( $html, $block );
+		$heading_text = trim( wp_strip_all_tags( $heading_html ) );
 		$anchor       = $headline_class_instance->get_headline_anchor( $heading_text );
 		$tag->setAttribute( 'id', $anchor );
 	}

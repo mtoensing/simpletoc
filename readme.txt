@@ -3,7 +3,7 @@ Contributors: MarcDK
 Tags: TOC, Table of Contents, Block, Accessibility, Table
 Requires at least: 5.9
 Tested up to: 6.9
-Stable tag: 7.0.3
+Stable tag: 7.0.4
 Requires PHP: 7.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -72,6 +72,10 @@ Hidden TOCs use native `<details>` and `<summary>` semantics without extra ARIA 
 SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoensing/SimpleTOC). If you find a bug or have an idea for a feature please feel free to contribute and create a pull request. 
 
 == Changelog ==
+
+= 7.0.4 =
+* Fixed: GenerateBlocks dynamic tags in heading links keep working when SimpleTOC adds heading IDs.
+* Fixed: GenerateBlocks dynamic heading text is resolved consistently in the TOC and matching heading anchors.
 
 = 7.0.3 =
 * Fixed: Removed an invalid `aria-labelledby` reference from hidden TOC `<details>` markup and now rely on native `<summary>` labeling.
