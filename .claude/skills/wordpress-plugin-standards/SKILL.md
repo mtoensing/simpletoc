@@ -10,6 +10,7 @@ Follow these rules for all changes in WordPress plugin repositories.
 ## Core Rules
 
 - Stay close to WordPress core and Gutenberg standards.
+- Keep it simple.
 - Prefer existing Gutenberg elements, WordPress functions, official APIs, block metadata, block-editor components, and the WordPress Settings API.
 - Write as little custom code as possible. Less is more.
 - Avoid hacks, CSS tricks, hidden coupling, and one-off workarounds.
@@ -22,6 +23,13 @@ Follow these rules for all changes in WordPress plugin repositories.
 - Update `readme.txt` only when changing plugin documentation.
 - Do not edit `README.md` by hand. It is generated automatically from `readme.txt` by the GitHub Actions workflow.
 - Keep `readme.txt` valid for WordPress.org first; the generated Markdown README is secondary.
+
+## Deployment Workflow
+
+- Read and understand the repository's GitHub Actions workflows before changing deployment behavior.
+- Check `.github/workflows/` to see which branch, tag, path, or manual triggers deploy plugin code, WordPress.org assets, generated documentation, or release artifacts.
+- Check `.distignore` before adding project-only files. Claude skills, local tooling, generated GitHub-only files, and development metadata must not be shipped to WordPress.org.
+- Keep deployment changes conservative and explicit. Do not add a new deployment path when an existing workflow already covers the job.
 
 ## Block Workflow
 
