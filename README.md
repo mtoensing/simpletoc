@@ -2,7 +2,7 @@
 **Contributors:** [MarcDK](https://profiles.wordpress.org/MarcDK/)  
 **Tags:** TOC, Table of Contents, Block, Accessibility, Table  
 **Requires at least:** 5.9  
-**Tested up to:** 6.9  
+**Tested up to:** 7.0  
 **Stable tag:** 7.0.5  
 **Requires PHP:** 7.3  
 **License:** GPLv2 or later  
