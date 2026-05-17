@@ -3,7 +3,7 @@
  * Plugin Name:   SimpleTOC - Table of Contents Block
  * Plugin URI:    https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
  * Description:   SEO-friendly Table of Contents Gutenberg block. No JavaScript or CSS by default.
- * Version:       7.0.6
+ * Version:       7.0.7
  * Author:        Marc Tönsing
  * Author URI:    https://toensing.com
  * Text Domain:   simpletoc
@@ -608,27 +608,11 @@ function generate_toc( $headings, $attributes ) {
 	$global_absolut_urls_enabled = get_option( 'simpletoc_absolute_urls_enabled', false );
 	$absolute_url                = $attributes['use_absolute_urls'] || $global_absolut_urls_enabled ? get_permalink() : '';
 
-	list($min_depth, $initial_depth) = find_min_depth( $headings, $attributes );
+	$toc_headings = get_included_toc_headings( $headings, $attributes );
+	list($min_depth, $initial_depth) = find_min_depth( $toc_headings, $attributes );
 
-	$item_count   = 0;
-	$headline_ids = new SimpleTOC_Headline_Ids();
-	foreach ( $headings as $line => $headline ) {
-		$this_depth       = (int) $headings[ $line ][2];
-		$next_depth       = isset( $headings[ $line + 1 ][2] ) ? (int) $headings[ $line + 1 ][2] : '';
-		$exclude_headline = should_exclude_headline( $headline, $attributes, $this_depth );
-		$title            = trim( wp_strip_all_tags( $headline ) );
-		$custom_id        = extract_id( $headline );
-		$link             = $custom_id ? $custom_id : $headline_ids->get_headline_anchor( $title );
-		if ( ! $exclude_headline ) {
-			++$item_count;
-			open_list( $list, $list_type, $min_depth, $this_depth );
-			$page  = get_page_number_from_headline( $headline );
-			$list .= '<a href="' . $absolute_url . $page . '#' . $link . '">' . $title . '</a>' . PHP_EOL;
-
-		}
-		close_list( $list, $list_type, $min_depth, $attributes['min_level'], $attributes['max_level'], $next_depth, $line, count( $headings ) - 1, $initial_depth, $this_depth );
-
-	}
+	$item_count = count( $toc_headings );
+	$list       = render_toc_list_items( $toc_headings, $list_type, $absolute_url, $min_depth );
 
 	$html = add_accordion_start( $html, $attributes, $item_count, $align_class );
 	$html = add_hidden_markup_start( $html, $attributes, $item_count, $align_class );
@@ -646,7 +630,7 @@ function generate_toc( $headings, $attributes ) {
 			$html_style = " $styles";
 		}
 
-		$html .= "<$list_type class=\"$html_class\"$html_style>\n$list</li></$list_type>";
+		$html .= "<$list_type class=\"$html_class\"$html_style>\n$list</$list_type>";
 	}
 
 	$html = add_accordion_end( $html, $attributes );
@@ -672,8 +656,9 @@ function find_min_depth( $headings, $attributes ) {
 	$initial_depth = 6;
 
 	foreach ( $headings as $line => $headline ) {
-		if ( $min_depth > $headings[ $line ][2] ) {
-			$min_depth     = (int) $headings[ $line ][2];
+		$this_depth = is_array( $headline ) && isset( $headline['depth'] ) ? (int) $headline['depth'] : (int) $headings[ $line ][2];
+		if ( $min_depth > $this_depth ) {
+			$min_depth     = $this_depth;
 			$initial_depth = $min_depth;
 		}
 	}
@@ -702,6 +687,84 @@ function should_exclude_headline( $headline, $attributes, $this_depth ) {
 	}
 
 	return ( $this_depth > $attributes['max_level'] || $exclude_headline || $this_depth < $attributes['min_level'] );
+}
+
+/**
+ * Filters headings down to TOC-visible entries while preserving anchor generation order.
+ *
+ * @param array $headings An array of headings to include in the table of contents.
+ * @param array $attributes An array of attributes to customize the output.
+ * @return array[] The headings that should be rendered in the table of contents.
+ */
+function get_included_toc_headings( $headings, $attributes ) {
+	$toc_headings = array();
+	$headline_ids = new SimpleTOC_Headline_Ids();
+
+	foreach ( $headings as $headline ) {
+		$this_depth = (int) $headline[2];
+		$title      = trim( wp_strip_all_tags( $headline ) );
+		$custom_id  = extract_id( $headline );
+		$link       = $custom_id ? $custom_id : $headline_ids->get_headline_anchor( $title );
+
+		if ( should_exclude_headline( $headline, $attributes, $this_depth ) ) {
+			continue;
+		}
+
+		$toc_headings[] = array(
+			'headline' => $headline,
+			'depth'    => $this_depth,
+			'title'    => $title,
+			'link'     => $link,
+		);
+	}
+
+	return $toc_headings;
+}
+
+/**
+ * Renders nested TOC list item markup from already-filtered headings.
+ *
+ * @param array[] $toc_headings The headings that should be rendered in the table of contents.
+ * @param string  $list_type The type of list to be created, either "ul" (unordered list) or "ol".
+ * @param string  $absolute_url The optional absolute URL prefix for links.
+ * @param int     $min_depth The minimum heading depth included in the table of contents.
+ * @return string The rendered nested list item markup.
+ */
+function render_toc_list_items( $toc_headings, $list_type, $absolute_url, $min_depth ) {
+	$list          = '';
+	$current_depth = null;
+
+	foreach ( $toc_headings as $toc_heading ) {
+		$this_depth = $toc_heading['depth'];
+
+		if ( null === $current_depth ) {
+			$current_depth = $this_depth;
+			$list         .= '<li>';
+		} elseif ( $this_depth > $current_depth ) {
+			for ( $current_depth; $current_depth < $this_depth; $current_depth++ ) {
+				$list .= "\n<" . $list_type . ">\n<li>";
+			}
+		} elseif ( $this_depth === $current_depth ) {
+			$list .= "</li>\n<li>";
+		} else {
+			for ( $current_depth; $current_depth > $this_depth; $current_depth-- ) {
+				$list .= "</li>\n</" . $list_type . ">\n";
+			}
+			$list .= "</li>\n<li>";
+		}
+
+		$page  = get_page_number_from_headline( $toc_heading['headline'] );
+		$list .= '<a href="' . $absolute_url . $page . '#' . $toc_heading['link'] . '">' . $toc_heading['title'] . '</a>' . PHP_EOL;
+	}
+
+	if ( null !== $current_depth ) {
+		for ( $current_depth; $current_depth > $min_depth; $current_depth-- ) {
+			$list .= "</li>\n</" . $list_type . ">\n";
+		}
+		$list .= '</li>';
+	}
+
+	return $list;
 }
 
 /**
