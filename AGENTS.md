@@ -1,17 +1,6 @@
----
-name: wordpress-plugin-standards
-description: >
-  Use when working on WordPress plugins, especially for Gutenberg block changes,
-  PHP render logic, settings-page work, styling changes, editor sidebar options,
-  or plugin documentation. Apply when implementation quality must stay close to
-  WordPress core patterns: prefer standards, official APIs, block metadata,
-  Settings API, sanitized output, and maintainable SCSS over hacks, CSS tricks,
-  or ad-hoc workarounds.
----
+# Repository Instructions
 
-# WordPress Plugin Standards
-
-Follow these rules for all changes in WordPress plugin repositories.
+Follow these rules for all changes in this WordPress plugin repository.
 
 ## Core Rules
 
