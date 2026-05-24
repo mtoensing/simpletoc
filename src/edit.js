@@ -31,13 +31,31 @@ import {
 } from '@wordpress/components';
 import HeadingLevelDropdown from './heading-level-dropdown';
 import { useSelect } from '@wordpress/data';
+import metadata from './block.json';
 import './editor.scss';
 import './../assets/accordion.css';
 
 const DEFAULT_BOX_COLOR = '#ebebeb';
+const SERVER_SIDE_RENDER_ATTRIBUTE_NAMES = [
+	...Object.keys( metadata.attributes || {} ),
+	'align',
+	'className',
+];
+
+function getServerSideRenderAttributes( attributes ) {
+	return SERVER_SIDE_RENDER_ATTRIBUTE_NAMES.reduce( ( filtered, name ) => {
+		if ( attributes[ name ] !== undefined ) {
+			filtered[ name ] = attributes[ name ];
+		}
+
+		return filtered;
+	}, {} );
+}
 
 export default function Edit( { attributes, setAttributes } ) {
 	const { hideTOC, hidden, accordion } = attributes;
+	const serverSideRenderAttributes =
+		getServerSideRenderAttributes( attributes );
 
 	// Effect to adjust hideTOC based on hidden or accordion attributes
 	useEffect( () => {
@@ -535,7 +553,7 @@ export default function Edit( { attributes, setAttributes } ) {
 			) : (
 				<ServerSideRender
 					block="simpletoc/toc"
-					attributes={ attributes }
+					attributes={ serverSideRenderAttributes }
 				/>
 			) }
 		</div>
