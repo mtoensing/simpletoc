@@ -32,7 +32,7 @@ jobs:
           node-version: 20
 
       - name: Generate README.md
-        run: npx --yes wp-readme-to-markdown@1.0.1
+        run: npx --yes wp-readme-to-markdown@1.0.1 --screenshot-url=.wordpress-org/{screenshot}.png
 
       - name: Commit README.md
         run: |
