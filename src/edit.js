@@ -1,5 +1,4 @@
 import { __ } from '@wordpress/i18n';
-import { useEffect } from '@wordpress/element';
 import {
 	InspectorControls,
 	BlockControls,
@@ -37,7 +36,9 @@ import './../assets/accordion.css';
 
 const DEFAULT_BOX_COLOR = '#ebebeb';
 const SERVER_SIDE_RENDER_ATTRIBUTE_NAMES = [
-	...Object.keys( metadata.attributes || {} ),
+	...Object.entries( metadata.attributes || {} )
+		.filter( ( [ , settings ] ) => settings.role !== 'local' )
+		.map( ( [ name ] ) => name ),
 	'align',
 	'className',
 ];
@@ -53,23 +54,10 @@ function getServerSideRenderAttributes( attributes ) {
 }
 
 export default function Edit( { attributes, setAttributes } ) {
-	const { hideTOC, hidden, accordion } = attributes;
+	const { hidden, accordion } = attributes;
+	const hideTOC = hidden || accordion;
 	const serverSideRenderAttributes =
 		getServerSideRenderAttributes( attributes );
-
-	// Effect to adjust hideTOC based on hidden or accordion attributes
-	useEffect( () => {
-		// If hideTOC is already set, no need to adjust
-		if ( hideTOC !== undefined ) {
-			return;
-		}
-
-		// Determine if we need to activate hideTOC based on hidden or accordion
-		if ( hidden || accordion ) {
-			setAttributes( { hideTOC: true } );
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [] ); // Empty dependency array ensures this runs once on mount
 
 	const blockProps = useBlockProps();
 
@@ -350,17 +338,14 @@ export default function Edit( { attributes, setAttributes } ) {
 							checked={ hideTOC }
 							onChange={ ( value ) => {
 								if ( ! value ) {
-									// When turning off the "Hide SimpleTOC", reset both 'hidden' and 'accordion'
 									setAttributes( {
-										hideTOC: false,
 										hidden: false,
 										accordion: false,
 									} );
 								} else {
-									// When turning on, set 'hidden' true by default (and 'accordion' remains false unless chosen otherwise)
 									setAttributes( {
-										hideTOC: true,
 										hidden: true,
+										accordion: false,
 									} );
 								}
 							} }

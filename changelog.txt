@@ -1,5 +1,9 @@
 == Changelog ==
 
+= 7.0.9 =
+* Fixed: Restored WordPress 7.0 editor previews for existing SimpleTOC blocks that contain legacy editor-only attributes.
+* Fixed: The "Hide SimpleTOC" editor toggle no longer stores a redundant helper attribute.
+
 = 7.0.8 =
 * Fixed: Prevent editor preview errors when another plugin adds editor-only attributes to blocks, for example Noted! block notes. Thanks Hans-Gerd Gerhards (@hage).
 
