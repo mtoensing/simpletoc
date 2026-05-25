@@ -131,15 +131,33 @@ The heavy plus character I used can not be colored with css without hacks. But y
 I don’t see an easy solution at the moment. SimpleTOC is only a block that can be placed in your post. If there was a plugin that adds blocks to every post, then this would be the solution. I think this should be another separate plug-in to keep the code of SimpleTOC clean and … well, simple. 
 
 ## Screenshots ##
-1. SimpleTOC block in Gutenberg editor.
-2. SimpleTOC in the post.
-3. Simple but powerful. Customize each TOC as you like.
-4. Control the maximum depth of the headings.
-5. SimpleTOC styled with Gutenbergs native group styles.
-6. SimpleTOC Advanced Features
-7. Gutenberg Heading block: Set a custom anchor  
-8. SimpleTOC hidden in the accordion menu.
-9. SimpleTOC global settings.
+### 1. SimpleTOC block in Gutenberg editor. ###
+![SimpleTOC block in Gutenberg editor.](.wordpress-org/screenshot-1.png)
+
+### 2. SimpleTOC in the post. ###
+![SimpleTOC in the post.](.wordpress-org/screenshot-2.png)
+
+### 3. Simple but powerful. Customize each TOC as you like. ###
+![Simple but powerful. Customize each TOC as you like.](.wordpress-org/screenshot-3.png)
+
+### 4. Control the maximum depth of the headings. ###
+![Control the maximum depth of the headings.](.wordpress-org/screenshot-4.png)
+
+### 5. SimpleTOC styled with Gutenbergs native group styles. ###
+![SimpleTOC styled with Gutenbergs native group styles.](.wordpress-org/screenshot-5.png)
+
+### 6. SimpleTOC Advanced Features ###
+![SimpleTOC Advanced Features](.wordpress-org/screenshot-6.png)
+
+### 7. Gutenberg Heading block: Set a custom anchor   ###
+![Gutenberg Heading block: Set a custom anchor  ](.wordpress-org/screenshot-7.png)
+
+### 8. SimpleTOC hidden in the accordion menu. ###
+![SimpleTOC hidden in the accordion menu.](.wordpress-org/screenshot-8.png)
+
+### 9. SimpleTOC global settings. ###
+![SimpleTOC global settings.](.wordpress-org/screenshot-9.png)
+
 
 ## Credits ##
 
