@@ -3,7 +3,7 @@
 **Tags:** TOC, Table of Contents, Block, Accessibility, Table  
 **Requires at least:** 5.9  
 **Tested up to:** 7.0  
-**Stable tag:** 7.0.9  
+**Stable tag:** 7.0.10  
 **Requires PHP:** 7.3  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
@@ -72,6 +72,10 @@ Hidden TOCs use native `<details>` and `<summary>` semantics without extra ARIA 
 SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoensing/SimpleTOC). If you find a bug or have an idea for a feature please feel free to contribute and create a pull request. 
 
 ## Changelog ##
+### 7.0.10 ###
+* Fixed: Prevent the SimpleTOC editor preview from collapsing during WordPress autosaves.
+* Changed: Automatic editor refresh now runs after manual post saves and keeps the previous TOC visible while updating.
+
 ### 7.0.9 ###
 * Fixed: Restored WordPress 7.0 editor previews for existing SimpleTOC blocks that contain legacy editor-only attributes.
 * Fixed: The "Hide SimpleTOC" editor toggle no longer stores a redundant helper attribute.
