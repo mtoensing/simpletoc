@@ -1,5 +1,9 @@
 == Changelog ==
 
+= 7.0.10 =
+* Fixed: Prevent the SimpleTOC editor preview from collapsing during WordPress autosaves.
+* Changed: Automatic editor refresh now runs after manual post saves and keeps the previous TOC visible while updating.
+
 = 7.0.9 =
 * Fixed: Restored WordPress 7.0 editor previews for existing SimpleTOC blocks that contain legacy editor-only attributes.
 * Fixed: The "Hide SimpleTOC" editor toggle no longer stores a redundant helper attribute.

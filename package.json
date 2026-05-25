@@ -1,6 +1,6 @@
 {
 	"name": "simpletoc",
-	"version": "7.0.9",
+	"version": "7.0.10",
 	"author": "Marc Tönsing",
 	"description": "SEO-friendly Table of Contents Gutenberg block. No JavaScript or CSS by default.",
 	"main": "build/index.js",
@@ -33,6 +33,7 @@
 		"@wordpress/scripts": "^30.27.0"
 	},
 	"dependencies": {
+		"@wordpress/element": "^6.46.0",
 		"@wordpress/i18n": "^6.16.0",
 		"@wordpress/icons": "^11.8.0",
 		"@wordpress/server-side-render": "^6.19.0"

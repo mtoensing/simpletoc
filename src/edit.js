@@ -26,8 +26,8 @@ import {
 	PanelBody,
 	PanelRow,
 	ExternalLink,
-	Spinner,
 } from '@wordpress/components';
+import { useEffect, useRef, useState } from '@wordpress/element';
 import HeadingLevelDropdown from './heading-level-dropdown';
 import { useSelect } from '@wordpress/data';
 import metadata from './block.json';
@@ -51,6 +51,37 @@ function getServerSideRenderAttributes( attributes ) {
 
 		return filtered;
 	}, {} );
+}
+
+function SimpleTOCLoadingResponsePlaceholder( { children } ) {
+	const [ showStatus, setShowStatus ] = useState( false );
+
+	useEffect( () => {
+		const timeout = setTimeout( () => {
+			setShowStatus( true );
+		}, 1000 );
+
+		return () => clearTimeout( timeout );
+	}, [] );
+
+	if ( ! showStatus ) {
+		return <>{ children }</>;
+	}
+
+	return (
+		<div className="simpletoc-loading-preview" aria-busy="true">
+			<div className="simpletoc-loading-preview__content">
+				{ children }
+			</div>
+			<div
+				className="simpletoc-loading-preview__status"
+				role="status"
+				aria-live="polite"
+			>
+				{ __( 'Updating table of contents…', 'simpletoc' ) }
+			</div>
+		</div>
+	);
 }
 
 export default function Edit( { attributes, setAttributes } ) {
@@ -83,17 +114,42 @@ export default function Edit( { attributes, setAttributes } ) {
 		window.simpletocEditorSettings?.settingsUrl ||
 		'';
 
-	const { returnisSaving, returnisSavingNonPostEntityChanges } = useSelect(
-		( select ) => {
-			const { isSavingPost, isSavingNonPostEntityChanges } =
-				select( editorStore );
-			return {
-				returnisSaving: isSavingPost(),
-				returnisSavingNonPostEntityChanges:
-					isSavingNonPostEntityChanges(),
-			};
+	const [ serverSideRenderRefresh, setServerSideRenderRefresh ] =
+		useState( 0 );
+	const wasSavingPost = useRef( false );
+	const { didPostSaveSucceed, isSavingPost } = useSelect( ( select ) => {
+		const {
+			didPostSaveRequestSucceed,
+			isAutosavingPost,
+			isSavingPost: getIsSavingPost,
+		} = select( editorStore );
+		const savingPost =
+			typeof getIsSavingPost === 'function' ? getIsSavingPost() : false;
+		const autosavingPost =
+			typeof isAutosavingPost === 'function' ? isAutosavingPost() : false;
+
+		return {
+			didPostSaveSucceed:
+				typeof didPostSaveRequestSucceed === 'function'
+					? didPostSaveRequestSucceed()
+					: undefined,
+			isSavingPost: savingPost && ! autosavingPost,
+		};
+	} );
+
+	useEffect( () => {
+		if (
+			autoupdateOption &&
+			autoupdate &&
+			wasSavingPost.current &&
+			! isSavingPost &&
+			didPostSaveSucceed !== false
+		) {
+			setServerSideRenderRefresh( ( refresh ) => refresh + 1 );
 		}
-	);
+
+		wasSavingPost.current = isSavingPost;
+	}, [ autoupdate, autoupdateOption, didPostSaveSucceed, isSavingPost ] );
 
 	const advpanelicon = 'settings';
 
@@ -530,17 +586,16 @@ export default function Edit( { attributes, setAttributes } ) {
 		<div { ...blockProps }>
 			{ controls }
 			{ controlssidebar }
-			{ /* Conditional rendering based on autoupdate attribute */ }
-			{ autoupdateOption &&
-			autoupdate &&
-			( returnisSaving || returnisSavingNonPostEntityChanges ) ? (
-				<Spinner />
-			) : (
-				<ServerSideRender
-					block="simpletoc/toc"
-					attributes={ serverSideRenderAttributes }
-				/>
-			) }
+			<ServerSideRender
+				block="simpletoc/toc"
+				attributes={ serverSideRenderAttributes }
+				LoadingResponsePlaceholder={
+					SimpleTOCLoadingResponsePlaceholder
+				}
+				urlQueryArgs={ {
+					simpletoc_refresh: serverSideRenderRefresh,
+				} }
+			/>
 		</div>
 	);
 }

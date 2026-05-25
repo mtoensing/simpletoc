@@ -18,3 +18,23 @@
 	background: rgba(0, 0, 0, 0.02);
 	border-radius: 4px;
 }
+
+.simpletoc-loading-preview {
+	position: relative;
+}
+
+.simpletoc-loading-preview__content {
+	opacity: 0.55;
+}
+
+.simpletoc-loading-preview__status {
+	position: absolute;
+	top: 0.5rem;
+	right: 0.5rem;
+	padding: 2px 6px;
+	background: rgba(255, 255, 255, 0.85);
+	border-radius: 2px;
+	color: #757575;
+	font-size: 12px;
+	line-height: 1.6;
+}
