@@ -16,8 +16,15 @@ Follow these rules for all changes in this WordPress plugin repository.
 ## Documentation Workflow
 
 - Update `readme.txt` only when changing plugin documentation.
-- Do not edit `README.md` by hand. It is generated automatically from `readme.txt` by the GitHub Actions workflow.
+- Never edit or regenerate `README.md` locally. It is generated automatically from `readme.txt` by the GitHub Actions workflow.
 - Keep `readme.txt` valid for WordPress.org first; the generated Markdown README is secondary.
+- Follow the official WordPress.org Plugin Readmes guidance when editing `readme.txt`: https://developer.wordpress.org/plugins/wordpress-org/how-your-readme-txt-works/
+- Keep the `readme.txt` header in WordPress.org format. `Stable tag` is the plugin release version and must match the versioned tag that WordPress.org should serve; the plugin version itself is read from the main plugin PHP header.
+- Keep `Stable tag`, `plugin.php` `Version`, `src/block.json` `version`, `build/block.json` `version`, and `package.json` / `package-lock.json` versions aligned for releases.
+- Keep the short description line under the readme header concise and plain text.
+- For changelogs, keep only the current release entry in `readme.txt` when practical, and move older release history to `changelog.txt` to keep the WordPress.org readme small.
+- When adding a new release entry, add it to both `readme.txt` and `changelog.txt` before release. If pruning older entries from `readme.txt`, keep the full older history in `changelog.txt`.
+- Do not use `Stable tag: trunk`; use the numeric plugin version tag.
 
 ## Deployment Workflow
 
