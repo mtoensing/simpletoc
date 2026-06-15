@@ -60,9 +60,32 @@ jobs:
           path: node_modules
           key: ${{ runner.os }}-node-20-modules-${{ hashFiles('package-lock.json') }}
 
+      - name: Restore Composer dependencies
+        id: composer-cache
+        uses: actions/cache@v5
+        with:
+          path: |
+            vendor
+            ~/.composer/cache
+          key: ${{ runner.os }}-phpunit-composer-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-phpunit-composer-
+
+      - name: Restore wp-env workspace
+        uses: actions/cache@v5
+        with:
+          path: ~/.wp-env
+          key: ${{ runner.os }}-wp-env-${{ hashFiles('.wp-env.json', 'package-lock.json', 'composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-wp-env-
+
       - name: Install dependencies
         if: steps.node-modules-cache.outputs.cache-hit != 'true'
         run: npm ci --prefer-offline --no-audit --no-fund
+
+      - name: Install Composer dependencies
+        if: steps.composer-cache.outputs.cache-hit != 'true'
+        run: composer install --no-interaction --prefer-dist --no-progress
 
       - name: Start WordPress test environment
         run: npx wp-env start
