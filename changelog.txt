@@ -1,6 +1,6 @@
 == Changelog ==
 
-= 7.0.11 =
+= 7.1.0 =
 * Fixed: Avoid DOMDocument HTML parsing for highlighted heading markup by using the WordPress HTML API.
 * Changed: Minimum required WordPress version is now 6.2.
 * Added: PHPUnit coverage for the core heading and TOC rendering helpers.
