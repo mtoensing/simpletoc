@@ -1,0 +1,9 @@
+{
+	"name": "mtoensing/simpletoc",
+	"description": "SEO-friendly Table of Contents Gutenberg block.",
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0-or-later",
+	"require-dev": {
+		"yoast/phpunit-polyfills": "^3.1"
+	}
+}

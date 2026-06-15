@@ -24,6 +24,7 @@
 		"lint-js:fix": "wp-scripts lint-js --fix",
 		"lint-css": "wp-scripts lint-style",
 		"lint-css:fix": "wp-scripts lint-style --fix",
+		"test:php": "wp-env run --env-cwd=wp-content/plugins/simpletoc tests-cli composer install && wp-env run --env-cwd=wp-content/plugins/simpletoc tests-cli vendor/bin/phpunit",
 		"wp-env": "wp-env",
 		"plugin-zip": "wp-scripts plugin-zip",
 		"wp-int": "npm install @wordpress/scripts --save-dev --save-exact @wordpress/scripts"
