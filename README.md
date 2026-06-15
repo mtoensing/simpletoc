@@ -3,7 +3,7 @@
 **Tags:** TOC, Table of Contents, Block, Accessibility, Table  
 **Requires at least:** 6.2  
 **Tested up to:** 7.0  
-**Stable tag:** 7.0.11  
+**Stable tag:** 7.1.0  
 **Requires PHP:** 7.3  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
@@ -72,7 +72,7 @@ Hidden TOCs use native `<details>` and `<summary>` semantics without extra ARIA 
 SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoensing/SimpleTOC). If you find a bug or have an idea for a feature please feel free to contribute and create a pull request. 
 
 ## Changelog ##
-### 7.0.11 ###
+### 7.1.0 ###
 * Fixed: Avoid DOMDocument HTML parsing for highlighted heading markup by using the WordPress HTML API.
 * Changed: Minimum required WordPress version is now 6.2.
 * Added: PHPUnit coverage for the core heading and TOC rendering helpers.
