@@ -1,8 +1,11 @@
 == Changelog ==
 
-= 7.0.10 =
+= 7.0.11 =
 * Fixed: Avoid DOMDocument HTML parsing for highlighted heading markup by using the WordPress HTML API.
 * Changed: Minimum required WordPress version is now 6.2.
+* Added: PHPUnit coverage for the core heading and TOC rendering helpers.
+
+= 7.0.10 =
 * Fixed: Prevent the SimpleTOC editor preview from collapsing during WordPress autosaves.
 * Changed: Automatic editor refresh now runs after manual post saves and keeps the previous TOC visible while updating.
 
