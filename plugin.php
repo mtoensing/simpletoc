@@ -4,6 +4,8 @@
  * Plugin URI:    https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
  * Description:   SEO-friendly Table of Contents Gutenberg block. No JavaScript or CSS by default.
  * Version:       7.0.10
+ * Requires at least: 6.2
+ * Requires PHP: 7.3
  * Author:        Marc Tönsing
  * Author URI:    https://toensing.com
  * Text Domain:   simpletoc
@@ -512,6 +514,27 @@ function simpletoc_plugin_meta( $links, $file ) {
 }
 
 /**
+ * Loads the WordPress HTML Tag Processor when available.
+ *
+ * @return bool True when the HTML Tag Processor can be used.
+ */
+function simpletoc_load_html_tag_processor() {
+	if ( class_exists( '\WP_HTML_Tag_Processor' ) ) {
+		return true;
+	}
+
+	if ( defined( 'ABSPATH' ) && defined( 'WPINC' ) ) {
+		$html_tag_processor_file = ABSPATH . WPINC . '/html-api/class-wp-html-tag-processor.php';
+
+		if ( file_exists( $html_tag_processor_file ) ) {
+			require_once $html_tag_processor_file;
+		}
+	}
+
+	return class_exists( '\WP_HTML_Tag_Processor' );
+}
+
+/**
  * Adds an ID attribute to all Heading tags in the provided HTML.
  *
  * @param string                 $html The HTML content to modify.
@@ -529,15 +552,7 @@ function add_anchor_attribute( $html, $headline_class_instance = null, $block = 
 		return $html;
 	}
 
-	if ( ! class_exists( '\WP_HTML_Tag_Processor' ) && defined( 'ABSPATH' ) && defined( 'WPINC' ) ) {
-		$html_tag_processor_file = ABSPATH . WPINC . '/html-api/class-wp-html-tag-processor.php';
-
-		if ( file_exists( $html_tag_processor_file ) ) {
-			require_once $html_tag_processor_file;
-		}
-	}
-
-	if ( class_exists( '\WP_HTML_Tag_Processor' ) ) {
+	if ( simpletoc_load_html_tag_processor() ) {
 		$processor = new \WP_HTML_Tag_Processor( $html_wo_nbs );
 
 		while ( $processor->next_tag() ) {
@@ -559,35 +574,7 @@ function add_anchor_attribute( $html, $headline_class_instance = null, $block = 
 		return $processor->get_updated_html();
 	}
 
-	libxml_use_internal_errors( true );
-	$dom = new \DOMDocument();
-	try {
-		$dom->loadHTML( '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . $html_wo_nbs, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
-	} catch ( \Exception $e ) {
-		return $html;
-	}
-
-	// use xpath to select the Heading html tags.
-	$xpath = new \DOMXPath( $dom );
-	$tags  = $xpath->evaluate( '//*[self::h1 or self::h2 or self::h3 or self::h4 or self::h5 or self::h6]' );
-
-	// Loop through all the found tags.
-	foreach ( $tags as $tag ) {
-		// if tag already has an attribute "id" defined, no need for creating a new one.
-		if ( ! empty( $tag->getAttribute( 'id' ) ) ) {
-			continue;
-		}
-		// Set id attribute.
-		$heading_html = simpletoc_get_heading_html_for_anchor( $html, $block );
-		$heading_text = trim( wp_strip_all_tags( $heading_html ) );
-		$anchor       = $headline_class_instance->get_headline_anchor( $heading_text );
-		$tag->setAttribute( 'id', $anchor );
-	}
-
-	// Save the HTML changes.
-	$content = $dom->saveHTML( $dom->documentElement ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-
-	return $content;
+	return $html;
 }
 
 /**
@@ -768,83 +755,6 @@ function render_toc_list_items( $toc_headings, $list_type, $absolute_url, $min_d
 }
 
 /**
- * The open_list function appends a new list item to the global $list variable, adding necessary opening tags if needed to maintain the correct nesting of the list.
- *
- * @param string &$list_to_append_to The global list variable to append the new list item to.
- * @param string $list_type The type of list to be created, either "ul" (unordered list) or "ol" (ordered list).
- * @param int    &$min_depth The minimum depth of headings that should be included in the table of contents.
- * @param int    $this_depth The depth of the current heading being processed.
- * @return void The function modifies the input $list_to_append_to variable directly.
- */
-function open_list( &$list_to_append_to, $list_type, &$min_depth, $this_depth ) {
-	if ( $this_depth === $min_depth ) {
-		$list_to_append_to .= '<li>';
-	} else {
-		for ( $min_depth; $min_depth < $this_depth; $min_depth++ ) {
-			$list_to_append_to .= "\n<" . $list_type . "><li>\n";
-		}
-	}
-}
-
-/**
- * Closes an HTML list tag and updates the list string and minimum depth variable as necessary.
- *
- * @param string   $list_to_append_to A reference to the list string being built.
- * @param string   $list_type The type of list tag being used (ul or ol).
- * @param int      $min_depth A reference to the minimum depth variable.
- * @param int      $min_level The minimum depth level of the headings.
- * @param int      $max_level Maximum depth setting, which is a high number like 6.
- * @param int|null $next_depth The depth of the next list item, or null if this is the last item.
- * @param int      $line The index of the current list item.
- * @param int      $last_line The index of the last list item.
- * @param int      $initial_depth The initial depth of the list.
- * @param int      $this_depth The depth of the current list item.
- * @return void
- */
-function close_list( &$list_to_append_to, $list_type, &$min_depth, $min_level, $max_level, $next_depth, $line, $last_line, $initial_depth, $this_depth ) {
-	if ( $line !== $last_line ) {
-		$list_to_append_to .= PHP_EOL;
-		if ( $next_depth < $this_depth ) {
-			// Next heading goes back shallower in the ToC!
-			if ( $next_depth >= $min_level ) {
-				// Next heading is within min depth bounds and WILL get ToC'd
-				// Close this item and step back shallower in the ToC.
-				for ( $min_depth; $min_depth > $next_depth; $min_depth-- ) {
-					$list_to_append_to .= "</li>\n</" . $list_type . ">\n";
-				}
-			} else { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedElse
-				// SKIP CLOSING! Next heading won't be included in the ToC at all.
-			}
-		} elseif ( $next_depth === $this_depth ) {
-			// Next heading is exactly as deep. Not going shallower or deeper in the ToC hierarchy.
-			// E.g. this is h3, next is h3.
-			if ( $next_depth < $min_level ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedIf
-				// E.g. this is h3, next is h3, min is h2
-				// This heading didn't open a ToC item. Nothing to close.
-			} else {
-				// SKIP CLOSING! Next heading will open a new sub-list in the ToC.
-				$list_to_append_to .= "</li>\n";
-			}
-		} else { // phpcs:ignore.
-			// Next heading is deeper in the ToC.
-			if ( $next_depth <= $max_level ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedIf
-				// Next deeper heading is within bounds and will open a new sub-list. Leave this one open.
-				// E.g. this is h3, next is h4, min is h2, max is h5.
-			} else { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedElse
-				// Next heading is too deep and will be ignored. We'll close out coming up or finishing the ToC.
-				// E.g. this is h3, next is h4, max is h3.
-			}
-		}
-	} else {
-		// This is the last line of the ToC. Close out the whole thing.
-		// IMPORTANT NOTE: The overall ToC list will be wrapped in a list element and closed out.
-		for ( $initial_depth; $initial_depth < $this_depth; $initial_depth++ ) {
-			$list_to_append_to .= "</li>\n</" . $list_type . ">\n";
-		}
-	}
-}
-
-/**
  * Adds smooth scrolling styles to the output HTML, if enabled by global option or block attribute.
  *
  * @param string $html The HTML string to which the styles will be added.
@@ -1011,21 +921,23 @@ function extract_id( $headline ) {
  * @return string The page number (in the format "X/") if it exists and is greater than 1, or an empty string otherwise.
  */
 function get_page_number_from_headline( $headline ) {
-	$dom = new \DOMDocument();
+	if ( simpletoc_load_html_tag_processor() ) {
+		$processor = new \WP_HTML_Tag_Processor( $headline );
 
-	try {
-		$dom->loadHTML( '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . $headline, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
-	} catch ( \Exception $e ) {
+		while ( $processor->next_tag() ) {
+			if ( ! in_array( $processor->get_tag(), array( 'H1', 'H2', 'H3', 'H4', 'H5', 'H6' ), true ) ) {
+				continue;
+			}
+
+			$page_number = (int) $processor->get_attribute( 'data-page' );
+
+			if ( $page_number > 1 ) {
+				return esc_html( $page_number . '/' );
+			}
+		}
+
 		return '';
 	}
 
-	$xpath = new \DOMXPath( $dom );
-	$nodes = $xpath->query( '//*/@data-page' );
-
-	if ( isset( $nodes[0] ) && $nodes[0]->nodeValue > 1 ) {
-		$page_number = $nodes[0]->nodeValue . '/';
-		return esc_html( $page_number );
-	} else {
-		return '';
-	}
+	return '';
 }

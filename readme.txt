@@ -1,7 +1,7 @@
 === SimpleTOC - Table of Contents Block ===
 Contributors: MarcDK
 Tags: TOC, Table of Contents, Block, Accessibility, Table
-Requires at least: 5.9
+Requires at least: 6.2
 Tested up to: 7.0
 Stable tag: 7.0.10
 Requires PHP: 7.3
@@ -73,6 +73,8 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 
 == Changelog ==
 = 7.0.10 =
+* Fixed: Avoid DOMDocument HTML parsing for highlighted heading markup by using the WordPress HTML API.
+* Changed: Minimum required WordPress version is now 6.2.
 * Fixed: Prevent the SimpleTOC editor preview from collapsing during WordPress autosaves.
 * Changed: Automatic editor refresh now runs after manual post saves and keeps the previous TOC visible while updating.
 
