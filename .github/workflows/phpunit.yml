@@ -41,6 +41,8 @@ jobs:
   phpunit:
     name: PHP unit tests
     runs-on: ubuntu-latest
+    env:
+      WP_ENV_HOME: ${{ github.workspace }}/.wp-env-cache
 
     steps:
       - name: Checkout
@@ -74,7 +76,7 @@ jobs:
       - name: Restore wp-env workspace
         uses: actions/cache@v5
         with:
-          path: ~/.wp-env
+          path: .wp-env-cache
           key: ${{ runner.os }}-wp-env-${{ hashFiles('.wp-env.json', 'package-lock.json', 'composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-wp-env-
