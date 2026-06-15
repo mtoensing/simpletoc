@@ -161,8 +161,6 @@ I don’t see an easy solution at the moment. SimpleTOC is only a block that can
 
 ## Credits ##
 
-This plugin is forked from [pdewouters](https://github.com/pdewouters/gutentoc) and uses code from [Easy-Table-of-Contents](https://github.com/shazahm1/Easy-Table-of-Contents)
-
 Many thanks to [Tom J Nowell](https://tomjn.com) and and Sally CJ who both helped me a lot with my questions over at wordpress.stackexchange.com
 
 And many more thanks to all the [developers on GitHub](https://github.com/mtoensing/simpletoc/graphs/contributors) who helped me making SimpleTOC what it is today!
