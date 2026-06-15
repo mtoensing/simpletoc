@@ -92,6 +92,18 @@ jobs:
       - name: Start WordPress test environment
         run: npx wp-env start
 
+      - name: Wait for test database
+        run: |
+          for attempt in {1..30}; do
+            if npx wp-env run --env-cwd=wp-content/plugins/simpletoc tests-cli wp db check; then
+              exit 0
+            fi
+
+            sleep 2
+          done
+
+          exit 1
+
       - name: Run PHPUnit
         run: npm run test:php
 
