@@ -3,3 +3,4 @@ vendor
 .DS_Store
 *.zip
 .phpunit.result.cache
+artifacts

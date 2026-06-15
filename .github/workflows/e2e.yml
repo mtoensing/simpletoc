@@ -1,0 +1,94 @@
+name: E2E
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/e2e.yml'
+      - '.wp-env.json'
+      - 'assets/**'
+      - 'build/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'plugin.php'
+      - 'simpletoc-*.php'
+      - 'src/**'
+      - 'tests/e2e/**'
+
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/e2e.yml'
+      - '.wp-env.json'
+      - 'assets/**'
+      - 'build/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'plugin.php'
+      - 'simpletoc-*.php'
+      - 'src/**'
+      - 'tests/e2e/**'
+
+  workflow_dispatch:
+
+concurrency:
+  group: e2e-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    name: Editor smoke test
+    runs-on: ubuntu-latest
+    env:
+      WP_ENV_HOME: ${{ github.workspace }}/.wp-env-cache
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Restore node_modules
+        id: node-modules-cache
+        uses: actions/cache@v5
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-20-modules-${{ hashFiles('package-lock.json') }}
+
+      - name: Restore Playwright browsers
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
+      - name: Restore wp-env workspace
+        uses: actions/cache@v5
+        with:
+          path: .wp-env-cache
+          key: ${{ runner.os }}-wp-env-e2e-${{ hashFiles('.wp-env.json', 'package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-wp-env-e2e-
+
+      - name: Install dependencies
+        if: steps.node-modules-cache.outputs.cache-hit != 'true'
+        run: npm ci --prefer-offline --no-audit --no-fund
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run editor smoke test
+        run: npm run test:e2e
+
+      - name: Stop WordPress test environment
+        if: always()
+        run: npx wp-env stop

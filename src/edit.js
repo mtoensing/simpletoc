@@ -8,13 +8,6 @@ import {
 import { store as editorStore } from '@wordpress/editor';
 import ServerSideRender from '@wordpress/server-side-render';
 import {
-	formatListBullets,
-	formatOutdent,
-	formatIndent,
-	update,
-	formatListNumbered,
-} from '@wordpress/icons';
-import {
 	BaseControl,
 	ColorPalette,
 	SelectControl,
@@ -170,7 +163,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				/>
 			) }
 			<ToolbarButton
-				icon={ formatListBullets }
+				icon="editor-ul"
 				title={ __( 'Convert to unordered list', 'simpletoc' ) }
 				describedBy={ __( 'Convert to unordered list', 'simpletoc' ) }
 				isActive={ attributes.use_ol === false }
@@ -179,7 +172,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				} }
 			/>
 			<ToolbarButton
-				icon={ formatListNumbered }
+				icon="editor-ol"
 				title={ __( 'Convert to ordered list', 'simpletoc' ) }
 				describedBy={ __( 'Convert to ordered list', 'simpletoc' ) }
 				isActive={ attributes.use_ol === true }
@@ -188,7 +181,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				} }
 			/>
 			<ToolbarButton
-				icon={ formatOutdent }
+				icon="editor-outdent"
 				title={ __( 'Indent list', 'simpletoc' ) }
 				describedBy={ __( 'Indent list', 'simpletoc' ) }
 				isActive={ attributes.remove_indent === true }
@@ -197,7 +190,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				} }
 			/>
 			<ToolbarButton
-				icon={ formatIndent }
+				icon="editor-indent"
 				title={ __( 'Outdent list', 'simpletoc' ) }
 				describedBy={ __( 'Outdent list', 'simpletoc' ) }
 				isActive={ attributes.remove_indent === false }
@@ -207,7 +200,7 @@ export default function Edit( { attributes, setAttributes } ) {
 			/>
 			{ ( ! attributes.autoupdate || ! autoupdateOption ) && (
 				<ToolbarButton
-					icon={ update }
+					icon="update"
 					label={ __( 'Update table of contents', 'simpletoc' ) }
 					onClick={ () => setAttributes( { updated: Date.now() } ) }
 				/>

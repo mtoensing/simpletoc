@@ -2,6 +2,8 @@
 /.git
 /.github
 /.claude
+/AGENTS.md
+/babel.config.js
 /node_modules
 /src
 package.json
@@ -10,6 +12,7 @@ composer.json
 composer.lock
 phpcs.xml.dist
 phpunit.xml.dist
+/playwright.config.js
 /vendor
 /tests
 .distignore
@@ -17,4 +20,5 @@ phpunit.xml.dist
 .gitattributes
 .editorconfig
 .wp-env.json
+/artifacts
 README.md
