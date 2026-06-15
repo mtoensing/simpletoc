@@ -1,0 +1,75 @@
+name: PHPUnit
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/phpunit.yml'
+      - '.wp-env.json'
+      - 'composer.json'
+      - 'composer.lock'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'phpunit.xml.dist'
+      - 'plugin.php'
+      - 'simpletoc-*.php'
+      - 'tests/**'
+
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/phpunit.yml'
+      - '.wp-env.json'
+      - 'composer.json'
+      - 'composer.lock'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'phpunit.xml.dist'
+      - 'plugin.php'
+      - 'simpletoc-*.php'
+      - 'tests/**'
+
+  workflow_dispatch:
+
+concurrency:
+  group: phpunit-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  phpunit:
+    name: PHP unit tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Restore node_modules
+        id: node-modules-cache
+        uses: actions/cache@v5
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-20-modules-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies
+        if: steps.node-modules-cache.outputs.cache-hit != 'true'
+        run: npm ci --prefer-offline --no-audit --no-fund
+
+      - name: Start WordPress test environment
+        run: npx wp-env start
+
+      - name: Run PHPUnit
+        run: npm run test:php
+
+      - name: Stop WordPress test environment
+        if: always()
+        run: npx wp-env stop
