@@ -163,9 +163,9 @@ add_filter(
 );
 
 /**
- * Filter to add plugins to the TOC list for Rank Math plugin
+ * Filter to add plugins to the TOC list for Rank Math plugin.
  *
- * @param array TOC plugins.
+ * @param array $toc_plugins TOC plugins.
  */
 add_filter(
 	'rank_math/researches/toc_plugins',
@@ -194,7 +194,7 @@ function simpletoc_add_ids_to_content( $content ) {
 	return $content;
 }
 
-add_filter( 'the_content', __NAMESPACE__ . '\simpletoc_add_ids_to_content', 1 ); 
+add_filter( 'the_content', __NAMESPACE__ . '\simpletoc_add_ids_to_content', 1 );
 
 /**
  * Recursively adds IDs to the headings of a nested block structure.
@@ -217,7 +217,7 @@ function add_ids_to_blocks_recursive( $blocks ) {
 	 */
 	$supported_blocks = apply_filters( 'simpletoc_supported_blocks_for_ids', $supported_blocks );
 
-	// Need two separate instances so that IDs aren't double coubnted.
+	// Need two separate instances so that IDs aren't double counted.
 	$inner_html_id_instance    = new SimpleTOC_Headline_Ids();
 	$inner_content_id_instance = new SimpleTOC_Headline_Ids();
 
@@ -278,7 +278,7 @@ function render_callback_simpletoc( $attributes ) {
 		)
 	);
 	$has_wrapper     = ! empty( $class_name ) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper'] || $box_style_enabled;
-	$pre_html        = $has_wrapper ? '<div role="navigation" aria-label="' . __( 'Table of Contents', 'simpletoc' ) . '" ' . $wrapper_attrs . '>' : '';
+	$pre_html        = $has_wrapper ? '<div role="navigation" aria-label="' . esc_attr__( 'Table of Contents', 'simpletoc' ) . '" ' . $wrapper_attrs . '>' : '';
 	$post_html       = $has_wrapper ? '</div>' : '';
 
 	$post   = get_post();
@@ -328,7 +328,7 @@ function get_empty_blocks_message( $is_backend, $attributes, $title_level, $alig
 		}
 
 		$html .= sprintf( '<h%d class="%s">%s</h%d>', $title_level, esc_attr( trim( 'simpletoc-title ' . $alignclass ) ), $title_text, $title_level );
-		$html .= sprintf( '<p class="components-notice is-warning %s">%s %s</p>', $alignclass, $warning_text1, $warning_text2 );
+		$html .= sprintf( '<p class="components-notice is-warning %s">%s %s</p>', esc_attr( $alignclass ), esc_html( $warning_text1 ), esc_html( $warning_text2 ) );
 
 		if ( $has_wrapper ) {
 			$html .= '</div>';
@@ -740,8 +740,10 @@ function render_toc_list_items( $toc_headings, $list_type, $absolute_url, $min_d
 			$list .= "</li>\n<li>";
 		}
 
-		$page  = get_page_number_from_headline( $toc_heading['headline'] );
-		$list .= '<a href="' . $absolute_url . $page . '#' . $toc_heading['link'] . '">' . $toc_heading['title'] . '</a>' . PHP_EOL;
+		$page = get_page_number_from_headline( $toc_heading['headline'] );
+		$url  = $absolute_url . $page . '#' . $toc_heading['link'];
+		$href = $absolute_url ? esc_url( $url ) : esc_attr( $url );
+		$list .= '<a href="' . $href . '">' . esc_html( $toc_heading['title'] ) . '</a>' . PHP_EOL;
 	}
 
 	if ( null !== $current_depth ) {
@@ -900,15 +902,23 @@ function add_accordion_end( $html, $attributes ) {
  * Extracts the ID value from the provided heading HTML string.
  *
  * @param string $headline The heading HTML string to extract the ID value from.
- * @return mixed Returns the extracted ID value, or false if no ID value is found.
+ * @return string|false Returns the extracted ID value, or false if no ID value is found.
  */
 function extract_id( $headline ) {
-	$pattern = '/id="([^"]*)"/';
-	preg_match( $pattern, $headline, $matches );
-	$id_value = $matches[1] ?? false;
+	if ( simpletoc_load_html_tag_processor() ) {
+		$processor = new \WP_HTML_Tag_Processor( $headline );
 
-	if ( false !== $id_value ) {
-		return $id_value;
+		while ( $processor->next_tag() ) {
+			if ( ! in_array( $processor->get_tag(), array( 'H1', 'H2', 'H3', 'H4', 'H5', 'H6' ), true ) ) {
+				continue;
+			}
+
+			$id_value = $processor->get_attribute( 'id' );
+
+			if ( is_string( $id_value ) ) {
+				return $id_value;
+			}
+		}
 	}
 
 	return false;

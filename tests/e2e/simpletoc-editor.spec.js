@@ -14,6 +14,20 @@ const postContent = `<!-- wp:simpletoc/toc {"no_title":true} /-->
 <h2 class="wp-block-heading">Second Section</h2>
 <!-- /wp:heading -->`;
 
+const paginatedPostContent = `<!-- wp:simpletoc/toc {"no_title":true} /-->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">First Page</h2>
+<!-- /wp:heading -->
+
+<!-- wp:nextpage -->
+<!--nextpage-->
+<!-- /wp:nextpage -->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Second Page</h2>
+<!-- /wp:heading -->`;
+
 test.describe( 'SimpleTOC editor rendering', () => {
 	test.beforeEach( async ( { requestUtils } ) => {
 		await requestUtils.activatePlugin(
@@ -79,6 +93,35 @@ test.describe( 'SimpleTOC editor rendering', () => {
 		).toHaveText( 'Font Stacks' );
 		await expect( page.locator( '#nested-details' ) ).toHaveText(
 			'Nested Details'
+		);
+	} );
+
+	test( 'keeps paginated TOC links relative on the frontend', async ( {
+		admin,
+		editor,
+		page,
+	} ) => {
+		await admin.createNewPost( {
+			title: 'SimpleTOC paginated link smoke test',
+		} );
+
+		await page.waitForFunction( () =>
+			wp.blocks.getBlockType( 'simpletoc/toc' )
+		);
+		await editor.setContent( paginatedPostContent );
+
+		const postId = await editor.publishPost();
+		expect( postId ).toBeTruthy();
+
+		await page.goto( `/?p=${ postId }` );
+
+		const toc = page.locator( '.simpletoc-list' );
+		await expect( toc ).toBeVisible();
+		await expect(
+			toc.getByRole( 'link', { name: 'Second Page' } )
+		).toHaveAttribute( 'href', '2/#second-page' );
+		await expect( toc.locator( 'a[href^="http://0.0.0.2/"]' ) ).toHaveCount(
+			0
 		);
 	} );
 } );
