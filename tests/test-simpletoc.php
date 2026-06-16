@@ -116,6 +116,64 @@ class SimpleTOC_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * @covers \MToensing\SimpleTOC\simpletoc_get_heading_depth
+	 */
+	public function test_get_heading_depth_reads_heading_tag_with_html_tag_processor() {
+		$result = MToensing\SimpleTOC\simpletoc_get_heading_depth( '<div><h4 class="wp-block-heading">Nested Heading</h4></div>' );
+
+		$this->assertSame( 4, $result );
+	}
+
+	/**
+	 * @covers \MToensing\SimpleTOC\simpletoc_add_page_number_to_headline
+	 */
+	public function test_add_page_number_to_headline_sets_data_page_with_html_tag_processor() {
+		$result = MToensing\SimpleTOC\simpletoc_add_page_number_to_headline( '<h2 class="wp-block-heading">Second Page</h2>', 2 );
+
+		$this->assertStringContainsString( 'data-page="2"', $result );
+		$this->assertStringContainsString( '<h2', $result );
+	}
+
+	/**
+	 * @covers \MToensing\SimpleTOC\simpletoc_add_pagenumber
+	 */
+	public function test_add_pagenumber_marks_headings_after_nextpage_block() {
+		$content  = '<!-- wp:heading --><h2 class="wp-block-heading">First Page</h2><!-- /wp:heading -->';
+		$content .= '<!-- wp:nextpage --><!--nextpage--><!-- /wp:nextpage -->';
+		$content .= '<!-- wp:heading --><h2 class="wp-block-heading">Second Page</h2><!-- /wp:heading -->';
+		$blocks   = parse_blocks( $content );
+		$headings = array(
+			'<h2 class="wp-block-heading">First Page</h2>',
+			'<h2 class="wp-block-heading">Second Page</h2>',
+		);
+
+		$result = MToensing\SimpleTOC\simpletoc_add_pagenumber( $blocks, $headings );
+
+		$this->assertStringContainsString( 'data-page="1"', $result[0] );
+		$this->assertStringContainsString( 'First Page', $result[0] );
+		$this->assertStringContainsString( 'data-page="2"', $result[1] );
+		$this->assertStringContainsString( 'Second Page', $result[1] );
+	}
+
+	/**
+	 * @covers \MToensing\SimpleTOC\filter_headings_recursive
+	 */
+	public function test_filter_headings_recursive_reads_reusable_block_headings() {
+		$reusable_block_id = self::factory()->post->create(
+			array(
+				'post_type'    => 'wp_block',
+				'post_status'  => 'publish',
+				'post_content' => '<!-- wp:heading --><h2 class="wp-block-heading">Reusable Heading</h2><!-- /wp:heading -->',
+			)
+		);
+		$blocks            = parse_blocks( '<!-- wp:block {"ref":' . $reusable_block_id . '} /-->' );
+
+		$result = MToensing\SimpleTOC\filter_headings_recursive( $blocks );
+
+		$this->assertContains( '<h2 class="wp-block-heading">Reusable Heading</h2>', $result );
+	}
+
+	/**
 	 * @covers \MToensing\SimpleTOC\generate_toc
 	 * @covers \MToensing\SimpleTOC\render_toc_list_items
 	 */
@@ -142,7 +200,7 @@ class SimpleTOC_Test extends WP_UnitTestCase {
 	public function test_generate_toc_excludes_hidden_headings() {
 		$headings = array(
 			'<h2 id="visible">Visible</h2>',
-			'<h2 id="hidden" class="simpletoc-hidden">Hidden</h2>',
+			'<h2 id="hidden" class=\'simpletoc-hidden\'>Hidden</h2>',
 		);
 
 		$result = MToensing\SimpleTOC\generate_toc( $headings, $this->get_default_attributes() );
@@ -210,5 +268,98 @@ class SimpleTOC_Test extends WP_UnitTestCase {
 		$result = MToensing\SimpleTOC\render_toc_list_items( $toc_headings, 'ul', 'https://example.com/post/', 2 );
 
 		$this->assertStringContainsString( '<a href="https://example.com/post/2/#second-page">Second Page</a>', $result );
+	}
+
+	/**
+	 * @covers \MToensing\SimpleTOC\generate_toc
+	 * @covers \MToensing\SimpleTOC\add_hidden_markup_start
+	 * @covers \MToensing\SimpleTOC\add_hidden_markup_end
+	 */
+	public function test_generate_toc_renders_hidden_details_markup() {
+		$headings = array(
+			'<h2 id="first">First</h2>',
+		);
+
+		$result = MToensing\SimpleTOC\generate_toc(
+			$headings,
+			$this->get_default_attributes(
+				array(
+					'hidden'     => true,
+					'title_text' => 'Contents',
+				)
+			)
+		);
+
+		$this->assertStringContainsString( '<details class="simpletoc">', $result );
+		$this->assertStringContainsString( '<summary>Contents</summary>', $result );
+		$this->assertStringContainsString( '<ul class="simpletoc-list">', $result );
+		$this->assertStringContainsString( '</details>', $result );
+	}
+
+	/**
+	 * @covers \MToensing\SimpleTOC\generate_toc
+	 * @covers \MToensing\SimpleTOC\add_accordion_start
+	 * @covers \MToensing\SimpleTOC\add_accordion_end
+	 */
+	public function test_generate_toc_renders_accordion_markup() {
+		$headings = array(
+			'<h2 id="first">First</h2>',
+		);
+
+		$result = MToensing\SimpleTOC\generate_toc(
+			$headings,
+			$this->get_default_attributes(
+				array(
+					'accordion'  => true,
+					'title_text' => 'Contents',
+				)
+			)
+		);
+
+		$this->assertStringContainsString( 'class="simpletoc-accordion-heading"', $result );
+		$this->assertStringContainsString( 'aria-controls="simpletoc-content-container"', $result );
+		$this->assertStringContainsString( '<div id="simpletoc-content-container" class="simpletoc-content">', $result );
+		$this->assertStringContainsString( '<ul class="simpletoc-list">', $result );
+		$this->assertStringEndsWith( '</div>', $result );
+	}
+
+	/**
+	 * @covers \MToensing\SimpleTOC\add_hidden_markup_start
+	 */
+	public function test_hidden_markup_uses_stylesheet_for_summary_cursor() {
+		$result = MToensing\SimpleTOC\add_hidden_markup_start(
+			'',
+			$this->get_default_attributes(
+				array(
+					'hidden'     => true,
+					'title_text' => 'Contents',
+				)
+			),
+			1,
+			''
+		);
+
+		$this->assertStringContainsString( '<summary>Contents</summary>', $result );
+		$this->assertStringNotContainsString( 'style=', $result );
+	}
+
+	/**
+	 * @covers \MToensing\SimpleTOC\add_accordion_start
+	 */
+	public function test_accordion_markup_uses_stylesheet_for_heading_margin() {
+		$result = MToensing\SimpleTOC\add_accordion_start(
+			'',
+			$this->get_default_attributes(
+				array(
+					'accordion'  => true,
+					'title_text' => 'Contents',
+				)
+			),
+			1,
+			''
+		);
+
+		$this->assertStringContainsString( 'class="simpletoc-accordion-heading"', $result );
+		$this->assertStringNotContainsString( 'style=', $result );
 	}
 }

@@ -21,6 +21,7 @@ require_once __DIR__ . '/simpletoc-admin-settings.php';
 require_once __DIR__ . '/simpletoc-class-headline-ids.php';
 
 const DEFAULT_BOX_COLOR = '#ebebeb';
+const SIMPLETOC_VERSION = '7.1.0';
 
 /**
  * Prevents direct execution of the plugin file.
@@ -225,10 +226,6 @@ function add_ids_to_blocks_recursive( $blocks ) {
 		if ( isset( $block['blockName'] ) && in_array( $block['blockName'], $supported_blocks, true ) && isset( $block['innerHTML'] ) && isset( $block['innerContent'] ) && isset( $block['innerContent'][0] ) ) {
 			$block['innerHTML']       = add_anchor_attribute( $block['innerHTML'], $inner_html_id_instance, $block );
 			$block['innerContent'][0] = add_anchor_attribute( $block['innerContent'][0], $inner_content_id_instance, $block );
-		} elseif ( isset( $block['attrs']['ref'] ) ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedElseif
-			// search in reusable blocks (this is not finished because I ran out of ideas.)
-			// $reusable_block_id = $block['attrs']['ref'];
-			// $reusable_block_content = parse_blocks(get_post($reusable_block_id)->post_content);.
 		} elseif ( ! empty( $block['innerBlocks'] ) ) {
 			// search in groups.
 			$block['innerBlocks'] = add_ids_to_blocks_recursive( $block['innerBlocks'] );
@@ -362,7 +359,7 @@ function simpletoc_add_pagenumber( $blocks, $headings ) {
 			// make sure its a headline.
 			foreach ( $headings as $heading => &$inner_heading ) {
 				if ( $inner_heading === $blocks[ $block ]['innerHTML'] ) {
-					$inner_heading = preg_replace( '/(<h1|<h2|<h3|<h4|<h5|<h6)/i', '$1 data-page="' . $pages . '"', $blocks[ $block ]['innerHTML'] );
+					$inner_heading = simpletoc_add_page_number_to_headline( $blocks[ $block ]['innerHTML'], $pages );
 				}
 			}
 		}
@@ -406,11 +403,8 @@ function filter_headings_recursive( $blocks ) {
 				$arr = array_merge( filter_headings_recursive( $inner_block ), $arr );
 			}
 		} else {
-			if ( isset( $blocks['blockName'] ) && ( 'core/heading' === $blocks['blockName'] ) && 'core/heading' !== $inner_block ) {
-				// make sure it's a headline.
-				if ( preg_match( '/(<h1|<h2|<h3|<h4|<h5|<h6)/i', $inner_block ) ) {
-					$arr[] = $inner_block;
-				}
+			if ( isset( $blocks['blockName'] ) && ( 'core/heading' === $blocks['blockName'] ) && 'core/heading' !== $inner_block && simpletoc_is_heading_html( $inner_block ) ) {
+				$arr[] = $inner_block;
 			}
 
 			$supported_third_party_blocks = array(
@@ -429,12 +423,9 @@ function filter_headings_recursive( $blocks ) {
 				$supported_third_party_blocks
 			);
 
-			if ( isset( $blocks['blockName'] ) && in_array( $blocks['blockName'], $supported_third_party_blocks, true ) && 'core/heading' !== $inner_block ) {
-				// make sure it's a headline.
-				if ( preg_match( '/(<h1|<h2|<h3|<h4|<h5|<h6)/i', $inner_block ) ) {
-					$inner_block = simpletoc_maybe_replace_generateblocks_dynamic_tags( $inner_block, $blocks );
-					$arr[] = $inner_block;
-				}
+			if ( isset( $blocks['blockName'] ) && in_array( $blocks['blockName'], $supported_third_party_blocks, true ) && 'core/heading' !== $inner_block && simpletoc_is_heading_html( $inner_block ) ) {
+				$inner_block = simpletoc_maybe_replace_generateblocks_dynamic_tags( $inner_block, $blocks );
+				$arr[] = $inner_block;
 			}
 		}
 	}
@@ -532,6 +523,91 @@ function simpletoc_load_html_tag_processor() {
 	}
 
 	return class_exists( '\WP_HTML_Tag_Processor' );
+}
+
+/**
+ * Returns true when the provided HTML contains a heading tag.
+ *
+ * @param string $html The HTML to inspect.
+ * @return bool True when the HTML contains a heading tag.
+ */
+function simpletoc_is_heading_html( $html ) {
+	return false !== simpletoc_get_heading_depth( $html );
+}
+
+/**
+ * Gets the first heading depth from an HTML fragment.
+ *
+ * @param string $html The HTML to inspect.
+ * @return int|false The heading depth, or false when no heading was found.
+ */
+function simpletoc_get_heading_depth( $html ) {
+	if ( simpletoc_load_html_tag_processor() ) {
+		$processor = new \WP_HTML_Tag_Processor( $html );
+
+		while ( $processor->next_tag() ) {
+			$tag_name = $processor->get_tag();
+
+			if ( in_array( $tag_name, array( 'H1', 'H2', 'H3', 'H4', 'H5', 'H6' ), true ) ) {
+				return (int) substr( $tag_name, 1 );
+			}
+		}
+	}
+
+	return false;
+}
+
+/**
+ * Adds a data-page attribute to the first heading in an HTML fragment.
+ *
+ * @param string $html The heading HTML.
+ * @param int    $page_number The page number to set.
+ * @return string The updated HTML.
+ */
+function simpletoc_add_page_number_to_headline( $html, $page_number ) {
+	if ( simpletoc_load_html_tag_processor() ) {
+		$processor = new \WP_HTML_Tag_Processor( $html );
+
+		while ( $processor->next_tag() ) {
+			if ( ! in_array( $processor->get_tag(), array( 'H1', 'H2', 'H3', 'H4', 'H5', 'H6' ), true ) ) {
+				continue;
+			}
+
+			$processor->set_attribute( 'data-page', (string) $page_number );
+			return $processor->get_updated_html();
+		}
+	}
+
+	return $html;
+}
+
+/**
+ * Checks whether the first heading in an HTML fragment has the provided class.
+ *
+ * @param string $html The heading HTML.
+ * @param string $class_name The class name to find.
+ * @return bool True when the class exists.
+ */
+function simpletoc_heading_has_class( $html, $class_name ) {
+	if ( simpletoc_load_html_tag_processor() ) {
+		$processor = new \WP_HTML_Tag_Processor( $html );
+
+		while ( $processor->next_tag() ) {
+			if ( ! in_array( $processor->get_tag(), array( 'H1', 'H2', 'H3', 'H4', 'H5', 'H6' ), true ) ) {
+				continue;
+			}
+
+			$class_attribute = $processor->get_attribute( 'class' );
+
+			if ( ! is_string( $class_attribute ) ) {
+				return false;
+			}
+
+			return in_array( $class_name, preg_split( '/\s+/', trim( $class_attribute ) ), true );
+		}
+	}
+
+	return false;
 }
 
 /**
@@ -667,11 +743,7 @@ function find_min_depth( $headings, $attributes ) {
  * @return bool True if the headline should be excluded, false otherwise.
  */
 function should_exclude_headline( $headline, $attributes, $this_depth ) {
-	$exclude_headline = false;
-	preg_match( '/class="([^"]+)"/', $headline, $matches );
-	if ( ! empty( $matches[1] ) && strpos( $matches[1], 'simpletoc-hidden' ) !== false ) {
-		$exclude_headline = true;
-	}
+	$exclude_headline = simpletoc_heading_has_class( $headline, 'simpletoc-hidden' );
 
 	return ( $this_depth > $attributes['max_level'] || $exclude_headline || $this_depth < $attributes['min_level'] );
 }
@@ -688,7 +760,12 @@ function get_included_toc_headings( $headings, $attributes ) {
 	$headline_ids = new SimpleTOC_Headline_Ids();
 
 	foreach ( $headings as $headline ) {
-		$this_depth = (int) $headline[2];
+		$this_depth = simpletoc_get_heading_depth( $headline );
+
+		if ( false === $this_depth ) {
+			continue;
+		}
+
 		$title      = trim( wp_strip_all_tags( $headline ) );
 		$custom_id  = extract_id( $headline );
 		$link       = $custom_id ? $custom_id : $headline_ids->get_headline_anchor( $title );
@@ -779,7 +856,7 @@ function enqueue_accordion_frontend() {
 		'simpletoc-accordion',
 		plugin_dir_url( __FILE__ ) . 'assets/accordion.js',
 		array(),
-		'6.9.0',
+		SIMPLETOC_VERSION,
 		true
 	);
 
@@ -787,7 +864,7 @@ function enqueue_accordion_frontend() {
 		'simpletoc-accordion',
 		plugin_dir_url( __FILE__ ) . 'assets/accordion.css',
 		array(),
-		'6.9.0'
+		SIMPLETOC_VERSION
 	);
 }
 
@@ -805,7 +882,7 @@ function add_hidden_markup_start( $html, $attributes, $itemcount, $alignclass ) 
 	if ( $is_hidden_enabled ) {
 		$title_text   = $attributes['title_text'] ? esc_html( trim( $attributes['title_text'] ) ) : esc_html__( 'Table of Contents', 'simpletoc' );
 		$hidden_start = '<details class="simpletoc">
-        <summary style="cursor: pointer;">' . $title_text . '</summary>';
+        <summary>' . $title_text . '</summary>';
 		$html        .= $hidden_start;
 	}
 
@@ -852,7 +929,7 @@ function add_accordion_start( $html, $attributes, $itemcount, $alignclass ) {
 	$accordion_start = '';
 	if ( $is_accordion_enabled ) {
 		enqueue_accordion_frontend();
-		$accordion_start = '<h2 style="margin: 0;"><button type="button" aria-expanded="false" aria-controls="simpletoc-content-container" class="simpletoc-collapsible">' . $title_text . '<span class="simpletoc-icon" aria-hidden="true"></span></button></h2><div id="simpletoc-content-container" class="simpletoc-content">';
+		$accordion_start = '<h2 class="simpletoc-accordion-heading"><button type="button" aria-expanded="false" aria-controls="simpletoc-content-container" class="simpletoc-collapsible">' . $title_text . '<span class="simpletoc-icon" aria-hidden="true"></span></button></h2><div id="simpletoc-content-container" class="simpletoc-content">';
 	}
 
 	// Add the accordion start HTML to the output.
