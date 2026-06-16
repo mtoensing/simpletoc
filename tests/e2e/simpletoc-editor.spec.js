@@ -28,6 +28,12 @@ const paginatedPostContent = `<!-- wp:simpletoc/toc {"no_title":true} /-->
 <h2 class="wp-block-heading">Second Page</h2>
 <!-- /wp:heading -->`;
 
+const legacySimpletocPostContent = `<!-- wp:simpletoc/toc {"no_title":false,"title_level":2,"title_text":"Table of Contents","use_ol":false,"remove_indent":false,"add_smooth":false,"use_absolute_urls":false,"min_level":1,"max_level":6,"accordion":false,"hidden":false,"wrapper":false,"autoupdate":true} /-->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Legacy Heading</h2>
+<!-- /wp:heading -->`;
+
 test.describe( 'SimpleTOC editor rendering', () => {
 	test.beforeEach( async ( { requestUtils } ) => {
 		await requestUtils.activatePlugin(
@@ -123,5 +129,61 @@ test.describe( 'SimpleTOC editor rendering', () => {
 		await expect( toc.locator( 'a[href^="http://0.0.0.2/"]' ) ).toHaveCount(
 			0
 		);
+	} );
+
+	test( 'loads legacy serialized SimpleTOC blocks as valid blocks', async ( {
+		admin,
+		editor,
+		page,
+	} ) => {
+		await admin.createNewPost( {
+			title: 'SimpleTOC legacy block compatibility smoke test',
+		} );
+
+		await page.waitForFunction( () =>
+			wp.blocks.getBlockType( 'simpletoc/toc' )
+		);
+		await editor.setContent( legacySimpletocPostContent );
+
+		await expect
+			.poll( async () =>
+				page.evaluate( () =>
+					wp.data
+						.select( 'core/block-editor' )
+						.getBlocks()
+						.map( ( block ) => ( {
+							name: block.name,
+							isValid: block.isValid,
+							attributes: block.attributes,
+						} ) )
+				)
+			)
+			.toMatchObject( [
+				{
+					name: 'simpletoc/toc',
+					isValid: true,
+					attributes: {
+						title_text: 'Table of Contents',
+						min_level: 1,
+						max_level: 6,
+					},
+				},
+				{
+					name: 'core/heading',
+					isValid: true,
+				},
+			] );
+
+		await expect( page.locator( '.block-editor-warning' ) ).toHaveCount(
+			0
+		);
+
+		await expect
+			.poll( async () =>
+				page.evaluate( () =>
+					wp.data.select( 'core/editor' ).getEditedPostContent()
+				)
+			)
+			.toContain( '<!-- wp:simpletoc/toc' );
 	} );
 } );
