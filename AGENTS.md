@@ -28,6 +28,7 @@ Follow these rules for all changes in this WordPress plugin repository.
 
 ## Deployment Workflow
 
+- Do not create pull requests. Commit and push approved changes directly to `main` as `mtoensing`.
 - Read and understand the repository's GitHub Actions workflows before changing deployment behavior.
 - Check `.github/workflows/` to see which branch, tag, path, or manual triggers deploy plugin code, WordPress.org assets, generated documentation, or release artifacts.
 - Check `.distignore` before adding project-only files. Claude skills, local tooling, generated GitHub-only files, and development metadata must not be shipped to WordPress.org.
