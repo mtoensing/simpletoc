@@ -125,6 +125,17 @@ class SimpleTOC_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * @covers \MToensing\SimpleTOC\simpletoc_get_html_tag_processor
+	 * @covers \MToensing\SimpleTOC\simpletoc_get_heading_depth
+	 */
+	public function test_html_tag_processor_ignores_non_string_block_content() {
+		$this->assertNull( MToensing\SimpleTOC\simpletoc_get_html_tag_processor( null ) );
+		$this->assertFalse( MToensing\SimpleTOC\simpletoc_get_heading_depth( null ) );
+		$this->assertSame( '', MToensing\SimpleTOC\get_page_number_from_headline( null ) );
+		$this->assertFalse( MToensing\SimpleTOC\extract_id( null ) );
+	}
+
+	/**
 	 * @covers \MToensing\SimpleTOC\simpletoc_add_page_number_to_headline
 	 */
 	public function test_add_page_number_to_headline_sets_data_page_with_html_tag_processor() {

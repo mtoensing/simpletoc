@@ -3,7 +3,7 @@
  * Plugin Name:   SimpleTOC - Table of Contents Block
  * Plugin URI:    https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
  * Description:   SEO-friendly Table of Contents Gutenberg block. No JavaScript or CSS by default.
- * Version:       7.1.0
+ * Version:       7.2.0
  * Requires at least: 6.2
  * Requires PHP: 7.3
  * Author:        Marc Tönsing
@@ -21,7 +21,7 @@ require_once __DIR__ . '/simpletoc-admin-settings.php';
 require_once __DIR__ . '/simpletoc-class-headline-ids.php';
 
 const DEFAULT_BOX_COLOR = '#ebebeb';
-const SIMPLETOC_VERSION = '7.1.0';
+const SIMPLETOC_VERSION = '7.2.0';
 
 /**
  * Prevents direct execution of the plugin file.
@@ -526,6 +526,23 @@ function simpletoc_load_html_tag_processor() {
 }
 
 /**
+ * Creates an HTML Tag Processor for a valid HTML fragment.
+ *
+ * Parsed block content can contain non-string placeholders for nested blocks.
+ * The WordPress HTML API accepts strings only.
+ *
+ * @param mixed $html The HTML fragment to inspect.
+ * @return \WP_HTML_Tag_Processor|null The processor, or null when unavailable or invalid.
+ */
+function simpletoc_get_html_tag_processor( $html ) {
+	if ( ! is_string( $html ) || ! simpletoc_load_html_tag_processor() ) {
+		return null;
+	}
+
+	return new \WP_HTML_Tag_Processor( $html );
+}
+
+/**
  * Returns true when the provided HTML contains a heading tag.
  *
  * @param string $html The HTML to inspect.
@@ -542,8 +559,9 @@ function simpletoc_is_heading_html( $html ) {
  * @return int|false The heading depth, or false when no heading was found.
  */
 function simpletoc_get_heading_depth( $html ) {
-	if ( simpletoc_load_html_tag_processor() ) {
-		$processor = new \WP_HTML_Tag_Processor( $html );
+	$processor = simpletoc_get_html_tag_processor( $html );
+
+	if ( $processor ) {
 
 		while ( $processor->next_tag() ) {
 			$tag_name = $processor->get_tag();
@@ -565,8 +583,9 @@ function simpletoc_get_heading_depth( $html ) {
  * @return string The updated HTML.
  */
 function simpletoc_add_page_number_to_headline( $html, $page_number ) {
-	if ( simpletoc_load_html_tag_processor() ) {
-		$processor = new \WP_HTML_Tag_Processor( $html );
+	$processor = simpletoc_get_html_tag_processor( $html );
+
+	if ( $processor ) {
 
 		while ( $processor->next_tag() ) {
 			if ( ! in_array( $processor->get_tag(), array( 'H1', 'H2', 'H3', 'H4', 'H5', 'H6' ), true ) ) {
@@ -589,8 +608,9 @@ function simpletoc_add_page_number_to_headline( $html, $page_number ) {
  * @return bool True when the class exists.
  */
 function simpletoc_heading_has_class( $html, $class_name ) {
-	if ( simpletoc_load_html_tag_processor() ) {
-		$processor = new \WP_HTML_Tag_Processor( $html );
+	$processor = simpletoc_get_html_tag_processor( $html );
+
+	if ( $processor ) {
 
 		while ( $processor->next_tag() ) {
 			if ( ! in_array( $processor->get_tag(), array( 'H1', 'H2', 'H3', 'H4', 'H5', 'H6' ), true ) ) {
@@ -619,6 +639,9 @@ function simpletoc_heading_has_class( $html, $class_name ) {
  * @return string The modified HTML content with ID attributes added to the Heading tags
  */
 function add_anchor_attribute( $html, $headline_class_instance = null, $block = array() ) {
+	if ( ! is_string( $html ) ) {
+		return $html;
+	}
 
 	// remove non-breaking space entites from input HTML.
 	$html_wo_nbs = str_replace( '&nbsp;', ' ', $html );
@@ -628,8 +651,9 @@ function add_anchor_attribute( $html, $headline_class_instance = null, $block = 
 		return $html;
 	}
 
-	if ( simpletoc_load_html_tag_processor() ) {
-		$processor = new \WP_HTML_Tag_Processor( $html_wo_nbs );
+	$processor = simpletoc_get_html_tag_processor( $html_wo_nbs );
+
+	if ( $processor ) {
 
 		while ( $processor->next_tag() ) {
 			if ( ! in_array( $processor->get_tag(), array( 'H1', 'H2', 'H3', 'H4', 'H5', 'H6' ), true ) ) {
@@ -982,8 +1006,9 @@ function add_accordion_end( $html, $attributes ) {
  * @return string|false Returns the extracted ID value, or false if no ID value is found.
  */
 function extract_id( $headline ) {
-	if ( simpletoc_load_html_tag_processor() ) {
-		$processor = new \WP_HTML_Tag_Processor( $headline );
+	$processor = simpletoc_get_html_tag_processor( $headline );
+
+	if ( $processor ) {
 
 		while ( $processor->next_tag() ) {
 			if ( ! in_array( $processor->get_tag(), array( 'H1', 'H2', 'H3', 'H4', 'H5', 'H6' ), true ) ) {
@@ -1008,8 +1033,9 @@ function extract_id( $headline ) {
  * @return string The page number (in the format "X/") if it exists and is greater than 1, or an empty string otherwise.
  */
 function get_page_number_from_headline( $headline ) {
-	if ( simpletoc_load_html_tag_processor() ) {
-		$processor = new \WP_HTML_Tag_Processor( $headline );
+	$processor = simpletoc_get_html_tag_processor( $headline );
+
+	if ( $processor ) {
 
 		while ( $processor->next_tag() ) {
 			if ( ! in_array( $processor->get_tag(), array( 'H1', 'H2', 'H3', 'H4', 'H5', 'H6' ), true ) ) {

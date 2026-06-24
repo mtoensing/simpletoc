@@ -1,6 +1,6 @@
 {
 	"name": "simpletoc",
-	"version": "7.1.0",
+	"version": "7.2.0",
 	"author": "Marc Tönsing",
 	"description": "SEO-friendly Table of Contents Gutenberg block. No JavaScript or CSS by default.",
 	"main": "build/index.js",
