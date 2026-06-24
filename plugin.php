@@ -3,7 +3,7 @@
  * Plugin Name:   SimpleTOC - Table of Contents Block
  * Plugin URI:    https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
  * Description:   SEO-friendly Table of Contents Gutenberg block. No JavaScript or CSS by default.
- * Version:       7.2.0
+ * Version:       7.1.1
  * Requires at least: 6.2
  * Requires PHP: 7.3
  * Author:        Marc Tönsing
@@ -21,7 +21,7 @@ require_once __DIR__ . '/simpletoc-admin-settings.php';
 require_once __DIR__ . '/simpletoc-class-headline-ids.php';
 
 const DEFAULT_BOX_COLOR = '#ebebeb';
-const SIMPLETOC_VERSION = '7.2.0';
+const SIMPLETOC_VERSION = '7.1.1';
 
 /**
  * Prevents direct execution of the plugin file.
