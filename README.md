@@ -3,7 +3,7 @@
 **Tags:** TOC, Table of Contents, Block, Accessibility, Table  
 **Requires at least:** 6.2  
 **Tested up to:** 7.0  
-**Stable tag:** 7.2.0  
+**Stable tag:** 7.1.1  
 **Requires PHP:** 7.3  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
@@ -72,8 +72,26 @@ Hidden TOCs use native `<details>` and `<summary>` semantics without extra ARIA 
 SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoensing/SimpleTOC). If you find a bug or have an idea for a feature please feel free to contribute and create a pull request. 
 
 ## Changelog ##
-### 7.2.0 ###
+### 7.1.1 ###
 * Fixed: Prevented WordPress HTML API notices when nested block content is not a string.
+* Fixed: Escaped TOC links and titles before rendering them.
+* Fixed: Preserved legacy SimpleTOC block validity in the WordPress editor.
+
+### 7.1.0 ###
+* Fixed: Avoid DOMDocument HTML parsing for highlighted heading markup by using the WordPress HTML API.
+* Changed: Minimum required WordPress version is now 6.2.
+* Added: PHPUnit coverage for core rendering helpers and an editor e2e smoke test.
+
+### 7.0.10 ###
+* Fixed: Prevent the SimpleTOC editor preview from collapsing during WordPress autosaves.
+* Changed: Automatic editor refresh now runs after manual post saves and keeps the previous TOC visible while updating.
+
+### 7.0.9 ###
+* Fixed: Restored WordPress 7.0 editor previews for existing SimpleTOC blocks that contain legacy editor-only attributes.
+* Fixed: The "Hide SimpleTOC" editor toggle no longer stores a redundant helper attribute.
+
+### 7.0.8 ###
+* Fixed: Prevent editor preview errors when another plugin adds editor-only attributes to blocks, for example Noted! block notes. Thanks Hans-Gerd Gerhards (@hage).
 
 ## Installation ##
 
