@@ -34,6 +34,8 @@ const SERVER_SIDE_RENDER_ATTRIBUTE_NAMES = [
 		.map( ( [ name ] ) => name ),
 	'align',
 	'className',
+	'fontSize',
+	'style',
 ];
 
 function getServerSideRenderAttributes( attributes ) {

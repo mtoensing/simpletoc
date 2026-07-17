@@ -16,7 +16,11 @@
     "align": [
       "wide",
       "full"
-    ]
+    ],
+    "typography": {
+      "fontSize": true,
+      "lineHeight": true
+    }
   },
   "description": "Adds a Table of Contents.",
   "attributes": {

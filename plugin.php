@@ -249,8 +249,13 @@ function render_callback_simpletoc( $attributes ) {
 	$title_level = $attributes['title_level'];
 	$global_box_style_enabled = apply_filters( 'simpletoc_box_style_enabled', false ) || true === (bool) get_option( 'simpletoc_box_style_enabled', false );
 	$box_style_enabled        = $global_box_style_enabled || ! empty( $attributes['box_style'] );
+	$typography_enabled       = ! empty( $attributes['fontSize'] ) || ! empty( $attributes['style']['typography'] );
 	$wrapper_classes   = array( 'simpletoc' );
 	$wrapper_style     = '';
+
+	if ( $typography_enabled ) {
+		$wrapper_classes[] = 'has-simpletoc-typography';
+	}
 
 	if ( $box_style_enabled ) {
 		$wrapper_classes[] = 'has-simpletoc-box-style';
@@ -274,7 +279,7 @@ function render_callback_simpletoc( $attributes ) {
 			'style' => $wrapper_style,
 		)
 	);
-	$has_wrapper     = ! empty( $class_name ) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper'] || $box_style_enabled;
+	$has_wrapper     = ! empty( $class_name ) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper'] || $box_style_enabled || $typography_enabled;
 	$pre_html        = $has_wrapper ? '<div role="navigation" aria-label="' . esc_attr__( 'Table of Contents', 'simpletoc' ) . '" ' . $wrapper_attrs . '>' : '';
 	$post_html       = $has_wrapper ? '</div>' : '';
 

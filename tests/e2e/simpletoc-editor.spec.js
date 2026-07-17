@@ -34,6 +34,12 @@ const legacySimpletocPostContent = `<!-- wp:simpletoc/toc {"no_title":false,"tit
 <h2 class="wp-block-heading">Legacy Heading</h2>
 <!-- /wp:heading -->`;
 
+const typographyPostContent = `<!-- wp:simpletoc/toc {"fontSize":"large","style":{"typography":{"lineHeight":"2"}}} /-->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Styled TOC Heading</h2>
+<!-- /wp:heading -->`;
+
 test.describe( 'SimpleTOC editor rendering', () => {
 	test.beforeEach( async ( { requestUtils } ) => {
 		await requestUtils.activatePlugin(
@@ -129,6 +135,46 @@ test.describe( 'SimpleTOC editor rendering', () => {
 		await expect( toc.locator( 'a[href^="http://0.0.0.2/"]' ) ).toHaveCount(
 			0
 		);
+	} );
+
+	test( 'applies native typography settings on the frontend', async ( {
+		admin,
+		editor,
+		page,
+	} ) => {
+		await admin.createNewPost( {
+			title: 'SimpleTOC typography smoke test',
+		} );
+
+		await page.waitForFunction( () =>
+			wp.blocks.getBlockType( 'simpletoc/toc' )
+		);
+		await editor.setContent( typographyPostContent );
+
+		const postId = await editor.publishPost();
+		expect( postId ).toBeTruthy();
+
+		await page.goto( `/?p=${ postId }` );
+
+		const toc = page.locator( '.simpletoc.has-simpletoc-typography' );
+		await expect( toc ).toHaveClass( /has-large-font-size/ );
+		await expect( toc ).toHaveAttribute( 'style', /line-height:\s*2/ );
+
+		const typography = await toc.evaluate( ( element ) => {
+			const title = element.querySelector( '.simpletoc-title' );
+			const wrapperStyle = window.getComputedStyle( element );
+			const titleStyle = window.getComputedStyle( title );
+
+			return {
+				fontSize: wrapperStyle.fontSize,
+				lineHeight: wrapperStyle.lineHeight,
+				titleFontSize: titleStyle.fontSize,
+				titleLineHeight: titleStyle.lineHeight,
+			};
+		} );
+
+		expect( typography.titleFontSize ).toBe( typography.fontSize );
+		expect( typography.titleLineHeight ).toBe( typography.lineHeight );
 	} );
 
 	test( 'loads legacy serialized SimpleTOC blocks as valid blocks', async ( {

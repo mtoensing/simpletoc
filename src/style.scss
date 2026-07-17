@@ -7,6 +7,13 @@
 	font-size: 1.6rem;
 }
 
+.simpletoc.has-simpletoc-typography .simpletoc-title,
+.simpletoc.has-simpletoc-typography .simpletoc-accordion-heading,
+.simpletoc.has-simpletoc-typography .simpletoc-collapsible {
+	font-size: inherit;
+	line-height: inherit;
+}
+
 .simpletoc > summary {
 	cursor: pointer;
 }
