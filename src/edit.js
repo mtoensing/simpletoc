@@ -103,7 +103,6 @@ export default function Edit( { attributes, setAttributes } ) {
 	}, [] );
 	const boxColors = editorSettings.colors || [];
 	const selectedBoxColor = attributes.box_color;
-	const wrapperEnabled = attributes.wrapper || attributes.box_style;
 	const settingsUrl =
 		editorSettings.simpletocSettingsUrl ||
 		window.simpletocEditorSettings?.settingsUrl ||
@@ -477,7 +476,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						<ToggleControl
 							label={ __( 'Box style', 'simpletoc' ) }
 							help={ __(
-								'Adds box spacing and title styling. Enables the wrapper markup automatically.',
+								'Adds box spacing and title styling.',
 								'simpletoc'
 							) }
 							checked={ attributes.box_style }
@@ -516,29 +515,6 @@ export default function Edit( { attributes, setAttributes } ) {
 							</BaseControl>
 						</PanelRow>
 					) }
-					<PanelRow>
-						<ToggleControl
-							label={ __( 'Wrapper div', 'simpletoc' ) }
-							help={
-								attributes.box_style
-									? __(
-											'Enabled automatically while box style is active.',
-											'simpletoc'
-									  )
-									: __(
-											'Additionally adds the role "navigation" and ARIA attributes.',
-											'simpletoc'
-									  )
-							}
-							checked={ wrapperEnabled }
-							disabled={ attributes.box_style }
-							onChange={ () =>
-								setAttributes( {
-									wrapper: ! attributes.wrapper,
-								} )
-							}
-						/>
-					</PanelRow>
 					<PanelRow>
 						<ToggleControl
 							label={ __( 'Automatic refresh', 'simpletoc' ) }

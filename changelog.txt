@@ -1,5 +1,10 @@
 == Changelog ==
 
+= 7.2.0 =
+* Changed: SimpleTOC now always uses the standard Gutenberg block wrapper so themes can style it through theme.json.
+* Removed: Obsolete block and global wrapper settings because the standard wrapper is now always active.
+* Added: Native Gutenberg typography controls for font size and line height.
+
 = 7.1.1 =
 * Fixed: Prevented WordPress HTML API notices when nested block content is not a string.
 * Fixed: Escaped TOC links and titles before rendering them.

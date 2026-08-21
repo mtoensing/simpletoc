@@ -37,6 +37,31 @@ class SimpleTOC_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Ensures legacy blocks receive the standard Gutenberg wrapper.
+	 */
+	public function test_rendered_legacy_block_uses_standard_block_wrapper() {
+		$content  = '<!-- wp:simpletoc/toc {"no_title":true,"wrapper":false} /-->';
+		$content .= '<!-- wp:heading --><h2 class="wp-block-heading">First heading</h2><!-- /wp:heading -->';
+		$post_id  = self::factory()->post->create(
+			array(
+				'post_content' => $content,
+			)
+		);
+
+		$GLOBALS['post'] = get_post( $post_id );
+		setup_postdata( $GLOBALS['post'] );
+
+		$result = do_blocks( $content );
+
+		wp_reset_postdata();
+
+		$this->assertStringContainsString( 'class="simpletoc wp-block-simpletoc-toc"', $result );
+		$this->assertStringContainsString( 'role="navigation"', $result );
+		$this->assertStringContainsString( 'aria-label="Table of Contents"', $result );
+		$this->assertStringContainsString( '<ul class="simpletoc-list">', $result );
+	}
+
+	/**
 	 * @covers \MToensing\SimpleTOC\add_anchor_attribute
 	 */
 	public function test_add_anchor_attribute_handles_highlighted_heading_markup() {

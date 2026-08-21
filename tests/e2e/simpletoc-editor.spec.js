@@ -231,5 +231,17 @@ test.describe( 'SimpleTOC editor rendering', () => {
 				)
 			)
 			.toContain( '<!-- wp:simpletoc/toc' );
+
+		const postId = await editor.publishPost();
+		expect( postId ).toBeTruthy();
+
+		await page.goto( `/?p=${ postId }` );
+		const tocWrapper = page.locator( '.wp-block-simpletoc-toc.simpletoc' );
+		await expect( tocWrapper ).toHaveAttribute( 'role', 'navigation' );
+		await expect( tocWrapper ).toHaveAttribute(
+			'aria-label',
+			'Table of Contents'
+		);
+		await expect( tocWrapper.locator( '.simpletoc-list' ) ).toBeVisible();
 	} );
 } );

@@ -3,7 +3,7 @@
  * Plugin Name:   SimpleTOC - Table of Contents Block
  * Plugin URI:    https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
  * Description:   SEO-friendly Table of Contents Gutenberg block. No JavaScript or CSS by default.
- * Version:       7.1.1
+ * Version:       7.2.0
  * Requires at least: 6.2
  * Requires PHP: 7.3
  * Author:        Marc Tönsing
@@ -21,7 +21,7 @@ require_once __DIR__ . '/simpletoc-admin-settings.php';
 require_once __DIR__ . '/simpletoc-class-headline-ids.php';
 
 const DEFAULT_BOX_COLOR = '#ebebeb';
-const SIMPLETOC_VERSION = '7.1.1';
+const SIMPLETOC_VERSION = '7.2.0';
 
 /**
  * Prevents direct execution of the plugin file.
@@ -245,7 +245,6 @@ function render_callback_simpletoc( $attributes ) {
 	$is_backend  = defined( 'REST_REQUEST' ) && REST_REQUEST && 'edit' === filter_input( INPUT_GET, 'context' );
 	$title_text  = $attributes['title_text'] ? esc_html( trim( $attributes['title_text'] ) ) : __( 'Table of Contents', 'simpletoc' );
 	$alignclass  = ! empty( $attributes['align'] ) ? 'align' . $attributes['align'] : '';
-	$class_name  = ! empty( $attributes['className'] ) ? wp_strip_all_tags( $attributes['className'] ) : '';
 	$title_level = $attributes['title_level'];
 	$global_box_style_enabled = apply_filters( 'simpletoc_box_style_enabled', false ) || true === (bool) get_option( 'simpletoc_box_style_enabled', false );
 	$box_style_enabled        = $global_box_style_enabled || ! empty( $attributes['box_style'] );
@@ -272,16 +271,14 @@ function render_callback_simpletoc( $attributes ) {
 		}
 	}
 
-	$wrapper_enabled = apply_filters( 'simpletoc_wrapper_enabled', false ) || true === (bool) get_option( 'simpletoc_wrapper_enabled', false ) || true === (bool) get_option( 'simpletoc_accordion_enabled', false );
 	$wrapper_attrs   = get_block_wrapper_attributes(
 		array(
 			'class' => implode( ' ', $wrapper_classes ),
 			'style' => $wrapper_style,
 		)
 	);
-	$has_wrapper     = ! empty( $class_name ) || $wrapper_enabled || $attributes['accordion'] || $attributes['wrapper'] || $box_style_enabled || $typography_enabled;
-	$pre_html        = $has_wrapper ? '<div role="navigation" aria-label="' . esc_attr__( 'Table of Contents', 'simpletoc' ) . '" ' . $wrapper_attrs . '>' : '';
-	$post_html       = $has_wrapper ? '</div>' : '';
+	$pre_html        = '<div role="navigation" aria-label="' . esc_attr__( 'Table of Contents', 'simpletoc' ) . '" ' . $wrapper_attrs . '>';
+	$post_html       = '</div>';
 
 	$post   = get_post();
 	$blocks = ! is_null( $post ) && ! is_null( $post->post_content ) ? parse_blocks( $post->post_content ) : '';
@@ -292,15 +289,15 @@ function render_callback_simpletoc( $attributes ) {
 	$toc_html       = generate_toc( $headings_clean, $attributes );
 
 	if ( empty( $blocks ) ) {
-		return get_empty_blocks_message( $is_backend, $attributes, $title_level, $alignclass, $title_text, __( 'No blocks found.', 'simpletoc' ), __( 'Save or update post first.', 'simpletoc' ), $wrapper_attrs, $has_wrapper );
+		return get_empty_blocks_message( $is_backend, $attributes, $title_level, $alignclass, $title_text, __( 'No blocks found.', 'simpletoc' ), __( 'Save or update post first.', 'simpletoc' ), $wrapper_attrs );
 	}
 
 	if ( empty( $headings_clean ) ) {
-		return get_empty_blocks_message( $is_backend, $attributes, $title_level, $alignclass, $title_text, __( 'No headings found.', 'simpletoc' ), __( 'Save or update post first.', 'simpletoc' ), $wrapper_attrs, $has_wrapper );
+		return get_empty_blocks_message( $is_backend, $attributes, $title_level, $alignclass, $title_text, __( 'No headings found.', 'simpletoc' ), __( 'Save or update post first.', 'simpletoc' ), $wrapper_attrs );
 	}
 
 	if ( empty( $toc_html ) ) {
-		return get_empty_blocks_message( $is_backend, $attributes, $title_level, $alignclass, $title_text, __( 'No headings found.', 'simpletoc' ), __( 'Check minimal and maximum level block settings.', 'simpletoc' ), $wrapper_attrs, $has_wrapper );
+		return get_empty_blocks_message( $is_backend, $attributes, $title_level, $alignclass, $title_text, __( 'No headings found.', 'simpletoc' ), __( 'Check minimal and maximum level block settings.', 'simpletoc' ), $wrapper_attrs );
 	}
 
 	return $pre_html . $toc_html . $post_html;
@@ -316,25 +313,18 @@ function render_callback_simpletoc( $attributes ) {
  * @param string $title_text    The text for the Table of Contents title.
  * @param string $warning_text1 The first part of the warning message to be displayed.
  * @param string $warning_text2 The second part of the warning message to be displayed.
- * @param string $wrapper_attrs Wrapper attributes for the optional block wrapper.
- * @param bool   $has_wrapper   Indicates if the wrapper should be rendered.
+ * @param string $wrapper_attrs Block wrapper attributes.
  *
  * @return string The HTML output for the empty blocks message.
  */
-function get_empty_blocks_message( $is_backend, $attributes, $title_level, $alignclass, $title_text, $warning_text1, $warning_text2, $wrapper_attrs = '', $has_wrapper = false ) {
+function get_empty_blocks_message( $is_backend, $attributes, $title_level, $alignclass, $title_text, $warning_text1, $warning_text2, $wrapper_attrs = '' ) {
 	$html = '';
 
 	if ( $is_backend ) {
-		if ( $has_wrapper ) {
-			$html .= '<div role="navigation" aria-label="' . esc_attr__( 'Table of Contents', 'simpletoc' ) . '" ' . $wrapper_attrs . '>';
-		}
-
+		$html .= '<div role="navigation" aria-label="' . esc_attr__( 'Table of Contents', 'simpletoc' ) . '" ' . $wrapper_attrs . '>';
 		$html .= sprintf( '<h%d class="%s">%s</h%d>', $title_level, esc_attr( trim( 'simpletoc-title ' . $alignclass ) ), $title_text, $title_level );
 		$html .= sprintf( '<p class="components-notice is-warning %s">%s %s</p>', esc_attr( $alignclass ), esc_html( $warning_text1 ), esc_html( $warning_text2 ) );
-
-		if ( $has_wrapper ) {
-			$html .= '</div>';
-		}
+		$html .= '</div>';
 	}
 
 	return $html;

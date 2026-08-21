@@ -48,16 +48,11 @@ function simpletoc_settings_page() {
  */
 function simpletoc_register_settings() {
 	// Register settings and filters for existing features.
-	$wrapper_enabled_filter       = apply_filters( 'simpletoc_wrapper_enabled', null );
 	$accordion_enabled_filter     = apply_filters( 'simpletoc_accordion_enabled', null );
 	$smooth_enabled_filter        = apply_filters( 'simpletoc_smooth_enabled', null );
 	$absolute_urls_enabled_filter = apply_filters( 'simpletoc_absolute_urls_enabled', null );
 	$autoupdate_enabled_filter    = apply_filters( 'simpletoc_autoupdate_enabled', null );
 	$box_style_enabled_filter     = apply_filters( 'simpletoc_box_style_enabled', null );
-
-	if ( null === $wrapper_enabled_filter ) {
-		register_setting( 'simpletoc_settings', 'simpletoc_wrapper_enabled' );
-	}
 
 	if ( null === $accordion_enabled_filter ) {
 		register_setting( 'simpletoc_settings', 'simpletoc_accordion_enabled' );
@@ -91,14 +86,6 @@ function simpletoc_register_settings() {
 		'simpletoc_accordion_enabled',
 		esc_html__( 'Force accordion menu', 'simpletoc' ),
 		__NAMESPACE__ . '\simpletoc_accordion_enabled_callback',
-		'simpletoc',
-		'simpletoc_wrapper_section'
-	);
-
-	add_settings_field(
-		'simpletoc_wrapper_enabled',
-		esc_html__( 'Force wrapper div', 'simpletoc' ),
-		__NAMESPACE__ . '\simpletoc_wrapper_enabled_callback',
 		'simpletoc',
 		'simpletoc_wrapper_section'
 	);
@@ -153,30 +140,12 @@ function simpletoc_wrapper_section_callback() {
 }
 
 /**
- * SimpleTOC wrapper enabled callback.
- */
-function simpletoc_wrapper_enabled_callback() {
-	$wrapper_enabled = get_option( 'simpletoc_wrapper_enabled', false );
-
-	if ( has_filter( 'simpletoc_wrapper_enabled' ) ) {
-		echo '<input type="checkbox" name="simpletoc_wrapper_enabled" id="simpletoc_wrapper_enabled" value="1" checked="checked" disabled="disabled" />';
-		echo '<label for="simpletoc_wrapper_enabled" class="description">' . esc_html__( 'Setting controlled by "simpletoc_wrapper_enabled" filter. Remove filter to adjust setting.', 'simpletoc' ) . '</label>';
-	} else {
-		echo '<input type="checkbox" name="simpletoc_wrapper_enabled" id="simpletoc_wrapper_enabled" value="1" ' . checked( 1, $wrapper_enabled, false ) . ' />';
-		echo '<label for="simpletoc_wrapper_enabled" class="description">' . esc_html__( 'Additionally adds the role "navigation" and ARIA attributes.', 'simpletoc' ) . '</label>';
-	}
-}
-
-/**
  * SimpleTOC accordion enabled callback.
  */
 function simpletoc_accordion_enabled_callback() {
 	$accordion_enabled = get_option( 'simpletoc_accordion_enabled', false );
-	if ( $accordion_enabled ) {
-		update_option( 'simpletoc_wrapper_enabled', true );
-	}
 	echo '<input type="checkbox" name="simpletoc_accordion_enabled" id="simpletoc_accordion_enabled" value="1" ' . checked( 1, $accordion_enabled, false ) . ' />';
-	echo '<label for="simpletoc_accordion_enabled" class="description">' . esc_html__( 'Adds minimal JavaScript and css styles.', 'simpletoc' ) . ' <strong>' . esc_html__( 'Notice:', 'simpletoc' ) . '</strong> ' . esc_html__( 'This will automatically enable the wrapper div.', 'simpletoc' ) . '</label>';
+	echo '<label for="simpletoc_accordion_enabled" class="description">' . esc_html__( 'Adds minimal JavaScript and css styles.', 'simpletoc' ) . '</label>';
 }
 
 /**

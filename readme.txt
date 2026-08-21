@@ -3,7 +3,7 @@ Contributors: MarcDK
 Tags: TOC, Table of Contents, Block, Accessibility, Table
 Requires at least: 6.2
 Tested up to: 7.0
-Stable tag: 7.1.1
+Stable tag: 7.2.0
 Requires PHP: 7.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -47,7 +47,7 @@ Hidden TOCs use native `<details>` and `<summary>` semantics without extra ARIA 
 * Inherits the style of your theme.
 * Smooth scrolling effect using CSS. 
 * Accessibility built-in by following web standards.
-* Optional ARIA Label and navigation role attributes.
+* Standard Gutenberg block wrapper with navigation role and ARIA label attributes.
 * Translated in [multiple languages](https://translate.wordpress.org/projects/wp-plugins/simpletoc/). Including German, Japanese, Chinese (Taiwan), Dutch, Brazilian Portuguese, French, Spanish and Latvia.
 * Ideal for creating a Frequently Asked Questions section on your website.
 
@@ -72,26 +72,10 @@ Hidden TOCs use native `<details>` and `<summary>` semantics without extra ARIA 
 SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoensing/SimpleTOC). If you find a bug or have an idea for a feature please feel free to contribute and create a pull request. 
 
 == Changelog ==
-= 7.1.1 =
-* Fixed: Prevented WordPress HTML API notices when nested block content is not a string.
-* Fixed: Escaped TOC links and titles before rendering them.
-* Fixed: Preserved legacy SimpleTOC block validity in the WordPress editor.
-
-= 7.1.0 =
-* Fixed: Avoid DOMDocument HTML parsing for highlighted heading markup by using the WordPress HTML API.
-* Changed: Minimum required WordPress version is now 6.2.
-* Added: PHPUnit coverage for core rendering helpers and an editor e2e smoke test.
-
-= 7.0.10 =
-* Fixed: Prevent the SimpleTOC editor preview from collapsing during WordPress autosaves.
-* Changed: Automatic editor refresh now runs after manual post saves and keeps the previous TOC visible while updating.
-
-= 7.0.9 =
-* Fixed: Restored WordPress 7.0 editor previews for existing SimpleTOC blocks that contain legacy editor-only attributes.
-* Fixed: The "Hide SimpleTOC" editor toggle no longer stores a redundant helper attribute.
-
-= 7.0.8 =
-* Fixed: Prevent editor preview errors when another plugin adds editor-only attributes to blocks, for example Noted! block notes. Thanks Hans-Gerd Gerhards (@hage).
+= 7.2.0 =
+* Changed: SimpleTOC now always uses the standard Gutenberg block wrapper so themes can style it through theme.json.
+* Removed: Obsolete block and global wrapper settings because the standard wrapper is now always active.
+* Added: Native Gutenberg typography controls for font size and line height.
 
 == Installation ==
 
@@ -117,9 +101,9 @@ If you really want to hide a single heading from the table of contents, then add
 
 You can convert your configured SimpleTOC block into a reusable block in Gutenberg. It will keep its settings. This way, you can use your desired settings for each new post by adding the reusable block.
 
-= How to add a div tag wrapper to the TOC? =
+= How can I style SimpleTOC through theme.json? =
 
-If you add a custom class to the SimpleTOC block in "Advanced" and then "Additional CSS Class(es)" a div with that class will be wrapped around the HTML output. 
+Add styles for the `simpletoc/toc` block to your theme.json. SimpleTOC uses the standard Gutenberg block wrapper and supports native font size and line height settings.
 
 = How to allow developers to exclude specific headings programmatically? = 
 

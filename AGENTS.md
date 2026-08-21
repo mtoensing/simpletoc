@@ -41,6 +41,7 @@ Follow these rules for all changes in this WordPress plugin repository.
 - For dynamic blocks, render frontend markup in the PHP render path, not in `save.js`.
 - When adding a new editor option, wire it through block attributes first, then implement the frontend effect in the existing PHP render path or registered frontend styles.
 - Rebuild generated files after source changes so `build/` stays in sync.
+- Use `wp-env` for isolated, reproducible PHPUnit and Playwright tests. Also verify important integration and rendered-frontend behavior on the local Valet site `marctv.test`, using WP-CLI from `/Users/marc/Sites/marctv` and the live local response.
 
 ## Styling Workflow
 
