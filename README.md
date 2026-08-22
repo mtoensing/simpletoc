@@ -3,7 +3,7 @@
 **Tags:** TOC, Table of Contents, Block, Accessibility, Table  
 **Requires at least:** 6.2  
 **Tested up to:** 7.0  
-**Stable tag:** 7.2.0  
+**Stable tag:** 7.3.0  
 **Requires PHP:** 7.3  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
@@ -42,8 +42,8 @@ Hidden TOCs use native `<details>` and `<summary>` semantics without extra ARIA 
 * Minimal and valid HTML output.
 * Utilizes the browser's built-in details tag for a collapsible interface.
 * No JavaScript or CSS by default. Optional features such as the accordion menu, smooth scrolling, or box style add minimal assets only when enabled.
-* Optional box style for the TOC with a default gray background.
-* Style SimpleTOC with Gutenberg's native group styling options.
+* Optional Box style in Gutenberg's Styles tab with a default gray background.
+* Native text, link, background, spacing, and typography controls.
 * Inherits the style of your theme.
 * Smooth scrolling effect using CSS. 
 * Accessibility built-in by following web standards.
@@ -54,11 +54,12 @@ Hidden TOCs use native `<details>` and `<summary>` semantics without extra ARIA 
 ### Customization ###
 
 * Administrators can utilize global settings to supersede the individual block settings.
-* Add background and text color with Gutenberg groups.
+* Set text, link, and background colors in Gutenberg's Styles tab.
 * Native block support for wide and full width.
+* Set vertical margins and padding with native spacing controls.
 * Control the maximum depth of the headings.
 * Choose between an ordered, bullet HTML list. Or indent the list.
-* Enable a box style and choose a box color directly in the block sidebar.
+* Select the Box style directly in Gutenberg's Styles tab.
 * Select a heading level or turn it into a paragraph.
 * Disable the h2 heading of the TOC block and add your own.
 
@@ -72,10 +73,11 @@ Hidden TOCs use native `<details>` and `<summary>` semantics without extra ARIA 
 SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoensing/SimpleTOC). If you find a bug or have an idea for a feature please feel free to contribute and create a pull request. 
 
 ## Changelog ##
-### 7.2.0 ###
-* Changed: SimpleTOC now always uses the standard Gutenberg block wrapper so themes can style it through theme.json.
-* Removed: Obsolete block and global wrapper settings because the standard wrapper is now always active.
-* Added: Native Gutenberg typography controls for font size and line height.
+### 7.3.0 ###
+* Changed: Box is now a native Gutenberg block style in the Styles tab.
+* Added: Native text, link, background color, margin, and padding controls.
+* Changed: Existing box-style blocks and the global Force box style setting remain compatible.
+* Thanks: Lovro Hrust (@lovor) for the theme.json and block styling feedback.
 
 ## Installation ##
 
@@ -89,9 +91,9 @@ In Gutenberg, add a block and search for "SimpleTOC" or just "TOC". Please save 
 
 SimpleTOC allows you to configure global settings for your WordPress website. These settings can be enforced globally, overriding any block-level configurations that may exist. To access these settings, navigate to the SimpleTOC section of the WordPress Settings.
 
-### How do I add a background color to SimpleTOC using Gutenberg groups? ###
+### How do I add colors or the Box style to SimpleTOC? ###
 
-Select the block and select "group" in the context menu. Apply "background color", "link color" and "text color" to this group. SimpleTOC will inherit these styles. You would like to use this styled SimpleTOC group next time you write a post? Convert it to a reusable block.
+Select the SimpleTOC block and open Gutenberg's Styles tab. Choose the Box style or use the native color controls to set text, link, and background colors. Native spacing controls are available for vertical margins and padding.
 
 ### How to exclude a single heading from the TOC? ###
 
@@ -103,7 +105,7 @@ You can convert your configured SimpleTOC block into a reusable block in Gutenbe
 
 ### How can I style SimpleTOC through theme.json? ###
 
-Add styles for the `simpletoc/toc` block to your theme.json. SimpleTOC uses the standard Gutenberg block wrapper and supports native font size and line height settings.
+Add styles for the `simpletoc/toc` block to your theme.json. SimpleTOC uses the standard Gutenberg block wrapper and supports native colors, vertical margins, padding, font size, and line height settings. The Box variation uses the `boxed` style name.
 
 ### How to allow developers to exclude specific headings programmatically? ###
 
