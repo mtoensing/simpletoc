@@ -2,7 +2,7 @@
 Contributors: MarcDK
 Tags: TOC, Table of Contents, Block, Accessibility, Table
 Requires at least: 6.2
-Tested up to: 7.0
+Tested up to: 7.1
 Stable tag: 7.3.0
 Requires PHP: 7.3
 License: GPLv2 or later
@@ -78,6 +78,7 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 * Changed: Box is now a native Gutenberg block style in the Styles tab.
 * Added: Native text, link, background color, margin, and padding controls.
 * Added: theme.json styling support for colors, spacing, and typography.
+* Added: WordPress 7.1 support and automated compatibility tests.
 * Changed: Existing box-style blocks and the global Force box style setting remain compatible.
 * Thanks: Lovro Hrust (@lovor) for the theme.json and block styling feedback.
 

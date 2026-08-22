@@ -39,10 +39,19 @@ concurrency:
 
 jobs:
   phpunit:
-    name: PHP unit tests
+    name: PHP unit tests (WordPress ${{ matrix.wordpress }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - wordpress: '6.2'
+            core: 'WordPress/WordPress#6.2'
+          - wordpress: '7.1'
+            core: 'WordPress/WordPress#7.1'
     env:
       WP_ENV_HOME: ${{ github.workspace }}/.wp-env-cache
+      WP_ENV_CORE: ${{ matrix.core }}
 
     steps:
       - name: Checkout
@@ -77,9 +86,9 @@ jobs:
         uses: actions/cache@v5
         with:
           path: .wp-env-cache
-          key: ${{ runner.os }}-wp-env-${{ hashFiles('.wp-env.json', 'package-lock.json', 'composer.lock') }}
+          key: ${{ runner.os }}-wp-env-wordpress-${{ matrix.wordpress }}-${{ hashFiles('.wp-env.json', 'package-lock.json', 'composer.lock') }}
           restore-keys: |
-            ${{ runner.os }}-wp-env-
+            ${{ runner.os }}-wp-env-wordpress-${{ matrix.wordpress }}-
 
       - name: Install dependencies
         if: steps.node-modules-cache.outputs.cache-hit != 'true'
