@@ -3,7 +3,7 @@
  * Plugin Name:   SimpleTOC - Table of Contents Block
  * Plugin URI:    https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
  * Description:   SEO-friendly Table of Contents Gutenberg block. No JavaScript or CSS by default.
- * Version:       7.2.0
+ * Version:       7.3.0
  * Requires at least: 6.2
  * Requires PHP: 7.3
  * Author:        Marc Tönsing
@@ -21,7 +21,7 @@ require_once __DIR__ . '/simpletoc-admin-settings.php';
 require_once __DIR__ . '/simpletoc-class-headline-ids.php';
 
 const DEFAULT_BOX_COLOR = '#ebebeb';
-const SIMPLETOC_VERSION = '7.2.0';
+const SIMPLETOC_VERSION = '7.3.0';
 
 /**
  * Prevents direct execution of the plugin file.
@@ -247,7 +247,7 @@ function render_callback_simpletoc( $attributes ) {
 	$alignclass  = ! empty( $attributes['align'] ) ? 'align' . $attributes['align'] : '';
 	$title_level = $attributes['title_level'];
 	$global_box_style_enabled = apply_filters( 'simpletoc_box_style_enabled', false ) || true === (bool) get_option( 'simpletoc_box_style_enabled', false );
-	$box_style_enabled        = $global_box_style_enabled || ! empty( $attributes['box_style'] );
+	$legacy_box_style_enabled = ! empty( $attributes['box_style'] );
 	$typography_enabled       = ! empty( $attributes['fontSize'] ) || ! empty( $attributes['style']['typography'] );
 	$wrapper_classes   = array( 'simpletoc' );
 	$wrapper_style     = '';
@@ -256,12 +256,13 @@ function render_callback_simpletoc( $attributes ) {
 		$wrapper_classes[] = 'has-simpletoc-typography';
 	}
 
-	if ( $box_style_enabled ) {
+	if ( $global_box_style_enabled || $legacy_box_style_enabled ) {
+		$wrapper_classes[] = 'is-style-boxed';
 		$wrapper_classes[] = 'has-simpletoc-box-style';
 
 		if ( $global_box_style_enabled ) {
 			$wrapper_classes[] = 'has-background';
-			$wrapper_style = safecss_filter_attr( 'background-color:' . DEFAULT_BOX_COLOR . ';' );
+			$wrapper_style     = safecss_filter_attr( 'background-color:' . DEFAULT_BOX_COLOR . ';' );
 		} elseif ( ! empty( $attributes['box_color'] ) ) {
 			$wrapper_classes[] = 'has-background';
 			$wrapper_style     = safecss_filter_attr( 'background-color:' . $attributes['box_color'] . ';' );

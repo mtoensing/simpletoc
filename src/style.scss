@@ -1,10 +1,16 @@
+.simpletoc.is-style-boxed,
 .simpletoc.has-simpletoc-box-style {
 	padding: 1em 1em 0.5em;
 }
 
+.simpletoc.is-style-boxed .simpletoc-title,
 .simpletoc.has-simpletoc-box-style .simpletoc-title {
 	margin: 0;
 	font-size: 1.6rem;
+}
+
+:where(.simpletoc.is-style-boxed:not(.has-background)) {
+	background-color: #ebebeb;
 }
 
 .simpletoc.has-simpletoc-typography .simpletoc-title,

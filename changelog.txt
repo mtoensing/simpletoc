@@ -1,5 +1,11 @@
 == Changelog ==
 
+= 7.3.0 =
+* Changed: Box is now a native Gutenberg block style in the Styles tab.
+* Added: Native text, link, background color, margin, and padding controls.
+* Changed: Existing box-style blocks and the global Force box style setting remain compatible.
+* Thanks: Lovro Hrust (@lovor) for the theme.json and block styling feedback.
+
 = 7.2.0 =
 * Changed: SimpleTOC now always uses the standard Gutenberg block wrapper so themes can style it through theme.json.
 * Removed: Obsolete block and global wrapper settings because the standard wrapper is now always active.

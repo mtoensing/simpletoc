@@ -40,6 +40,12 @@ const typographyPostContent = `<!-- wp:simpletoc/toc {"fontSize":"large","style"
 <h2 class="wp-block-heading">Styled TOC Heading</h2>
 <!-- /wp:heading -->`;
 
+const boxedStylePostContent = `<!-- wp:simpletoc/toc {"className":"is-style-boxed","backgroundColor":"contrast","textColor":"base","style":{"elements":{"link":{"color":{"text":"#abcdef"}}},"spacing":{"margin":{"top":"10px","bottom":"20px"},"padding":{"top":"30px","right":"31px","bottom":"32px","left":"33px"}}}} /-->
+
+<!-- wp:heading -->
+<h2 class="wp-block-heading">Boxed TOC Heading</h2>
+<!-- /wp:heading -->`;
+
 test.describe( 'SimpleTOC editor rendering', () => {
 	test.beforeEach( async ( { requestUtils } ) => {
 		await requestUtils.activatePlugin(
@@ -175,6 +181,72 @@ test.describe( 'SimpleTOC editor rendering', () => {
 
 		expect( typography.titleFontSize ).toBe( typography.fontSize );
 		expect( typography.titleLineHeight ).toBe( typography.lineHeight );
+	} );
+
+	test( 'applies the Box style and native design supports', async ( {
+		admin,
+		editor,
+		page,
+	} ) => {
+		await admin.createNewPost( {
+			title: 'SimpleTOC native styles smoke test',
+		} );
+
+		await page.waitForFunction( () =>
+			wp.blocks.getBlockType( 'simpletoc/toc' )
+		);
+
+		const blockType = await page.evaluate( () => {
+			const { styles, supports } =
+				wp.blocks.getBlockType( 'simpletoc/toc' );
+
+			return { styles, supports };
+		} );
+
+		expect( blockType.styles ).toEqual(
+			expect.arrayContaining( [
+				expect.objectContaining( { name: 'boxed', label: 'Box' } ),
+			] )
+		);
+		expect( blockType.supports ).toMatchObject( {
+			color: {
+				background: true,
+				link: true,
+				text: true,
+			},
+			spacing: {
+				margin: [ 'top', 'bottom' ],
+				padding: true,
+			},
+		} );
+
+		await editor.setContent( boxedStylePostContent );
+
+		const postId = await editor.publishPost();
+		expect( postId ).toBeTruthy();
+
+		await page.goto( `/?p=${ postId }` );
+
+		const toc = page.locator( '.simpletoc.is-style-boxed' );
+		await expect( toc ).toHaveClass( /has-contrast-background-color/ );
+		await expect( toc ).toHaveClass( /has-base-color/ );
+		await expect( toc ).toHaveAttribute( 'style', /margin-top:\s*10px/ );
+		await expect( toc ).toHaveAttribute( 'style', /margin-bottom:\s*20px/ );
+		await expect( toc ).toHaveAttribute( 'style', /padding-top:\s*30px/ );
+		await expect( toc ).toHaveAttribute( 'style', /padding-right:\s*31px/ );
+		await expect( toc ).toHaveAttribute(
+			'style',
+			/padding-bottom:\s*32px/
+		);
+		await expect( toc ).toHaveAttribute( 'style', /padding-left:\s*33px/ );
+
+		const linkColor = await toc
+			.locator( '.simpletoc-list a' )
+			.first()
+			.evaluate(
+				( element ) => window.getComputedStyle( element ).color
+			);
+		expect( linkColor ).toBe( 'rgb(171, 205, 239)' );
 	} );
 
 	test( 'loads legacy serialized SimpleTOC blocks as valid blocks', async ( {

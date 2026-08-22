@@ -62,6 +62,61 @@ class SimpleTOC_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Ensures the legacy box attributes retain their frontend appearance.
+	 */
+	public function test_rendered_legacy_box_uses_boxed_style_compatibility() {
+		$content  = '<!-- wp:simpletoc/toc {"no_title":true,"box_style":true,"box_color":"#abcdef"} /-->';
+		$content .= '<!-- wp:heading --><h2 class="wp-block-heading">First heading</h2><!-- /wp:heading -->';
+		$post_id  = self::factory()->post->create(
+			array(
+				'post_content' => $content,
+			)
+		);
+
+		$GLOBALS['post'] = get_post( $post_id );
+		setup_postdata( $GLOBALS['post'] );
+
+		$result = do_blocks( $content );
+
+		wp_reset_postdata();
+
+		$this->assertStringContainsString( 'is-style-boxed', $result );
+		$this->assertStringContainsString( 'has-simpletoc-box-style', $result );
+		$this->assertStringContainsString( 'has-background', $result );
+		$this->assertStringContainsString( 'background-color:#abcdef', $result );
+	}
+
+	/**
+	 * Ensures native color and spacing supports reach the block wrapper.
+	 */
+	public function test_rendered_box_applies_native_color_and_spacing_supports() {
+		$content  = '<!-- wp:simpletoc/toc {"no_title":true,"className":"is-style-boxed","style":{"color":{"background":"#112233","text":"#fefefe"},"spacing":{"margin":{"top":"10px","bottom":"20px"},"padding":{"top":"30px","right":"31px","bottom":"32px","left":"33px"}}}} /-->';
+		$content .= '<!-- wp:heading --><h2 class="wp-block-heading">First heading</h2><!-- /wp:heading -->';
+		$post_id  = self::factory()->post->create(
+			array(
+				'post_content' => $content,
+			)
+		);
+
+		$GLOBALS['post'] = get_post( $post_id );
+		setup_postdata( $GLOBALS['post'] );
+
+		$result = do_blocks( $content );
+
+		wp_reset_postdata();
+
+		$this->assertStringContainsString( 'is-style-boxed', $result );
+		$this->assertStringContainsString( 'background-color:#112233', $result );
+		$this->assertStringContainsString( 'color:#fefefe', $result );
+		$this->assertStringContainsString( 'margin-top:10px', $result );
+		$this->assertStringContainsString( 'margin-bottom:20px', $result );
+		$this->assertStringContainsString( 'padding-top:30px', $result );
+		$this->assertStringContainsString( 'padding-right:31px', $result );
+		$this->assertStringContainsString( 'padding-bottom:32px', $result );
+		$this->assertStringContainsString( 'padding-left:33px', $result );
+	}
+
+	/**
 	 * @covers \MToensing\SimpleTOC\add_anchor_attribute
 	 */
 	public function test_add_anchor_attribute_handles_highlighted_heading_markup() {

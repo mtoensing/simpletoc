@@ -186,6 +186,6 @@ function simpletoc_box_style_enabled_callback() {
 		echo '<label for="simpletoc_box_style_enabled" class="description">' . esc_html__( 'Setting controlled by "simpletoc_box_style_enabled" filter. Remove filter to adjust setting.', 'simpletoc' ) . '</label>';
 	} else {
 		echo '<input type="checkbox" name="simpletoc_box_style_enabled" id="simpletoc_box_style_enabled" value="1" ' . checked( 1, $box_style_enabled, false ) . ' />';
-		echo '<label for="simpletoc_box_style_enabled" class="description">' . esc_html__( 'Enables the box style for all SimpleTOC blocks with the default gray background. Wrapper markup is added automatically.', 'simpletoc' ) . '</label>';
+		echo '<label for="simpletoc_box_style_enabled" class="description">' . esc_html__( 'Applies the Box style with the default gray background to all SimpleTOC blocks.', 'simpletoc' ) . '</label>';
 	}
 }

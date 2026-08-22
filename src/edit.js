@@ -9,7 +9,6 @@ import { store as editorStore } from '@wordpress/editor';
 import ServerSideRender from '@wordpress/server-side-render';
 import {
 	BaseControl,
-	ColorPalette,
 	SelectControl,
 	ToolbarButton,
 	ToggleControl,
@@ -27,15 +26,16 @@ import metadata from './block.json';
 import './editor.scss';
 import './../assets/accordion.css';
 
-const DEFAULT_BOX_COLOR = '#ebebeb';
 const SERVER_SIDE_RENDER_ATTRIBUTE_NAMES = [
 	...Object.entries( metadata.attributes || {} )
 		.filter( ( [ , settings ] ) => settings.role !== 'local' )
 		.map( ( [ name ] ) => name ),
 	'align',
+	'backgroundColor',
 	'className',
 	'fontSize',
 	'style',
+	'textColor',
 ];
 
 function getServerSideRenderAttributes( attributes ) {
@@ -101,8 +101,6 @@ export default function Edit( { attributes, setAttributes } ) {
 	const editorSettings = useSelect( ( select ) => {
 		return select( blockEditorStore ).getSettings() || {};
 	}, [] );
-	const boxColors = editorSettings.colors || [];
-	const selectedBoxColor = attributes.box_color;
 	const settingsUrl =
 		editorSettings.simpletocSettingsUrl ||
 		window.simpletocEditorSettings?.settingsUrl ||
@@ -472,49 +470,6 @@ export default function Edit( { attributes, setAttributes } ) {
 							}
 						/>
 					</PanelRow>
-					<PanelRow>
-						<ToggleControl
-							label={ __( 'Box style', 'simpletoc' ) }
-							help={ __(
-								'Adds box spacing and title styling.',
-								'simpletoc'
-							) }
-							checked={ attributes.box_style }
-							onChange={ () =>
-								setAttributes( {
-									box_style: ! attributes.box_style,
-									box_color:
-										! attributes.box_style &&
-										! attributes.box_color
-											? DEFAULT_BOX_COLOR
-											: attributes.box_color,
-								} )
-							}
-						/>
-					</PanelRow>
-					{ attributes.box_style && boxColors.length > 0 && (
-						<PanelRow>
-							<BaseControl
-								id="simpletoc-box-color"
-								label={ __( 'Box color', 'simpletoc' ) }
-								help={ __(
-									'Uses the active editor color palette.',
-									'simpletoc'
-								) }
-							>
-								<ColorPalette
-									colors={ boxColors }
-									value={ selectedBoxColor }
-									onChange={ ( colorValue ) =>
-										setAttributes( {
-											box_color: colorValue || '',
-										} )
-									}
-									clearable={ false }
-								/>
-							</BaseControl>
-						</PanelRow>
-					) }
 					<PanelRow>
 						<ToggleControl
 							label={ __( 'Automatic refresh', 'simpletoc' ) }
