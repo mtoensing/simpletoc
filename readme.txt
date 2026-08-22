@@ -44,6 +44,7 @@ Hidden TOCs use native `<details>` and `<summary>` semantics without extra ARIA 
 * No JavaScript or CSS by default. Optional features such as the accordion menu, smooth scrolling, or box style add minimal assets only when enabled.
 * Optional Box style in Gutenberg's Styles tab with a default gray background.
 * Native text, link, background, spacing, and typography controls.
+* Global block styling through theme.json.
 * Inherits the style of your theme.
 * Smooth scrolling effect using CSS. 
 * Accessibility built-in by following web standards.
@@ -76,6 +77,7 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 = 7.3.0 =
 * Changed: Box is now a native Gutenberg block style in the Styles tab.
 * Added: Native text, link, background color, margin, and padding controls.
+* Added: theme.json styling support for colors, spacing, and typography.
 * Changed: Existing box-style blocks and the global Force box style setting remain compatible.
 * Thanks: Lovro Hrust (@lovor) for the theme.json and block styling feedback.
 
@@ -105,7 +107,49 @@ You can convert your configured SimpleTOC block into a reusable block in Gutenbe
 
 = How can I style SimpleTOC through theme.json? =
 
-Add styles for the `simpletoc/toc` block to your theme.json. SimpleTOC uses the standard Gutenberg block wrapper and supports native colors, vertical margins, padding, font size, and line height settings. The Box variation uses the `boxed` style name.
+Add styles for the `simpletoc/toc` block to your theme.json. SimpleTOC uses the standard Gutenberg block wrapper and supports native colors, vertical margins, padding, font size, and line height settings.
+
+The following example sets default colors, spacing, and typography for every SimpleTOC block:
+
+    {
+        "$schema": "https://schemas.wp.org/trunk/theme.json",
+        "version": 3,
+        "styles": {
+            "blocks": {
+                "simpletoc/toc": {
+                    "color": {
+                        "background": "#f5f5f5",
+                        "text": "#1e1e1e"
+                    },
+                    "elements": {
+                        "link": {
+                            "color": {
+                                "text": "#0057b8"
+                            }
+                        }
+                    },
+                    "spacing": {
+                        "margin": {
+                            "top": "1.5rem",
+                            "bottom": "1.5rem"
+                        },
+                        "padding": {
+                            "top": "1rem",
+                            "right": "1rem",
+                            "bottom": "1rem",
+                            "left": "1rem"
+                        }
+                    },
+                    "typography": {
+                        "fontSize": "1rem",
+                        "lineHeight": "1.6"
+                    }
+                }
+            }
+        }
+    }
+
+Replace the example values with your theme's values or preset variables. Selecting the Box style adds the standard `is-style-boxed` class.
 
 = How to allow developers to exclude specific headings programmatically? = 
 
