@@ -29,6 +29,11 @@ Follow these rules for all changes in this WordPress plugin repository.
 ## Deployment Workflow
 
 - Do not create pull requests. Commit and push approved changes directly to `main` as `mtoensing`.
+- Never publish or deploy anything to WordPress.org unless the user's current request explicitly says "veröffentlichen auf WordPress.org" (publish on WordPress.org).
+- Treat this as a fresh-release authorization: approval from an earlier request does not carry over to a later release or deployment.
+- Requests to prepare a release, update versions, create a release in the code, commit, push, or tag a version do not authorize a WordPress.org deployment.
+- Do not create or push a Git tag when that tag can trigger the WordPress.org deployment workflow unless the user has given the explicit WordPress.org publication authorization above.
+- Preparing release code, documentation, and metadata and pushing them to `main` remains allowed when requested, provided no WordPress.org deployment is triggered.
 - Read and understand the repository's GitHub Actions workflows before changing deployment behavior.
 - Check `.github/workflows/` to see which branch, tag, path, or manual triggers deploy plugin code, WordPress.org assets, generated documentation, or release artifacts.
 - Check `.distignore` before adding project-only files. Claude skills, local tooling, generated GitHub-only files, and development metadata must not be shipped to WordPress.org.
