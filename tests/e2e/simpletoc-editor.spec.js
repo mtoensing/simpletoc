@@ -316,4 +316,113 @@ test.describe( 'SimpleTOC editor rendering', () => {
 		);
 		await expect( tocWrapper.locator( '.simpletoc-list' ) ).toBeVisible();
 	} );
+	test( 'tracks scrolling with CSS and JavaScript disabled', async ( {
+		admin,
+		editor,
+		page,
+		browser,
+	} ) => {
+		await admin.createNewPost( { title: 'SimpleTOC CSS scroll spy' } );
+		const sections = [ 'First', 'Nested', 'Last' ]
+			.map( ( title, index ) => {
+				const level = index === 1 ? 3 : 2;
+				return `<!-- wp:heading {"level":${ level }} -->
+<h${ level } class="wp-block-heading">${ title }</h${ level }><!-- /wp:heading -->
+<!-- wp:spacer {"height":"1200px"} --><div style="height:1200px" aria-hidden="true" class="wp-block-spacer"></div><!-- /wp:spacer -->`;
+			} )
+			.join( '\n' );
+		await editor.setContent( '<!-- wp:simpletoc/toc /-->\n' + sections );
+		await editor.canvas.locator( '[data-type="simpletoc/toc"]' ).click();
+		await editor.openDocumentSettingsSidebar();
+		await page
+			.getByRole( 'button', { name: 'Advanced Features', exact: true } )
+			.click();
+		await page
+			.getByRole( 'checkbox', {
+				name: 'Highlight current section',
+				exact: true,
+			} )
+			.check();
+		const postId = await editor.publishPost();
+		const context = await browser.newContext( {
+			javaScriptEnabled: false,
+		} );
+		try {
+			const frontend = await context.newPage();
+			await frontend.goto(
+				new URL( `/?p=${ postId }`, page.url() ).href
+			);
+			const toc = frontend.locator( '.wp-block-simpletoc-toc' );
+			await expect( toc ).toHaveClass( /has-simpletoc-scroll-spy/ );
+			await expect( toc ).toHaveCSS( 'scroll-target-group', 'auto' );
+			for ( const title of [ 'First', 'Nested', 'Last', 'First' ] ) {
+				await frontend
+					.getByRole( 'heading', { name: title, exact: true } )
+					.evaluate( ( heading ) =>
+						window.scrollTo(
+							0,
+							heading.getBoundingClientRect().top +
+								window.scrollY +
+								10
+						)
+					);
+				await expect( toc.locator( 'a:target-current' ) ).toHaveText(
+					title
+				);
+				await expect( toc.locator( 'a:target-current' ) ).toHaveCSS(
+					'text-decoration-line',
+					'underline'
+				);
+			}
+		} finally {
+			await context.close();
+		}
+	} );
+	test( 'saves the global scroll spy setting and enforces it in the editor', async ( {
+		admin,
+		editor,
+		page,
+	} ) => {
+		const settingsPath = '/wp-admin/options-general.php?page=simpletoc';
+		await page.goto( settingsPath );
+		await page.locator( '#simpletoc_scroll_spy_enabled' ).check();
+		await page.getByRole( 'button', { name: 'Save Changes' } ).click();
+		await expect(
+			page.locator( '#simpletoc_scroll_spy_enabled' )
+		).toBeChecked();
+		try {
+			await admin.createNewPost( {
+				title: 'Globally enabled scroll spy',
+			} );
+			await editor.setContent( postContent );
+			await editor.canvas
+				.locator( '[data-type="simpletoc/toc"]' )
+				.click();
+			await editor.openDocumentSettingsSidebar();
+			await page
+				.getByRole( 'button', {
+					name: 'Advanced Features',
+					exact: true,
+				} )
+				.click();
+			const toggle = page.getByRole( 'checkbox', {
+				name: 'Highlight current section',
+				exact: true,
+			} );
+			await expect( toggle ).toBeChecked();
+			await expect( toggle ).toBeDisabled();
+			const postId = await editor.publishPost();
+			await page.goto( `/?p=${ postId }` );
+			await expect(
+				page.locator( '.wp-block-simpletoc-toc' )
+			).toHaveClass( /has-simpletoc-scroll-spy/ );
+		} finally {
+			await page.goto( settingsPath );
+			await page.locator( '#simpletoc_scroll_spy_enabled' ).uncheck();
+			await page.getByRole( 'button', { name: 'Save Changes' } ).click();
+			await expect(
+				page.locator( '#simpletoc_scroll_spy_enabled' )
+			).not.toBeChecked();
+		}
+	} );
 } );

@@ -3,7 +3,7 @@
  * Plugin Name:   SimpleTOC - Table of Contents Block
  * Plugin URI:    https://marc.tv/simpletoc-wordpress-inhaltsverzeichnis-plugin-gutenberg/
  * Description:   SEO-friendly Table of Contents Gutenberg block. No JavaScript or CSS by default.
- * Version:       7.3.1
+ * Version:       7.4.0
  * Requires at least: 6.2
  * Requires PHP: 7.3
  * Author:        Marc Tönsing
@@ -21,7 +21,7 @@ require_once __DIR__ . '/simpletoc-admin-settings.php';
 require_once __DIR__ . '/simpletoc-class-headline-ids.php';
 
 const DEFAULT_BOX_COLOR = '#ebebeb';
-const SIMPLETOC_VERSION = '7.3.1';
+const SIMPLETOC_VERSION = '7.4.0';
 
 /**
  * Prevents direct execution of the plugin file.
@@ -58,7 +58,8 @@ function register_simpletoc_block() {
 		'simpletoc-toc-editor-script',
 		'window.simpletocEditorSettings = ' . wp_json_encode(
 			array(
-				'settingsUrl' => admin_url( 'options-general.php?page=simpletoc' ),
+				'settingsUrl'      => admin_url( 'options-general.php?page=simpletoc' ),
+				'scrollSpyEnabled' => simpletoc_scroll_spy_enabled(),
 			)
 		) . ';',
 		'before'
@@ -77,6 +78,8 @@ add_action( 'init', __NAMESPACE__ . '\register_simpletoc_block' );
  */
 function add_simpletoc_block_editor_settings( $editor_settings, $editor_context ) {
 	$editor_settings['simpletocSettingsUrl'] = admin_url( 'options-general.php?page=simpletoc' );
+
+	$editor_settings['simpletocScrollSpyEnabled'] = simpletoc_scroll_spy_enabled();
 
 	return $editor_settings;
 }
@@ -251,6 +254,10 @@ function render_callback_simpletoc( $attributes ) {
 	$typography_enabled       = ! empty( $attributes['fontSize'] ) || ! empty( $attributes['style']['typography'] );
 	$wrapper_classes   = array( 'simpletoc' );
 	$wrapper_style     = '';
+
+	if ( simpletoc_scroll_spy_enabled() || ! empty( $attributes['scroll_spy'] ) ) {
+		$wrapper_classes[] = 'has-simpletoc-scroll-spy';
+	}
 
 	if ( $typography_enabled ) {
 		$wrapper_classes[] = 'has-simpletoc-typography';

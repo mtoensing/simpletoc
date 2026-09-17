@@ -4,6 +4,7 @@
 /.claude
 /AGENTS.md
 /babel.config.js
+/.eslintrc.js
 /node_modules
 /src
 package.json

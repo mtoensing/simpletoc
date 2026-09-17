@@ -106,6 +106,11 @@ export default function Edit( { attributes, setAttributes } ) {
 		window.simpletocEditorSettings?.settingsUrl ||
 		'';
 
+	const scrollSpyEnabled =
+		editorSettings.simpletocScrollSpyEnabled ??
+		window.simpletocEditorSettings?.scrollSpyEnabled ??
+		false;
+
 	const [ serverSideRenderRefresh, setServerSideRenderRefresh ] =
 		useState( 0 );
 	const wasSavingPost = useRef( false );
@@ -436,6 +441,32 @@ export default function Edit( { attributes, setAttributes } ) {
 							</div>
 						</PanelRow>
 					) }
+					<PanelRow>
+						<ToggleControl
+							label={ __(
+								'Highlight current section',
+								'simpletoc'
+							) }
+							help={
+								scrollSpyEnabled
+									? __(
+											'Enabled globally in SimpleTOC settings.',
+											'simpletoc'
+									  )
+									: __(
+											'Underlines the current section link while scrolling in supported browsers. Other browsers show the normal table of contents.',
+											'simpletoc'
+									  )
+							}
+							checked={
+								scrollSpyEnabled || attributes.scroll_spy
+							}
+							disabled={ scrollSpyEnabled }
+							onChange={ ( value ) =>
+								setAttributes( { scroll_spy: value } )
+							}
+						/>
+					</PanelRow>
 					<PanelRow>
 						<ToggleControl
 							label={ __(

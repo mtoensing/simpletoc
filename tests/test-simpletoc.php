@@ -12,6 +12,32 @@ use MToensing\SimpleTOC\SimpleTOC_Headline_Ids;
  */
 class SimpleTOC_Test extends WP_UnitTestCase {
 	/**
+	 * Covers opt-in behavior, global enforcement, and the global filter override.
+	 */
+	public function test_scroll_spy_settings_precedence() {
+		$content = '<!-- wp:simpletoc/toc /--><!-- wp:heading --><h2>Section</h2><!-- /wp:heading -->';
+		$post_id = self::factory()->post->create( array( 'post_content' => $content ) );
+		$GLOBALS['post'] = get_post( $post_id );
+		setup_postdata( $GLOBALS['post'] );
+
+		try {
+			$this->assertStringNotContainsString( 'has-simpletoc-scroll-spy', do_blocks( $content ) );
+			$enabled_content = str_replace( 'wp:simpletoc/toc /', 'wp:simpletoc/toc {"scroll_spy":true} /', $content );
+			$this->assertStringContainsString( 'has-simpletoc-scroll-spy', do_blocks( $enabled_content ) );
+
+			update_option( 'simpletoc_scroll_spy_enabled', true );
+			$this->assertStringContainsString( 'has-simpletoc-scroll-spy', do_blocks( $content ) );
+			add_filter( 'simpletoc_scroll_spy_enabled', '__return_false' );
+			$this->assertStringNotContainsString( 'has-simpletoc-scroll-spy', do_blocks( $content ) );
+			$this->assertStringContainsString( 'has-simpletoc-scroll-spy', do_blocks( $enabled_content ) );
+		} finally {
+			remove_filter( 'simpletoc_scroll_spy_enabled', '__return_false' );
+			delete_option( 'simpletoc_scroll_spy_enabled' );
+			wp_reset_postdata();
+		}
+	}
+
+	/**
 	 * Returns default block attributes for TOC rendering tests.
 	 *
 	 * @param array $overrides Attribute overrides.

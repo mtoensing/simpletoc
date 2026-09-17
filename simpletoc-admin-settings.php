@@ -8,6 +8,15 @@
 namespace MToensing\SimpleTOC;
 
 /**
+ * Whether scroll highlighting is enforced globally.
+ *
+ * @return bool
+ */
+function simpletoc_scroll_spy_enabled() {
+	return (bool) apply_filters( 'simpletoc_scroll_spy_enabled', (bool) get_option( 'simpletoc_scroll_spy_enabled', false ) );
+}
+
+/**
  * Add SimpleTOC global settings page.
  */
 function simpletoc_add_settings_page() {
@@ -74,6 +83,18 @@ function simpletoc_register_settings() {
 		register_setting( 'simpletoc_settings', 'simpletoc_box_style_enabled' );
 	}
 
+	if ( null === apply_filters( 'simpletoc_scroll_spy_enabled', null ) ) {
+		register_setting(
+			'simpletoc_settings',
+			'simpletoc_scroll_spy_enabled',
+			array(
+				'type'              => 'boolean',
+				'sanitize_callback' => 'rest_sanitize_boolean',
+				'default'           => false,
+			)
+		);
+	}
+
 	// Add settings sections and fields.
 	add_settings_section(
 		'simpletoc_wrapper_section',
@@ -111,6 +132,14 @@ function simpletoc_register_settings() {
 		'simpletoc_autoupdate_enabled',
 		esc_html__( 'Force no auto refresh', 'simpletoc' ),
 		__NAMESPACE__ . '\simpletoc_autoupdate_enabled_callback',
+		'simpletoc',
+		'simpletoc_wrapper_section'
+	);
+
+	add_settings_field(
+		'simpletoc_scroll_spy_enabled',
+		esc_html__( 'Force highlight current section', 'simpletoc' ),
+		__NAMESPACE__ . '\simpletoc_scroll_spy_enabled_callback',
 		'simpletoc',
 		'simpletoc_wrapper_section'
 	);
@@ -187,5 +216,17 @@ function simpletoc_box_style_enabled_callback() {
 	} else {
 		echo '<input type="checkbox" name="simpletoc_box_style_enabled" id="simpletoc_box_style_enabled" value="1" ' . checked( 1, $box_style_enabled, false ) . ' />';
 		echo '<label for="simpletoc_box_style_enabled" class="description">' . esc_html__( 'Applies the Box style with the default gray background to all SimpleTOC blocks.', 'simpletoc' ) . '</label>';
+	}
+}
+
+/**
+ * Scroll highlighting setting.
+ */
+function simpletoc_scroll_spy_enabled_callback() {
+	$controlled = null !== apply_filters( 'simpletoc_scroll_spy_enabled', null );
+	echo '<input type="checkbox" name="simpletoc_scroll_spy_enabled" id="simpletoc_scroll_spy_enabled" value="1" ' . checked( true, simpletoc_scroll_spy_enabled(), false ) . disabled( $controlled, true, false ) . ' />';
+	echo '<label for="simpletoc_scroll_spy_enabled" class="description">' . esc_html__( 'Underlines the current section link in all SimpleTOC blocks in supported browsers. No JavaScript fallback.', 'simpletoc' ) . '</label>';
+	if ( $controlled ) {
+		echo '<p class="description">' . esc_html__( 'Setting controlled by the simpletoc_scroll_spy_enabled filter.', 'simpletoc' ) . '</p>';
 	}
 }

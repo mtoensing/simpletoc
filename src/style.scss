@@ -23,3 +23,17 @@
 .simpletoc > summary {
 	cursor: pointer;
 }
+
+@supports (scroll-target-group: auto) {
+
+	.wp-block-simpletoc-toc.has-simpletoc-scroll-spy {
+		scroll-target-group: auto;
+	}
+
+	/* Native CSS Overflow 5 selector. */
+	/* stylelint-disable-next-line selector-pseudo-class-no-unknown */
+	.wp-block-simpletoc-toc.has-simpletoc-scroll-spy a:target-current {
+		text-decoration: underline;
+		text-decoration-thickness: 0.15em;
+	}
+}
