@@ -476,10 +476,9 @@ function simpletoc_sanitize_string( $string_to_sanitize ) {
 	// remove umlauts and accents.
 	$string_without_accents = remove_accents( $html_wo_nbs );
 	// Sanitizes a title, replacing whitespace and a few other characters with dashes.
-	$sanitized_string = sanitize_title_with_dashes( $string_without_accents );
-	// Encode for use in an url.
-	$urlencoded = rawurlencode( $sanitized_string );
-	return $urlencoded;
+	// Already returns a URL-safe, percent-encoded slug for non-ASCII input, so no
+	// further rawurlencode() is needed (that would double-encode the string).
+	return sanitize_title_with_dashes( $string_without_accents );
 }
 
 /**
