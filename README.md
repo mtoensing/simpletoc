@@ -3,7 +3,7 @@
 **Tags:** TOC, Table of Contents, Block, Accessibility, Table  
 **Requires at least:** 6.2  
 **Tested up to:** 7.1  
-**Stable tag:** 7.3.1  
+**Stable tag:** 7.4.0  
 **Requires PHP:** 7.3  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
@@ -64,6 +64,12 @@ Hidden TOCs use native `<details>` and `<summary>` semantics without extra ARIA 
 * Select a heading level or turn it into a paragraph.
 * Disable the h2 heading of the TOC block and add your own.
 
+### Highlight the current section ###
+
+Enable "Highlight current section" under Advanced Features in the SimpleTOC block settings. The link for the current section is underlined as visitors scroll. This option is off by default. To enable it for all blocks, turn on "Force highlight current section" under Settings > SimpleTOC. The global setting takes precedence over individual block settings. Developers can override the global setting with the `simpletoc_scroll_spy_enabled` filter.
+
+This feature uses native CSS `scroll-target-group` and `:target-current`. Browser support is limited. Browsers without support keep the normal table of contents and working links. No JavaScript fallback or polyfill is included. Highlighting applies to headings on the current page and does not make the table of contents sticky.
+
 ### Compatibility ###
 
 * GeneratePress and Rank Math support.
@@ -74,16 +80,8 @@ Hidden TOCs use native `<details>` and `<summary>` semantics without extra ARIA 
 SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoensing/SimpleTOC). If you find a bug or have an idea for a feature please feel free to contribute and create a pull request. 
 
 ## Changelog ##
-### 7.3.1 ###
-* Fixed: Heading anchors for non-Latin scripts (Japanese, Chinese, Korean, Cyrillic, etc.) were double URL-encoded, breaking externally shared or hand-written fragment links. Props to the reporter of issue #89.
-
-### 7.3.0 ###
-* Changed: Box is now a native Gutenberg block style in the Styles tab.
-* Added: Native text, link, background color, margin, and padding controls.
-* Added: theme.json styling support for colors, spacing, and typography.
-* Added: WordPress 7.1 support and automated compatibility tests.
-* Changed: Existing box-style blocks and the global Force box style setting remain compatible.
-* Thanks: Lovro Hrust (@lovor) for the theme.json and block styling feedback.
+### 7.4.0 ###
+* Added: Optional CSS-only scroll spy to underline the current section link in supporting browsers. Enable Highlight current section in the block settings or enforce it globally under Settings > SimpleTOC. No JavaScript or polyfill is added.
 
 ## Installation ##
 
