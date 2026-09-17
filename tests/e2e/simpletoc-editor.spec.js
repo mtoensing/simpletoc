@@ -332,7 +332,14 @@ test.describe( 'SimpleTOC editor rendering', () => {
 			} )
 			.join( '\n' );
 		await editor.setContent( '<!-- wp:simpletoc/toc /-->\n' + sections );
-		await editor.canvas.locator( '[data-type="simpletoc/toc"]' ).click();
+		await page.evaluate( () => {
+			const block = wp.data
+				.select( 'core/block-editor' )
+				.getBlocks()[ 0 ];
+			wp.data
+				.dispatch( 'core/block-editor' )
+				.selectBlock( block.clientId );
+		} );
 		await editor.openDocumentSettingsSidebar();
 		await page
 			.getByRole( 'button', { name: 'Advanced Features', exact: true } )
@@ -395,9 +402,14 @@ test.describe( 'SimpleTOC editor rendering', () => {
 				title: 'Globally enabled scroll spy',
 			} );
 			await editor.setContent( postContent );
-			await editor.canvas
-				.locator( '[data-type="simpletoc/toc"]' )
-				.click();
+			await page.evaluate( () => {
+				const block = wp.data
+					.select( 'core/block-editor' )
+					.getBlocks()[ 0 ];
+				wp.data
+					.dispatch( 'core/block-editor' )
+					.selectBlock( block.clientId );
+			} );
 			await editor.openDocumentSettingsSidebar();
 			await page
 				.getByRole( 'button', {
