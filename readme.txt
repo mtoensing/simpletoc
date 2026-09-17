@@ -3,7 +3,7 @@ Contributors: MarcDK
 Tags: TOC, Table of Contents, Block, Accessibility, Table
 Requires at least: 6.2
 Tested up to: 7.1
-Stable tag: 7.3.0
+Stable tag: 7.3.1
 Requires PHP: 7.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -74,6 +74,9 @@ Hidden TOCs use native `<details>` and `<summary>` semantics without extra ARIA 
 SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoensing/SimpleTOC). If you find a bug or have an idea for a feature please feel free to contribute and create a pull request. 
 
 == Changelog ==
+= 7.3.1 =
+* Fixed: Heading anchors for non-Latin scripts (Japanese, Chinese, Korean, Cyrillic, etc.) were double URL-encoded, breaking externally shared or hand-written fragment links. Props to the reporter of issue #89.
+
 = 7.3.0 =
 * Changed: Box is now a native Gutenberg block style in the Styles tab.
 * Added: Native text, link, background color, margin, and padding controls.
