@@ -38,6 +38,7 @@ Follow these rules for all changes in this WordPress plugin repository.
 - Check `.github/workflows/` to see which branch, tag, path, or manual triggers deploy plugin code, WordPress.org assets, generated documentation, or release artifacts.
 - Check `.distignore` before adding project-only files. Claude skills, local tooling, generated GitHub-only files, and development metadata must not be shipped to WordPress.org.
 - Keep deployment changes conservative and explicit. Do not add a new deployment path when an existing workflow already covers the job.
+- Before tagging or pushing a release, confirm all tests and GitHub Actions workflows on `main` are green. Do not release on top of a failing or in-progress run.
 
 ## Block Workflow
 
