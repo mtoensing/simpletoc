@@ -82,14 +82,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-phpunit-composer-
 
-      - name: Restore wp-env workspace
-        uses: actions/cache@v5
-        with:
-          path: .wp-env-cache
-          key: ${{ runner.os }}-wp-env-wordpress-${{ matrix.wordpress }}-${{ hashFiles('.wp-env.json', 'package-lock.json', 'composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-wp-env-wordpress-${{ matrix.wordpress }}-
-
       - name: Install dependencies
         if: steps.node-modules-cache.outputs.cache-hit != 'true'
         run: npm ci --prefer-offline --no-audit --no-fund
