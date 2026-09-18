@@ -1,6 +1,8 @@
 name: E2E
 
 on:
+  workflow_call:
+
   push:
     branches:
       - main
@@ -50,6 +52,7 @@ jobs:
           - wordpress: '7.1'
             core: 'WordPress/WordPress#7.1'
     env:
+      # Keep wp-env state fresh: its configuration cache outlives Docker databases.
       WP_ENV_HOME: ${{ github.workspace }}/.wp-env-cache
       WP_ENV_CORE: ${{ matrix.core }}
       PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
@@ -89,6 +92,14 @@ jobs:
 
       - name: Run editor smoke test
         run: npm run test:e2e
+
+      - name: Upload failed test traces and screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-wordpress-${{ matrix.wordpress }}
+          path: artifacts/test-results
+          retention-days: 7
 
       - name: Stop WordPress test environment
         if: always()

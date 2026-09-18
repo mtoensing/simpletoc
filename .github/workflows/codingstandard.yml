@@ -1,6 +1,8 @@
 name: Coding Standards
 
 on:
+  workflow_call:
+
   push:
     branches:
       - main

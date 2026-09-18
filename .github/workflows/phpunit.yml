@@ -1,6 +1,8 @@
 name: PHPUnit
 
 on:
+  workflow_call:
+
   push:
     branches:
       - main
@@ -50,6 +52,7 @@ jobs:
           - wordpress: '7.1'
             core: 'WordPress/WordPress#7.1'
     env:
+      # Keep wp-env state fresh: its configuration cache outlives Docker databases.
       WP_ENV_HOME: ${{ github.workspace }}/.wp-env-cache
       WP_ENV_CORE: ${{ matrix.core }}
 

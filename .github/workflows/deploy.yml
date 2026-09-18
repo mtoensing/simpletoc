@@ -10,13 +10,45 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  lint:
+    uses: ./.github/workflows/codingstandard.yml
+
+  e2e:
+    uses: ./.github/workflows/e2e.yml
+
+  phpunit:
+    uses: ./.github/workflows/phpunit.yml
+
   tag:
     name: New tag
+    needs: [lint, e2e, phpunit]
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v5
+
+      - name: Verify release versions match the tag
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import re
+          from pathlib import Path
+
+          tag = os.environ['GITHUB_REF_NAME']
+          assert re.fullmatch(r'[0-9]+\.[0-9]+\.[0-9]+', tag), 'Expected a numeric release tag'
+          versions = {
+              'plugin.php': re.search(r'Version:\s*(\S+)', Path('plugin.php').read_text()).group(1),
+              'readme.txt': re.search(r'Stable tag:\s*(\S+)', Path('readme.txt').read_text()).group(1),
+          }
+          for filename in ('src/block.json', 'build/block.json', 'package.json', 'package-lock.json'):
+              versions[filename] = json.loads(Path(filename).read_text())['version']
+          versions['package-lock.json root'] = json.loads(Path('package-lock.json').read_text())['packages']['']['version']
+          for filename, version in versions.items():
+              assert version == tag, f'{filename}: {version} does not match tag {tag}'
+          print(f'All release versions match {tag}')
+          PY
 
       - name: Setup Node
         uses: actions/setup-node@v5
