@@ -3,7 +3,7 @@
 **Tags:** TOC, Table of Contents, Block, Accessibility, Table  
 **Requires at least:** 6.2  
 **Tested up to:** 7.1  
-**Stable tag:** 7.4.0  
+**Stable tag:** 7.4.1  
 **Requires PHP:** 7.3  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
@@ -80,8 +80,8 @@ This feature uses native CSS `scroll-target-group` and `:target-current`. Browse
 SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoensing/SimpleTOC). If you find a bug or have an idea for a feature please feel free to contribute and create a pull request. 
 
 ## Changelog ##
-### 7.4.0 ###
-* Added: Optional CSS-only scroll spy to underline the current section link in supporting browsers. Enable Highlight current section in the block settings or enforce it globally under Settings > SimpleTOC. No JavaScript or polyfill is added.
+### 7.4.1 ###
+* Fixed: Headings inside Query Loop blocks (core/query, GenerateBlocks) no longer receive duplicate anchor IDs from the surrounding page and are no longer listed in the table of contents. Fixes issue #90.
 
 ## Installation ##
 
