@@ -29,6 +29,7 @@ Follow these rules for all changes in this WordPress plugin repository.
 ## Deployment Workflow
 
 - Do not create pull requests. Commit and push approved changes directly to `main` as `mtoensing`.
+- Commit and push only under the user's own GitHub account. Never attribute commits or pull requests to an LLM (e.g. Claude, GPT) — do not add `Co-Authored-By` trailers or similar attribution for an AI assistant.
 - Never publish or deploy anything to WordPress.org unless the user's current request explicitly says "veröffentlichen auf WordPress.org" (publish on WordPress.org).
 - Treat this as a fresh-release authorization: approval from an earlier request does not carry over to a later release or deployment.
 - Requests to prepare a release, update versions, create a release in the code, commit, push, or tag a version do not authorize a WordPress.org deployment.

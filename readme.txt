@@ -155,7 +155,7 @@ Replace the example values with your theme's values or preset variables. Selecti
 
 = How to allow developers to exclude specific headings programmatically? = 
 
-Use the 'simpletoc_excluded_blocks' filter. For example, this code will exclude heading blocks that are inside a column block.
+Query Loop blocks (core/query, generateblocks/query-loop, generateblocks/query) are always excluded, because their headings repeat for every post. Use the 'simpletoc_excluded_blocks' filter to exclude more blocks. For example, this code will exclude heading blocks that are inside a column block.
 
 Example: 
 

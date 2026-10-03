@@ -12,6 +12,39 @@ use MToensing\SimpleTOC\SimpleTOC_Headline_Ids;
  */
 class SimpleTOC_Test extends WP_UnitTestCase {
 	/**
+	 * Query templates must remain untouched because their headings repeat per post.
+	 */
+	public function test_query_loop_subtrees_are_excluded_from_ids_and_toc() {
+		foreach ( array( 'core/query', 'generateblocks/query-loop', 'generateblocks/query' ) as $block_name ) {
+			$loop = '<!-- wp:' . $block_name . ' --><!-- wp:group --><div class="wp-block-group"><!-- wp:heading --><h2>Loop heading</h2><!-- /wp:heading --><!-- wp:generateblocks/text --><h2>{{post_title}}</h2><!-- /wp:generateblocks/text --><!-- wp:generateblocks/headline --><h3>Legacy title</h3><!-- /wp:generateblocks/headline --></div><!-- /wp:group --><!-- /wp:' . $block_name . ' -->';
+			$content = '<!-- wp:heading --><h2>Page section</h2><!-- /wp:heading --><!-- wp:group --><div class="wp-block-group">' . $loop . '</div><!-- /wp:group -->';
+			$result = MToensing\SimpleTOC\simpletoc_add_ids_to_content( $content );
+
+			$this->assertStringContainsString( serialize_blocks( parse_blocks( $loop ) ), $result, $block_name );
+			$this->assertStringContainsString( 'id="page-section"', $result );
+			$this->assertSame( array( '<h2 id="page-section">Page section</h2>' ), MToensing\SimpleTOC\filter_headings_recursive( parse_blocks( $result ) ), $block_name );
+		}
+	}
+
+	/**
+	 * Custom exclusions apply consistently to anchors and TOC entries.
+	 */
+	public function test_custom_excluded_blocks_are_not_modified() {
+		$exclude_groups = static function ( $blocks ) {
+			$blocks[] = 'core/group';
+			return $blocks;
+		};
+		$content = '<!-- wp:group --><div class="wp-block-group"><!-- wp:heading --><h2>Excluded</h2><!-- /wp:heading --></div><!-- /wp:group -->';
+		add_filter( 'simpletoc_excluded_blocks', $exclude_groups );
+		try {
+			$this->assertSame( $content, MToensing\SimpleTOC\simpletoc_add_ids_to_content( $content ) );
+			$this->assertSame( array(), MToensing\SimpleTOC\filter_headings_recursive( parse_blocks( $content ) ) );
+		} finally {
+			remove_filter( 'simpletoc_excluded_blocks', $exclude_groups );
+		}
+	}
+
+	/**
 	 * Covers opt-in behavior, global enforcement, and the global filter override.
 	 */
 	public function test_scroll_spy_settings_precedence() {
