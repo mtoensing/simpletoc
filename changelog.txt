@@ -1,5 +1,8 @@
 == Changelog ==
 
+= 7.4.1 =
+* Fixed: Headings inside Query Loop blocks (core/query, GenerateBlocks) no longer receive duplicate anchor IDs from the surrounding page and are no longer listed in the table of contents. Fixes issue #90.
+
 = 7.4.0 =
 * Added: Optional CSS-only scroll spy to underline the current section link in supporting browsers. Enable Highlight current section in the block settings or enforce it globally under Settings > SimpleTOC. No JavaScript or polyfill is added.
 
