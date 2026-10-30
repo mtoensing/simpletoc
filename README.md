@@ -30,6 +30,13 @@ The maximum depth of the toc can be configured in in the blocks' sidebar among m
 > "Simple yet powerful. Great plugin that does exactly what you need."
 — [@mixey on wordpress.org](https://wordpress.org/support/topic/simple-yet-powerful-106/)
 
+### In the press ###
+
+SimpleTOC ranked #1 in WP Collections' October 2026 comparison of seven free WordPress table of contents plugins.
+
+> "On the block editor, use SimpleTOC, the lightest table of contents we measured."
+— [WP Collections](https://wp-collections.com/best-free-table-of-contents-plugins-wordpress/)
+
 ### Accessibility ###
 
 This plugin is designed & developed for WCAG 2.2 level AA conformance. The plugin is tested with assistive technology and intended to be accessible, however some third party plugins or themes may affect the individual accessibility on a given website. If you find an accessibility issue, please [let us know](https://github.com/mtoensing/simpletoc/issues) and we'll try to address it promptly.
