@@ -1,6 +1,6 @@
 == Changelog ==
 
-= Unreleased =
+= 7.4.3 =
 * Fixed: Navigation landmarks use the custom table of contents title as their accessible label. Fixes issue #93.
 * Fixed: Core Accordion Heading blocks are included in the table of contents with working anchors, excluding decorative icons. Fixes issue #91.
 
