@@ -3,7 +3,7 @@
 **Tags:** TOC, Table of Contents, Block, Accessibility, Table  
 **Requires at least:** 6.2  
 **Tested up to:** 7.1  
-**Stable tag:** 7.4.2  
+**Stable tag:** 7.4.3  
 **Requires PHP:** 7.3  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
@@ -82,17 +82,10 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 
 ## Changelog ##
 
-### Unreleased ###
+### 7.4.3 ###
 * Fixed: Navigation landmarks use the custom table of contents title as their accessible label. Fixes issue #93.
 * Fixed: Core Accordion Heading blocks are included in the table of contents with working anchors, excluding decorative icons. Fixes issue #91.
 
-### 7.4.2 ###
-* Fixed: Global setting filters now consistently override saved global preferences while preserving individual block options.
-* Fixed: Block controls show globally enforced values and are disabled when overridden. Accordion sub-options are visibly dimmed; globally forced Box styling hides conflicting style and background color controls.
-* Fixed: Accordion mode takes precedence over the details dropdown, preventing nested collapsible controls and invalid HTML.
-* Fixed: Accordion plus and minus symbols inherit the button text color, including on hover, and scale with its font size.
-* Improved: Global settings use consistent boolean sanitization, filter ownership indicators, and editor configuration.
-* Improved: Renamed the manual refresh setting and clarified that forced accordions are collapsed by default.
 
 ## Installation ##
 
