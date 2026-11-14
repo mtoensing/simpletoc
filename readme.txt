@@ -71,20 +71,6 @@ Hidden TOCs use native `<details>` and `<summary>` semantics without extra ARIA 
 * Select a heading level or turn it into a paragraph.
 * Disable the h2 heading of the TOC block and add your own.
 
-= Global settings =
-
-Under Settings > SimpleTOC, administrators can enforce accordion menus, smooth scrolling, absolute URLs, the Box style, and current-section highlighting, or require manual preview refresh. Globally enforced controls show their effective state and cannot be changed in individual blocks. A disabled global option still lets individual blocks enable that feature.
-
-"Force accordion menu" collapses every table of contents by default. Visitors click the heading to expand it. This overrides the block's details dropdown without changing its saved preference. "Force manual refresh" disables automatic preview refresh in the editor; use the block toolbar's update button instead.
-
-When the Box style is enforced globally, the editor hides the block style and background color controls that would conflict with the global default background. Text and link colors remain configurable.
-
-= Highlight the current section =
-
-Enable "Highlight current section" under Advanced Features in the SimpleTOC block settings. The link for the current section is underlined as visitors scroll. This option is off by default. To enable it for all blocks, turn on "Force highlight current section" under Settings > SimpleTOC. The global setting takes precedence over individual block settings. Developers can override the global setting with the `simpletoc_scroll_spy_enabled` filter.
-
-This feature uses native CSS `scroll-target-group` and `:target-current`. Browser support is limited. Browsers without support keep the normal table of contents and working links. No JavaScript fallback or polyfill is included. Highlighting applies to headings on the current page and does not make the table of contents sticky.
-
 = Compatibility =
 
 * GeneratePress and Rank Math support.
