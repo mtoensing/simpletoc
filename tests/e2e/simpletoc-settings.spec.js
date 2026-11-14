@@ -190,8 +190,13 @@ test.describe( 'SimpleTOC settings audit', () => {
 							renders.push( request.url() );
 						}
 					};
+					const canvas = ( await page
+						.locator( 'iframe[name="editor-canvas"]' )
+						.count() )
+						? editor.canvas
+						: page;
 					await expect(
-						page.locator( '.simpletoc-list' )
+						canvas.locator( '.simpletoc-list' )
 					).toBeVisible();
 					page.on( 'request', onRequest );
 					await page.evaluate(
@@ -397,8 +402,16 @@ test.describe( 'SimpleTOC settings audit', () => {
 		);
 		expect( attributes.hidden ).toBe( true );
 		expect( attributes.accordion ).toBe( false );
+		const canvas = ( await page
+			.locator( 'iframe[name="editor-canvas"]' )
+			.count() )
+			? editor.canvas
+			: page;
+		await expect( canvas.locator( '.simpletoc-collapsible' ) ).toHaveCount(
+			1
+		);
 		await expect(
-			page.locator( '.simpletoc-content details' )
+			canvas.locator( '.simpletoc-content details' )
 		).toHaveCount( 0 );
 		await page.goto( `/?p=${ postId }` );
 		await expect(
