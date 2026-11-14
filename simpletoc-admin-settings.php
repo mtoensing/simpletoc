@@ -203,7 +203,7 @@ function simpletoc_setting_checkbox( $option, $description ) {
  * Outputs the accordion setting.
  */
 function simpletoc_accordion_enabled_callback() {
-	simpletoc_setting_checkbox( 'simpletoc_accordion_enabled', __( 'Adds minimal JavaScript and css styles.', 'simpletoc' ) );
+	simpletoc_setting_checkbox( 'simpletoc_accordion_enabled', __( 'Collapses the table of contents by default. Click the heading to expand it. Adds minimal JavaScript and CSS.', 'simpletoc' ) );
 }
 
 /**

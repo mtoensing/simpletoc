@@ -31,14 +31,14 @@
 }
 
 .simpletoc-collapsible .simpletoc-icon::after {
-	content: "\02795"; /* Unicode character for "plus" sign (+) */
+	content: "+";
 	float: right;
 	margin-left: 5px;
-	font-size: 13px;
+	font-size: 1em;
 }
 
 .simpletoc .active .simpletoc-icon::after {
-	content: "\2796"; /* Unicode character for "minus" sign (-) */
+	content: "\2212";
 }
 
 .simpletoc-content {
