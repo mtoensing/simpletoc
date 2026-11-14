@@ -207,6 +207,7 @@ function add_ids_to_blocks_recursive( $blocks ) {
 
 	$supported_blocks = array(
 		'core/heading',
+		'core/accordion-heading',
 		'generateblocks/text',
 		'generateblocks/headline',
 	);
@@ -288,7 +289,7 @@ function render_callback_simpletoc( $attributes ) {
 			'style' => $wrapper_style,
 		)
 	);
-	$pre_html        = '<div role="navigation" aria-label="' . esc_attr__( 'Table of Contents', 'simpletoc' ) . '" ' . $wrapper_attrs . '>';
+	$pre_html        = '<div role="navigation" aria-label="' . esc_attr( $title_text ) . '" ' . $wrapper_attrs . '>';
 	$post_html       = '</div>';
 
 	$post   = get_post();
@@ -423,8 +424,8 @@ function filter_headings_recursive( $blocks ) {
 				$arr = array_merge( filter_headings_recursive( $inner_block ), $arr );
 			}
 		} else {
-			if ( isset( $blocks['blockName'] ) && ( 'core/heading' === $blocks['blockName'] ) && 'core/heading' !== $inner_block && simpletoc_is_heading_html( $inner_block ) ) {
-				$arr[] = $inner_block;
+			if ( isset( $blocks['blockName'] ) && in_array( $blocks['blockName'], array( 'core/heading', 'core/accordion-heading' ), true ) && 'core/heading' !== $inner_block && simpletoc_is_heading_html( $inner_block ) ) {
+				$arr[] = simpletoc_get_heading_html_for_anchor( $inner_block, $blocks );
 			}
 
 			$supported_third_party_blocks = array(
@@ -477,6 +478,11 @@ function simpletoc_maybe_replace_generateblocks_dynamic_tags( $html, $block ) {
  */
 function simpletoc_get_heading_html_for_anchor( $html, $block ) {
 	$heading_html = simpletoc_maybe_replace_generateblocks_dynamic_tags( $html, $block );
+
+	// Core accordion headings contain a decorative icon outside the title.
+	if ( isset( $block['blockName'] ) && 'core/accordion-heading' === $block['blockName'] ) {
+		$heading_html = preg_replace( '/<span\b[^>]*class=["\'][^"\']*\bwp-block-accordion-heading__toggle-icon\b[^"\']*["\'][^>]*>.*?<\/span>/is', '', $heading_html );
+	}
 
 	if ( '' === trim( wp_strip_all_tags( $heading_html ) ) ) {
 		return $html;

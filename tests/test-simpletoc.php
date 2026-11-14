@@ -177,6 +177,26 @@ class SimpleTOC_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Accordion titles share heading detection and anchors without decorative icons.
+	 */
+	public function test_core_accordion_headings_are_included() {
+		$heading = '<h3 class="wp-block-accordion-heading"><button type="button" class="wp-block-accordion-heading__toggle"><span class="wp-block-accordion-heading__toggle-icon" aria-hidden="true">+</span><span class="wp-block-accordion-heading__toggle-title">Frequently <em>asked</em> questions</span></button></h3>';
+		$content = '<!-- wp:accordion --><div><!-- wp:accordion-item --><div><!-- wp:accordion-heading -->' . $heading . '<!-- /wp:accordion-heading --><!-- wp:accordion-panel --><div><!-- wp:heading --><h2>Panel heading</h2><!-- /wp:heading --></div><!-- /wp:accordion-panel --></div><!-- /wp:accordion-item --></div><!-- /wp:accordion -->';
+		$anchored = MToensing\SimpleTOC\simpletoc_add_ids_to_content( $content );
+		$this->assertStringContainsString( 'id="frequently-asked-questions"', $anchored );
+		$this->assertStringContainsString( 'aria-hidden="true">+</span>', $anchored );
+		$headings = array_reverse( MToensing\SimpleTOC\filter_headings_recursive( parse_blocks( $anchored ) ) );
+		$this->assertCount( 2, $headings );
+		$html = MToensing\SimpleTOC\generate_toc( $headings, $this->get_default_attributes() );
+		$this->assertStringContainsString( 'href="#frequently-asked-questions">Frequently asked questions</a>', $html );
+		$this->assertStringContainsString( 'href="#panel-heading"', $html );
+		$this->assertStringNotContainsString( '+', $html );
+		$this->assertSame( array(), MToensing\SimpleTOC\get_included_toc_headings( array( $headings[0] ), $this->get_default_attributes( array( 'max_level' => 2 ) ) ) );
+		$custom = str_replace( '<h3 ', '<h3 id="faq" ', $heading );
+		$this->assertSame( $custom, MToensing\SimpleTOC\add_anchor_attribute( $custom, new SimpleTOC_Headline_Ids(), array( 'blockName' => 'core/accordion-heading' ) ) );
+	}
+
+	/**
 	 * Returns default block attributes for TOC rendering tests.
 	 *
 	 * @param array $overrides Attribute overrides.
@@ -224,6 +244,29 @@ class SimpleTOC_Test extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'role="navigation"', $result );
 		$this->assertStringContainsString( 'aria-label="Table of Contents"', $result );
 		$this->assertStringContainsString( '<ul class="simpletoc-list">', $result );
+	}
+
+	/**
+	 * Navigation landmarks use the chosen title in every display mode.
+	 */
+	public function test_navigation_label_uses_custom_title() {
+		$GLOBALS['post'] = get_post( self::factory()->post->create( array(
+			'post_content' => '<!-- wp:heading --><h2>Section</h2><!-- /wp:heading -->',
+		) ) );
+
+		try {
+			foreach ( array( array(), array( 'no_title' => true ), array( 'hidden' => true ), array( 'accordion' => true ) ) as $mode ) {
+				foreach ( array( 'On this page', '  Tips & "tricks"  ' ) as $title ) {
+					$attributes = $this->get_default_attributes( array_merge( array( 'no_title' => false, 'title_text' => $title ), $mode ) );
+					$html = render_block( array( 'blockName' => 'simpletoc/toc', 'attrs' => $attributes, 'innerBlocks' => array(), 'innerHTML' => '', 'innerContent' => array() ) );
+					$processor = new WP_HTML_Tag_Processor( $html );
+					$this->assertTrue( $processor->next_tag() );
+					$this->assertSame( trim( $title ), $processor->get_attribute( 'aria-label' ) );
+				}
+			}
+		} finally {
+			wp_reset_postdata();
+		}
 	}
 
 	/**
