@@ -18,6 +18,7 @@ import {
 	PanelBody,
 	PanelRow,
 	ExternalLink,
+	Notice,
 } from '@wordpress/components';
 import { useEffect, useRef, useState } from '@wordpress/element';
 import HeadingLevelDropdown from './heading-level-dropdown';
@@ -81,21 +82,10 @@ function SimpleTOCLoadingResponsePlaceholder( { children } ) {
 
 export default function Edit( { attributes, setAttributes } ) {
 	const { hidden, accordion } = attributes;
-	const hideTOC = hidden || accordion;
 	const serverSideRenderAttributes =
 		getServerSideRenderAttributes( attributes );
 
 	const blockProps = useBlockProps();
-
-	// Get the autoupdate option from WordPress php.
-	const autoupdateOption = useSelect( ( select ) => {
-		const optionValue =
-			select( 'core' ).getSite()?.simpletoc_autoupdate_enabled;
-		if ( Number( optionValue ) !== 1 ) {
-			return true;
-		}
-		return false;
-	}, [] );
 
 	const { autoupdate } = attributes;
 	const editorSettings = useSelect( ( select ) => {
@@ -106,10 +96,38 @@ export default function Edit( { attributes, setAttributes } ) {
 		window.simpletocEditorSettings?.settingsUrl ||
 		'';
 
+	const autoupdateOption = ! (
+		editorSettings.simpletocAutoRefreshDisabled ??
+		window.simpletocEditorSettings?.autoRefreshDisabled ??
+		false
+	);
+
 	const scrollSpyEnabled =
 		editorSettings.simpletocScrollSpyEnabled ??
 		window.simpletocEditorSettings?.scrollSpyEnabled ??
 		false;
+
+	const accordionEnabled =
+		editorSettings.simpletocAccordionEnabled ??
+		window.simpletocEditorSettings?.accordionEnabled ??
+		false;
+	const smoothEnabled =
+		editorSettings.simpletocSmoothEnabled ??
+		window.simpletocEditorSettings?.smoothEnabled ??
+		false;
+	const absoluteUrlsEnabled =
+		editorSettings.simpletocAbsoluteUrlsEnabled ??
+		window.simpletocEditorSettings?.absoluteUrlsEnabled ??
+		false;
+	const boxStyleEnabled =
+		editorSettings.simpletocBoxStyleEnabled ??
+		window.simpletocEditorSettings?.boxStyleEnabled ??
+		false;
+	const hideTOC = accordionEnabled || hidden || accordion;
+	const enabledGloballyHelp = __(
+		'Enabled globally in SimpleTOC settings.',
+		'simpletoc'
+	);
 
 	const [ serverSideRenderRefresh, setServerSideRenderRefresh ] =
 		useState( 0 );
@@ -154,6 +172,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		<BlockControls group="block">
 			{ ! (
 				attributes.no_title ||
+				accordionEnabled ||
 				attributes.accordion ||
 				attributes.hidden
 			) && (
@@ -389,6 +408,12 @@ export default function Edit( { attributes, setAttributes } ) {
 						<ToggleControl
 							label={ __( 'Hide SimpleTOC', 'simpletoc' ) }
 							checked={ hideTOC }
+							disabled={ accordionEnabled }
+							help={
+								accordionEnabled
+									? enabledGloballyHelp
+									: undefined
+							}
 							onChange={ ( value ) => {
 								if ( ! value ) {
 									setAttributes( {
@@ -407,11 +432,16 @@ export default function Edit( { attributes, setAttributes } ) {
 
 					{ hideTOC && (
 						<PanelRow>
-							<div className="simpletoc-hide-options">
+							<div
+								className={ `simpletoc-hide-options${
+									accordionEnabled ? ' is-disabled' : ''
+								}` }
+							>
 								<RadioControl
 									label={ __( 'Type', 'simpletoc' ) }
+									disabled={ accordionEnabled }
 									selected={
-										attributes.hidden
+										! accordionEnabled && attributes.hidden
 											? 'hidden'
 											: 'accordion'
 									}
@@ -473,11 +503,16 @@ export default function Edit( { attributes, setAttributes } ) {
 								'Smooth scrolling support',
 								'simpletoc'
 							) }
-							help={ __(
-								'Adds the following CSS to the HTML element: "scroll-behavior: smooth;"',
-								'simpletoc'
-							) }
-							checked={ attributes.add_smooth }
+							help={
+								smoothEnabled
+									? enabledGloballyHelp
+									: __(
+											'Adds the following CSS to the HTML element: "scroll-behavior: smooth;"',
+											'simpletoc'
+									  )
+							}
+							checked={ smoothEnabled || attributes.add_smooth }
+							disabled={ smoothEnabled }
 							onChange={ () =>
 								setAttributes( {
 									add_smooth: ! attributes.add_smooth,
@@ -488,11 +523,19 @@ export default function Edit( { attributes, setAttributes } ) {
 					<PanelRow>
 						<ToggleControl
 							label={ __( 'Use absolute urls', 'simpletoc' ) }
-							help={ __(
-								'Adds the permalink url to the fragment.',
-								'simpletoc'
-							) }
-							checked={ attributes.use_absolute_urls }
+							help={
+								absoluteUrlsEnabled
+									? enabledGloballyHelp
+									: __(
+											'Adds the permalink url to the fragment.',
+											'simpletoc'
+									  )
+							}
+							checked={
+								absoluteUrlsEnabled ||
+								attributes.use_absolute_urls
+							}
+							disabled={ absoluteUrlsEnabled }
 							onChange={ () =>
 								setAttributes( {
 									use_absolute_urls:
@@ -504,11 +547,21 @@ export default function Edit( { attributes, setAttributes } ) {
 					<PanelRow>
 						<ToggleControl
 							label={ __( 'Automatic refresh', 'simpletoc' ) }
-							help={ __(
-								'Automatic updating of the table of contents.',
-								'simpletoc'
-							) }
-							checked={ attributes.autoupdate }
+							help={
+								! autoupdateOption
+									? __(
+											'Disabled globally in SimpleTOC settings.',
+											'simpletoc'
+									  )
+									: __(
+											'Automatic updating of the table of contents.',
+											'simpletoc'
+									  )
+							}
+							checked={
+								autoupdateOption && attributes.autoupdate
+							}
+							disabled={ ! autoupdateOption }
 							onChange={ () =>
 								setAttributes( {
 									autoupdate: ! attributes.autoupdate,
@@ -516,6 +569,14 @@ export default function Edit( { attributes, setAttributes } ) {
 							}
 						/>
 					</PanelRow>
+					{ boxStyleEnabled && (
+						<Notice status="info" isDismissible={ false }>
+							{ __(
+								'The Box style and its default background are enabled globally in SimpleTOC settings.',
+								'simpletoc'
+							) }
+						</Notice>
+					) }
 					{ settingsUrl && (
 						<PanelRow>
 							<BaseControl

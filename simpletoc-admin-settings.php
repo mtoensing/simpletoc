@@ -8,12 +8,40 @@
 namespace MToensing\SimpleTOC;
 
 /**
+ * Returns the effective global setting. Filters override saved options.
+ * A false global setting still allows individual blocks to opt in.
+ *
+ * @param string $option Setting name.
+ * @return bool
+ */
+function simpletoc_setting_enabled( $option ) {
+	return (bool) apply_filters( $option, (bool) get_option( $option, false ) );
+}
+
+/**
  * Whether scroll highlighting is enforced globally.
  *
  * @return bool
  */
 function simpletoc_scroll_spy_enabled() {
-	return (bool) apply_filters( 'simpletoc_scroll_spy_enabled', (bool) get_option( 'simpletoc_scroll_spy_enabled', false ) );
+	return simpletoc_setting_enabled( 'simpletoc_scroll_spy_enabled' );
+}
+
+/**
+ * Global values shared by the block editor settings and script fallback.
+ *
+ * @return array
+ */
+function simpletoc_get_editor_settings() {
+	return array(
+		'settingsUrl'         => admin_url( 'options-general.php?page=simpletoc' ),
+		'scrollSpyEnabled'    => simpletoc_scroll_spy_enabled(),
+		'autoRefreshDisabled' => simpletoc_setting_enabled( 'simpletoc_autoupdate_enabled' ),
+		'accordionEnabled'    => simpletoc_setting_enabled( 'simpletoc_accordion_enabled' ),
+		'smoothEnabled'       => simpletoc_setting_enabled( 'simpletoc_smooth_enabled' ),
+		'absoluteUrlsEnabled' => simpletoc_setting_enabled( 'simpletoc_absolute_urls_enabled' ),
+		'boxStyleEnabled'     => simpletoc_setting_enabled( 'simpletoc_box_style_enabled' ),
+	);
 }
 
 /**
@@ -40,7 +68,7 @@ function simpletoc_settings_page() {
 
 	?>
 	<div class="wrap">
-		<h1><?php _e( 'SimpleTOC Settings', 'simpletoc' ); ?></h1>
+		<h1><?php esc_html_e( 'SimpleTOC Settings', 'simpletoc' ); ?></h1>
 		<form method="post" action="options.php">
 			<?php
 				settings_fields( 'simpletoc_settings' );
@@ -56,41 +84,28 @@ function simpletoc_settings_page() {
  * Register SimpleTOC settings.
  */
 function simpletoc_register_settings() {
-	// Register settings and filters for existing features.
-	$accordion_enabled_filter     = apply_filters( 'simpletoc_accordion_enabled', null );
-	$smooth_enabled_filter        = apply_filters( 'simpletoc_smooth_enabled', null );
-	$absolute_urls_enabled_filter = apply_filters( 'simpletoc_absolute_urls_enabled', null );
-	$autoupdate_enabled_filter    = apply_filters( 'simpletoc_autoupdate_enabled', null );
-	$box_style_enabled_filter     = apply_filters( 'simpletoc_box_style_enabled', null );
+	$options = array(
+		'simpletoc_accordion_enabled',
+		'simpletoc_smooth_enabled',
+		'simpletoc_absolute_urls_enabled',
+		'simpletoc_autoupdate_enabled',
+		'simpletoc_box_style_enabled',
+		'simpletoc_scroll_spy_enabled',
+	);
 
-	if ( null === $accordion_enabled_filter ) {
-		register_setting( 'simpletoc_settings', 'simpletoc_accordion_enabled' );
-	}
+	foreach ( $options as $option ) {
+		if ( null !== apply_filters( $option, null ) ) {
+			continue;
+		}
 
-	if ( null === $smooth_enabled_filter ) {
-		register_setting( 'simpletoc_settings', 'simpletoc_smooth_enabled' );
-	}
-
-	if ( null === $absolute_urls_enabled_filter ) {
-		register_setting( 'simpletoc_settings', 'simpletoc_absolute_urls_enabled' );
-	}
-
-	if ( null === $autoupdate_enabled_filter ) {
-		register_setting( 'simpletoc_settings', 'simpletoc_autoupdate_enabled', array( 'show_in_rest' => true ) );
-	}
-
-	if ( null === $box_style_enabled_filter ) {
-		register_setting( 'simpletoc_settings', 'simpletoc_box_style_enabled' );
-	}
-
-	if ( null === apply_filters( 'simpletoc_scroll_spy_enabled', null ) ) {
 		register_setting(
 			'simpletoc_settings',
-			'simpletoc_scroll_spy_enabled',
+			$option,
 			array(
 				'type'              => 'boolean',
 				'sanitize_callback' => 'rest_sanitize_boolean',
 				'default'           => false,
+				'show_in_rest'      => 'simpletoc_autoupdate_enabled' === $option,
 			)
 		);
 	}
@@ -130,7 +145,7 @@ function simpletoc_register_settings() {
 	// Add the autoupdate settings field.
 	add_settings_field(
 		'simpletoc_autoupdate_enabled',
-		esc_html__( 'Force no auto refresh', 'simpletoc' ),
+		esc_html__( 'Force manual refresh', 'simpletoc' ),
 		__NAMESPACE__ . '\simpletoc_autoupdate_enabled_callback',
 		'simpletoc',
 		'simpletoc_wrapper_section'
@@ -169,64 +184,59 @@ function simpletoc_wrapper_section_callback() {
 }
 
 /**
- * SimpleTOC accordion enabled callback.
+ * Outputs a global checkbox with its effective value and filter ownership.
+ *
+ * @param string $option Setting name.
+ * @param string $description Help text.
+ */
+function simpletoc_setting_checkbox( $option, $description ) {
+	$controlled = null !== apply_filters( $option, null );
+	echo '<input type="checkbox" name="' . esc_attr( $option ) . '" id="' . esc_attr( $option ) . '" value="1" ' . checked( true, simpletoc_setting_enabled( $option ), false ) . disabled( $controlled, true, false ) . ' />';
+	echo '<label for="' . esc_attr( $option ) . '" class="description">' . esc_html( $description ) . '</label>';
+	if ( $controlled ) {
+		/* translators: %s: WordPress filter name. */
+		echo '<p class="description">' . esc_html( sprintf( __( 'Setting controlled by the %s filter.', 'simpletoc' ), $option ) ) . '</p>';
+	}
+}
+
+/**
+ * Outputs the accordion setting.
  */
 function simpletoc_accordion_enabled_callback() {
-	$accordion_enabled = get_option( 'simpletoc_accordion_enabled', false );
-	echo '<input type="checkbox" name="simpletoc_accordion_enabled" id="simpletoc_accordion_enabled" value="1" ' . checked( 1, $accordion_enabled, false ) . ' />';
-	echo '<label for="simpletoc_accordion_enabled" class="description">' . esc_html__( 'Adds minimal JavaScript and css styles.', 'simpletoc' ) . '</label>';
+	simpletoc_setting_checkbox( 'simpletoc_accordion_enabled', __( 'Adds minimal JavaScript and css styles.', 'simpletoc' ) );
 }
 
 /**
- * SimpleTOC smooth enabled callback.
+ * Outputs the smooth setting.
  */
 function simpletoc_smooth_enabled_callback() {
-	$smooth_enabled = get_option( 'simpletoc_smooth_enabled', false );
-	echo '<input type="checkbox" name="simpletoc_smooth_enabled" id="simpletoc_smooth_enabled" value="1" ' . checked( 1, $smooth_enabled, false ) . ' />';
-	echo '<label for="simpletoc_smooth_enabled" class="description">' . esc_html__( 'Adds the following CSS to the HTML element: "scroll-behavior: smooth;"', 'simpletoc' ) . '</label>';
+	simpletoc_setting_checkbox( 'simpletoc_smooth_enabled', __( 'Adds the following CSS to the HTML element: "scroll-behavior: smooth;"', 'simpletoc' ) );
 }
 
 /**
- * SimpleTOC absolute urls enabled callback.
+ * Outputs the absolute urls setting.
  */
 function simpletoc_absolute_urls_enabled_callback() {
-	$absolute_urls_enabled = get_option( 'simpletoc_absolute_urls_enabled', false );
-	echo '<input type="checkbox" name="simpletoc_absolute_urls_enabled" id="simpletoc_absolute_urls_enabled" value="1" ' . checked( 1, $absolute_urls_enabled, false ) . ' />';
-	echo '<label for="simpletoc_absolute_urls_enabled" class="description">' . esc_html__( 'Adds the permalink url to the fragment.', 'simpletoc' ) . '</label>';
+	simpletoc_setting_checkbox( 'simpletoc_absolute_urls_enabled', __( 'Adds the permalink url to the fragment.', 'simpletoc' ) );
 }
 
 /**
- * SimpleTOC autoupdate enabled callback.
+ * Outputs the autoupdate setting.
  */
 function simpletoc_autoupdate_enabled_callback() {
-	$autoupdate_enabled = get_option( 'simpletoc_autoupdate_enabled', false );
-	echo '<input type="checkbox" name="simpletoc_autoupdate_enabled" id="simpletoc_autoupdate_enabled" value="1" ' . checked( 1, $autoupdate_enabled, false ) . ' />';
-	echo '<label for="simpletoc_autoupdate_enabled" class="description">' . esc_html__( 'Deactivate the automatic table of contents refresh feature.', 'simpletoc' ) . '</label>';
+	simpletoc_setting_checkbox( 'simpletoc_autoupdate_enabled', __( 'Deactivate the automatic table of contents refresh feature.', 'simpletoc' ) );
 }
 
 /**
- * SimpleTOC box style enabled callback.
+ * Outputs the box style setting.
  */
 function simpletoc_box_style_enabled_callback() {
-	$box_style_enabled = get_option( 'simpletoc_box_style_enabled', false );
-
-	if ( has_filter( 'simpletoc_box_style_enabled' ) ) {
-		echo '<input type="checkbox" name="simpletoc_box_style_enabled" id="simpletoc_box_style_enabled" value="1" checked="checked" disabled="disabled" />';
-		echo '<label for="simpletoc_box_style_enabled" class="description">' . esc_html__( 'Setting controlled by "simpletoc_box_style_enabled" filter. Remove filter to adjust setting.', 'simpletoc' ) . '</label>';
-	} else {
-		echo '<input type="checkbox" name="simpletoc_box_style_enabled" id="simpletoc_box_style_enabled" value="1" ' . checked( 1, $box_style_enabled, false ) . ' />';
-		echo '<label for="simpletoc_box_style_enabled" class="description">' . esc_html__( 'Applies the Box style with the default gray background to all SimpleTOC blocks.', 'simpletoc' ) . '</label>';
-	}
+	simpletoc_setting_checkbox( 'simpletoc_box_style_enabled', __( 'Applies the Box style with the default gray background to all SimpleTOC blocks.', 'simpletoc' ) );
 }
 
 /**
- * Scroll highlighting setting.
+ * Outputs the scroll spy setting.
  */
 function simpletoc_scroll_spy_enabled_callback() {
-	$controlled = null !== apply_filters( 'simpletoc_scroll_spy_enabled', null );
-	echo '<input type="checkbox" name="simpletoc_scroll_spy_enabled" id="simpletoc_scroll_spy_enabled" value="1" ' . checked( true, simpletoc_scroll_spy_enabled(), false ) . disabled( $controlled, true, false ) . ' />';
-	echo '<label for="simpletoc_scroll_spy_enabled" class="description">' . esc_html__( 'Underlines the current section link in all SimpleTOC blocks in supported browsers. No JavaScript fallback.', 'simpletoc' ) . '</label>';
-	if ( $controlled ) {
-		echo '<p class="description">' . esc_html__( 'Setting controlled by the simpletoc_scroll_spy_enabled filter.', 'simpletoc' ) . '</p>';
-	}
+	simpletoc_setting_checkbox( 'simpletoc_scroll_spy_enabled', __( 'Underlines the current section link in all SimpleTOC blocks in supported browsers. No JavaScript fallback.', 'simpletoc' ) );
 }

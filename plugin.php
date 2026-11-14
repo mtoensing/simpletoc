@@ -57,10 +57,7 @@ function register_simpletoc_block() {
 	wp_add_inline_script(
 		'simpletoc-toc-editor-script',
 		'window.simpletocEditorSettings = ' . wp_json_encode(
-			array(
-				'settingsUrl'      => admin_url( 'options-general.php?page=simpletoc' ),
-				'scrollSpyEnabled' => simpletoc_scroll_spy_enabled(),
-			)
+			simpletoc_get_editor_settings()
 		) . ';',
 		'before'
 	);
@@ -77,9 +74,9 @@ add_action( 'init', __NAMESPACE__ . '\register_simpletoc_block' );
  * @return array
  */
 function add_simpletoc_block_editor_settings( $editor_settings, $editor_context ) {
-	$editor_settings['simpletocSettingsUrl'] = admin_url( 'options-general.php?page=simpletoc' );
-
-	$editor_settings['simpletocScrollSpyEnabled'] = simpletoc_scroll_spy_enabled();
+	foreach ( simpletoc_get_editor_settings() as $name => $value ) {
+		$editor_settings[ 'simpletoc' . ucfirst( $name ) ] = $value;
+	}
 
 	return $editor_settings;
 }
@@ -255,7 +252,7 @@ function render_callback_simpletoc( $attributes ) {
 	$title_text  = $attributes['title_text'] ? esc_html( trim( $attributes['title_text'] ) ) : __( 'Table of Contents', 'simpletoc' );
 	$alignclass  = ! empty( $attributes['align'] ) ? 'align' . $attributes['align'] : '';
 	$title_level = $attributes['title_level'];
-	$global_box_style_enabled = apply_filters( 'simpletoc_box_style_enabled', false ) || true === (bool) get_option( 'simpletoc_box_style_enabled', false );
+	$global_box_style_enabled = simpletoc_setting_enabled( 'simpletoc_box_style_enabled' );
 	$legacy_box_style_enabled = ! empty( $attributes['box_style'] );
 	$typography_enabled       = ! empty( $attributes['fontSize'] ) || ! empty( $attributes['style']['typography'] );
 	$wrapper_classes   = array( 'simpletoc' );
@@ -714,7 +711,7 @@ function generate_toc( $headings, $attributes ) {
 	$align_class                 = isset( $attributes['align'] ) ? 'align' . $attributes['align'] : '';
 	$styles                      = $attributes['remove_indent'] ? 'style="padding-left:0;list-style:none;"' : '';
 	$list_type                   = $attributes['use_ol'] ? 'ol' : 'ul';
-	$global_absolut_urls_enabled = get_option( 'simpletoc_absolute_urls_enabled', false );
+	$global_absolut_urls_enabled = simpletoc_setting_enabled( 'simpletoc_absolute_urls_enabled' );
 	$absolute_url                = $attributes['use_absolute_urls'] || $global_absolut_urls_enabled ? get_permalink() : '';
 
 	$toc_headings = get_included_toc_headings( $headings, $attributes );
@@ -722,6 +719,11 @@ function generate_toc( $headings, $attributes ) {
 
 	$item_count = count( $toc_headings );
 	$list       = render_toc_list_items( $toc_headings, $list_type, $absolute_url, $min_depth );
+
+	// Accordion takes precedence over details, including legacy blocks with both flags.
+	if ( $attributes['accordion'] || simpletoc_setting_enabled( 'simpletoc_accordion_enabled' ) ) {
+		$attributes['hidden'] = false;
+	}
 
 	$html = add_accordion_start( $html, $attributes, $item_count, $align_class );
 	$html = add_hidden_markup_start( $html, $attributes, $item_count, $align_class );
@@ -888,7 +890,7 @@ function render_toc_list_items( $toc_headings, $list_type, $absolute_url, $min_d
  */
 function add_smooth( $html, $attributes ) {
 	// Add smooth scrolling styles, if enabled by global option or block attribute.
-	$is_smooth_enabled = $attributes['add_smooth'] || true === (bool) get_option( 'simpletoc_smooth_enabled', false );
+	$is_smooth_enabled = $attributes['add_smooth'] || simpletoc_setting_enabled( 'simpletoc_smooth_enabled' );
 	$html             .= $is_smooth_enabled ? '<style>html { scroll-behavior: smooth; }</style>' : '';
 
 	return $html;
@@ -967,7 +969,7 @@ function add_hidden_markup_end( $html, $attributes ) {
  */
 function add_accordion_start( $html, $attributes, $itemcount, $alignclass ) {
 	// Check if accordion is enabled either through the function arguments or the options.
-	$is_accordion_enabled = $attributes['accordion'] || true === (bool) get_option( 'simpletoc_accordion_enabled', false );
+	$is_accordion_enabled = $attributes['accordion'] || simpletoc_setting_enabled( 'simpletoc_accordion_enabled' );
 	$is_hidden_enabled    = $attributes['hidden'];
 	$title_text           = $attributes['title_text'] ? esc_html( trim( $attributes['title_text'] ) ) : esc_html__( 'Table of Contents', 'simpletoc' );
 
@@ -1012,7 +1014,7 @@ function add_accordion_start( $html, $attributes, $itemcount, $alignclass ) {
  */
 function add_accordion_end( $html, $attributes ) {
 	// Check if accordion is enabled either through the function arguments or the options.
-	$is_accordion_enabled = $attributes['accordion'] || true === (bool) get_option( 'simpletoc_accordion_enabled', false );
+	$is_accordion_enabled = $attributes['accordion'] || simpletoc_setting_enabled( 'simpletoc_accordion_enabled' );
 
 	if ( $is_accordion_enabled ) {
 		$html .= '</div>';

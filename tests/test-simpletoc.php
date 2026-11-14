@@ -12,6 +12,112 @@ use MToensing\SimpleTOC\SimpleTOC_Headline_Ids;
  */
 class SimpleTOC_Test extends WP_UnitTestCase {
 	/**
+	 * Saved settings and filter overrides agree with the settings page.
+	 */
+	public function test_global_settings_filter_precedence_and_checkbox_state() {
+		foreach ( array( 'accordion', 'smooth', 'absolute_urls', 'autoupdate', 'box_style', 'scroll_spy' ) as $name ) {
+			$option = 'simpletoc_' . $name . '_enabled';
+			try {
+				delete_option( $option );
+				$this->assertFalse( MToensing\SimpleTOC\simpletoc_setting_enabled( $option ) );
+				add_filter( $option, '__return_true' );
+				$this->assertTrue( MToensing\SimpleTOC\simpletoc_setting_enabled( $option ) );
+				remove_filter( $option, '__return_true' );
+				update_option( $option, '1' );
+				$this->assertTrue( MToensing\SimpleTOC\simpletoc_setting_enabled( $option ) );
+				add_filter( $option, '__return_false' );
+				$this->assertFalse( MToensing\SimpleTOC\simpletoc_setting_enabled( $option ) );
+				ob_start();
+				MToensing\SimpleTOC\simpletoc_setting_checkbox( $option, 'Description' );
+				$markup = ob_get_clean();
+				$this->assertStringContainsString( disabled( true, true, false ), $markup );
+				$this->assertStringNotContainsString( checked( true, true, false ), $markup );
+			} finally {
+				remove_filter( $option, '__return_true' );
+				remove_filter( $option, '__return_false' );
+				delete_option( $option );
+			}
+		}
+	}
+
+	/**
+	 * Frontend consumers use filters without suppressing individual block opt-ins.
+	 */
+	public function test_frontend_global_filters_preserve_block_opt_ins() {
+		$GLOBALS['post'] = get_post( self::factory()->post->create() );
+		foreach ( array( 'accordion' => 'accordion', 'smooth' => 'add_smooth', 'absolute_urls' => 'use_absolute_urls' ) as $name => $attribute ) {
+			$option = 'simpletoc_' . $name . '_enabled';
+			$marker = array( 'accordion' => 'simpletoc-collapsible', 'smooth' => 'scroll-behavior: smooth', 'absolute_urls' => get_permalink() . '#' )[ $name ];
+			$headings = array( '<h2>Section</h2>' );
+			try {
+				add_filter( $option, '__return_true' );
+				$this->assertStringContainsString( $marker, MToensing\SimpleTOC\generate_toc( $headings, $this->get_default_attributes() ) );
+				remove_filter( $option, '__return_true' );
+				update_option( $option, true );
+				add_filter( $option, '__return_false' );
+				$this->assertStringNotContainsString( $marker, MToensing\SimpleTOC\generate_toc( $headings, $this->get_default_attributes() ) );
+				$this->assertStringContainsString( $marker, MToensing\SimpleTOC\generate_toc( $headings, $this->get_default_attributes( array( $attribute => true ) ) ) );
+			} finally {
+				remove_filter( $option, '__return_true' );
+				remove_filter( $option, '__return_false' );
+				delete_option( $option );
+			}
+		}
+	}
+
+	/**
+	 * The editor receives the filtered refresh preference, including false overrides.
+	 */
+	public function test_editor_uses_filtered_auto_refresh_setting() {
+		$option = 'simpletoc_autoupdate_enabled';
+		try {
+			add_filter( $option, '__return_true' );
+			$settings = MToensing\SimpleTOC\add_simpletoc_block_editor_settings( array(), null );
+			$this->assertTrue( $settings['simpletocAutoRefreshDisabled'] );
+			remove_filter( $option, '__return_true' );
+			update_option( $option, true );
+			add_filter( $option, '__return_false' );
+			$settings = MToensing\SimpleTOC\add_simpletoc_block_editor_settings( array(), null );
+			$this->assertFalse( $settings['simpletocAutoRefreshDisabled'] );
+		} finally {
+			remove_filter( $option, '__return_true' );
+			remove_filter( $option, '__return_false' );
+			delete_option( $option );
+		}
+	}
+
+	/**
+	 * Accordion overrides details without rewriting the saved block attributes.
+	 */
+	public function test_accordion_and_details_are_mutually_exclusive() {
+		$attributes = $this->get_default_attributes( array( 'hidden' => true ) );
+		foreach ( array( 'option', 'filter', 'block' ) as $source ) {
+			try {
+				if ( 'option' === $source ) {
+					update_option( 'simpletoc_accordion_enabled', true );
+				} elseif ( 'filter' === $source ) {
+					add_filter( 'simpletoc_accordion_enabled', '__return_true' );
+				} else {
+					$attributes['accordion'] = true;
+				}
+				$html = MToensing\SimpleTOC\generate_toc( array( '<h2>Section</h2>' ), $attributes );
+				$this->assertSame( 1, substr_count( $html, 'class="simpletoc-collapsible"' ) );
+				$this->assertStringNotContainsString( '<details', $html );
+				$this->assertStringNotContainsString( '</details>', $html );
+				$this->assertStringContainsString( '</ul></div>', $html );
+				$this->assertTrue( $attributes['hidden'] );
+			} finally {
+				delete_option( 'simpletoc_accordion_enabled' );
+				remove_filter( 'simpletoc_accordion_enabled', '__return_true' );
+				$attributes['accordion'] = false;
+			}
+		}
+		$html = MToensing\SimpleTOC\generate_toc( array( '<h2>Section</h2>' ), $attributes );
+		$this->assertStringContainsString( '<details', $html );
+		$this->assertStringNotContainsString( 'simpletoc-collapsible', $html );
+	}
+
+	/**
 	 * Query templates must remain untouched because their headings repeat per post.
 	 */
 	public function test_query_loop_subtrees_are_excluded_from_ids_and_toc() {

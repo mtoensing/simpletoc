@@ -21,7 +21,18 @@ const simpletocicon = (
 import Edit from './edit';
 import save from './save';
 
+const globalBoxStyleEnabled =
+	window.simpletocEditorSettings?.boxStyleEnabled ?? false;
+
 registerBlockType( metadata, {
+	// Keep saved attributes; omit controls overridden by the global Box style.
+	...( globalBoxStyleEnabled && {
+		styles: [],
+		supports: {
+			...metadata.supports,
+			color: { ...metadata.supports.color, background: false },
+		},
+	} ),
 	icon: simpletocicon,
 	/**
 	 * @see ./edit.js
