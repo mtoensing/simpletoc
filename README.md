@@ -82,6 +82,10 @@ SimpleTOC is open-source and developed on [GitHub Pages](https://github.com/mtoe
 
 ## Changelog ##
 
+### Unreleased ###
+* Fixed: Navigation landmarks use the custom table of contents title as their accessible label. Fixes issue #93.
+* Fixed: Core Accordion Heading blocks are included in the table of contents with working anchors, excluding decorative icons. Fixes issue #91.
+
 ### 7.4.2 ###
 * Fixed: Global setting filters now consistently override saved global preferences while preserving individual block options.
 * Fixed: Block controls show globally enforced values and are disabled when overridden. Accordion sub-options are visibly dimmed; globally forced Box styling hides conflicting style and background color controls.
